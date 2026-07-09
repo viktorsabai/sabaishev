@@ -19,13 +19,13 @@ export default function Header({ onContactClick }: HeaderProps) {
       transition={{ duration: 0.5, delay: 0.2 }}
       className="fixed top-0 left-0 right-0 z-40 border-b border-border/50 bg-background/80 backdrop-blur-md"
     >
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:px-6 lg:px-8">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 md:px-6 lg:px-8">
         <motion.button
           type="button"
           onClick={scrollTop}
           whileHover={{ scale: 1.01 }}
           whileTap={{ scale: 0.99 }}
-          className="group min-w-0 text-left"
+          className="min-w-0 flex-1 text-left"
         >
           <HeaderTypingPresence />
         </motion.button>

@@ -1,32 +1,22 @@
-import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { content } from "@/lib/content";
 
-type Phase = "think" | "type" | "hold" | "pause";
-
-function charDelay(char: string): number {
-  if (char === " " || char === "·") return 110 + Math.random() * 90;
-  if (".,!?—-".includes(char)) return 320 + Math.random() * 280;
-  return 72 + Math.random() * 88;
-}
-
-function thinkDelay(): number {
-  return 1800 + Math.random() * 1400;
-}
+type Phase = "think" | "type" | "hold" | "erase";
 
 function TypingDots() {
   return (
-    <span className="inline-flex items-center gap-1 px-0.5 py-1">
+    <span className="inline-flex h-[1.15em] items-center gap-[5px]" aria-hidden>
       {[0, 1, 2].map((i) => (
         <motion.span
           key={i}
-          className="h-1.5 w-1.5 rounded-full bg-foreground-muted"
-          animate={{ opacity: [0.3, 1, 0.3], y: [0, -2, 0] }}
+          className="block h-[5px] w-[5px] rounded-full bg-foreground/45"
+          animate={{ opacity: [0.25, 1, 0.25], scale: [0.85, 1, 0.85] }}
           transition={{
-            duration: 1.05,
+            duration: 1.2,
             repeat: Infinity,
-            delay: i * 0.17,
+            delay: i * 0.2,
             ease: "easeInOut",
           }}
         />
@@ -37,10 +27,11 @@ function TypingDots() {
 
 export default function HeaderTypingPresence() {
   const { language } = useLanguage();
-  const { title, status, messages } = content[language].header;
+  const { status, messages } = content[language].header;
   const [index, setIndex] = useState(0);
   const [text, setText] = useState("");
   const [phase, setPhase] = useState<Phase>("think");
+  const timerRef = useRef<number | null>(null);
 
   const message = messages[index % messages.length];
 
@@ -51,96 +42,82 @@ export default function HeaderTypingPresence() {
   }, [language]);
 
   useEffect(() => {
-    setText("");
-    setPhase("think");
-  }, [index, message]);
-
-  useEffect(() => {
-    if (phase !== "think") return;
-    const t = window.setTimeout(() => setPhase("type"), thinkDelay());
-    return () => window.clearTimeout(t);
-  }, [phase, index, message]);
-
-  useEffect(() => {
-    if (phase !== "type") return;
-
-    if (text.length < message.length) {
-      const nextChar = message[text.length];
-      const t = window.setTimeout(() => {
-        setText(message.slice(0, text.length + 1));
-      }, charDelay(nextChar));
-      return () => window.clearTimeout(t);
+    if (timerRef.current) {
+      window.clearTimeout(timerRef.current);
+      timerRef.current = null;
     }
 
-    const t = window.setTimeout(() => setPhase("hold"), 400);
-    return () => window.clearTimeout(t);
-  }, [phase, text, message]);
+    if (phase === "think") {
+      timerRef.current = window.setTimeout(() => {
+        setText("");
+        setPhase("type");
+      }, 2200 + Math.random() * 1600);
+    } else if (phase === "type") {
+      if (text.length < message.length) {
+        const ch = message[text.length];
+        let delay = 95 + Math.random() * 75;
+        if (ch === " " || ch === "·") delay = 140 + Math.random() * 100;
+        if (".,!?—-".includes(ch)) delay = 380 + Math.random() * 320;
 
-  useEffect(() => {
-    if (phase !== "hold") return;
-    const t = window.setTimeout(() => setPhase("pause"), 7000);
-    return () => window.clearTimeout(t);
-  }, [phase, index]);
+        timerRef.current = window.setTimeout(() => {
+          setText(message.slice(0, text.length + 1));
+        }, delay);
+      } else {
+        timerRef.current = window.setTimeout(() => setPhase("hold"), 500);
+      }
+    } else if (phase === "hold") {
+      timerRef.current = window.setTimeout(() => setPhase("erase"), 6500);
+    } else if (phase === "erase") {
+      if (text.length > 0) {
+        timerRef.current = window.setTimeout(() => {
+          setText((t) => t.slice(0, -1));
+        }, 28 + Math.random() * 18);
+      } else {
+        timerRef.current = window.setTimeout(() => {
+          setIndex((i) => (i + 1) % messages.length);
+          setPhase("think");
+        }, 900);
+      }
+    }
 
-  useEffect(() => {
-    if (phase !== "pause") return;
-    const t = window.setTimeout(() => {
-      setIndex((i) => (i + 1) % messages.length);
-    }, 1400);
-    return () => window.clearTimeout(t);
-  }, [phase, messages.length]);
+    return () => {
+      if (timerRef.current) {
+        window.clearTimeout(timerRef.current);
+        timerRef.current = null;
+      }
+    };
+  }, [phase, text, message, messages.length]);
 
-  const showDots = phase === "think" || (phase === "type" && text.length === 0);
-  const showCursor = phase === "type" && text.length > 0;
+  const showDots = phase === "think";
+  const showCursor = phase === "type" || phase === "erase";
 
   return (
-    <div className="flex min-w-0 max-w-[min(100%,17rem)] items-end gap-2 sm:max-w-xs md:max-w-sm">
+    <div className="flex min-w-0 items-center gap-3">
       <span
-        className="shrink-0 pb-0.5 text-[28px] leading-none md:text-[32px]"
+        className="shrink-0 text-[34px] leading-none md:text-[38px]"
         aria-hidden
       >
-        {"🧚🏿‍♀️"}
+        {"🧚‍♀️"}
       </span>
 
-      <div className="min-w-0">
-        <div className="mb-1 flex items-center gap-1.5 pl-0.5">
-          <span className="text-[11px] font-medium leading-none text-foreground-secondary">
-            {title}
-          </span>
-          <span
-            className="h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400/90"
-            title={status}
-            aria-hidden
-          />
-        </div>
-
-        <div className="min-w-[3.25rem] rounded-[18px] rounded-bl-[5px] border border-border/50 bg-foreground/[0.07] px-3 py-2 shadow-sm backdrop-blur-sm">
-          <AnimatePresence mode="wait">
-            {showDots ? (
-              <motion.div
-                key="dots"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
-              >
-                <TypingDots />
-              </motion.div>
-            ) : (
-              <motion.p
-                key={`msg-${index}`}
-                initial={{ opacity: 0.85 }}
-                animate={{ opacity: 1 }}
-                className="text-[13px] leading-snug text-foreground/90"
-              >
-                <span className="line-clamp-2">{text}</span>
-                {showCursor && (
-                  <span className="ml-px animate-pulse text-foreground/45">|</span>
-                )}
-              </motion.p>
-            )}
-          </AnimatePresence>
-        </div>
+      <div
+        className="flex min-h-9 min-w-0 max-w-[min(58vw,20rem)] items-center rounded-[20px] rounded-bl-[6px] border border-white/[0.08] bg-white/[0.06] px-3.5 py-2 md:max-w-md md:min-h-10 md:px-4"
+        title={status}
+      >
+        <p className="min-w-0 truncate text-[13px] leading-none text-foreground/90 md:text-[14px]">
+          {showDots ? (
+            <TypingDots />
+          ) : (
+            <>
+              {text}
+              {showCursor && (
+                <span className="ml-[1px] inline-block animate-pulse text-foreground/40">
+                  |
+                </span>
+              )}
+            </>
+          )}
+        </p>
       </div>
     </div>
   );
