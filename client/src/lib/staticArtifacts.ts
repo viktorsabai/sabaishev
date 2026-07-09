@@ -12,7 +12,11 @@ export const productArtifactImages: Record<string, string[]> = {
 };
 
 export const processArtifactImages: Record<string, string> = {
-  // "0:0": "/artifacts/process/problem-statement.png",
+  "0:0": "/artifacts/process/process-0-0.png",
+  "0:1": "/artifacts/process/process-0-1.png",
+  "0:2": "/artifacts/process/process-0-2.png",
+  "0:3": "/artifacts/process/process-0-3.png",
+  "0:4": "/artifacts/process/process-0-4.png",
 };
 
 export function getProductImages(
