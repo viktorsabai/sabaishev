@@ -6,6 +6,13 @@ export const content: Record<Language, any> = {
     header: {
       title: "VIKTOR.SYSTEM",
       status: "Online",
+      messages: [
+        "Свободен для нового проекта",
+        "MVP под ключ — от брифа до релиза",
+        "Product · UX · AI — один контур",
+        "Опишите задачу в брифе внизу",
+        "Отвечу сегодня",
+      ],
     },
     // Boot Screen
     boot: {
@@ -532,6 +539,13 @@ export const content: Record<Language, any> = {
     header: {
       title: "VIKTOR.SYSTEM",
       status: "Online",
+      messages: [
+        "Available for a new project",
+        "MVP end-to-end — brief to release",
+        "Product · UX · AI — one system",
+        "Describe the task in the brief below",
+        "I reply today",
+      ],
     },
     // Boot Screen
     boot: {
@@ -1053,6 +1067,13 @@ export const content: Record<Language, any> = {
     header: {
       title: "VIKTOR.SYSTEM",
       status: "Online",
+      messages: [
+        "ว่างรับโปรเจกต์ใหม่",
+        "MVP ครบวงจร — บรีฟถึงปล่อย",
+        "Product · UX · AI — ระบบเดียว",
+        "เล่างานในบรีฟด้านล่าง",
+        "ตอบกลับวันนี้",
+      ],
     },
     // Boot Screen
     boot: {

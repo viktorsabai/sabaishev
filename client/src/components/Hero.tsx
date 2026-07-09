@@ -54,7 +54,7 @@ export default function Hero({ onExploreClick, onContactClick }: HeroProps) {
   return (
     <section
       id="hero"
-      className="relative flex min-h-[calc(100dvh-3.5rem)] flex-col justify-center px-4 pb-16 pt-6 md:min-h-screen md:items-center md:justify-center md:pb-0 md:pt-0 overflow-hidden"
+      className="relative flex min-h-[calc(100dvh-4rem)] flex-col justify-center px-4 pb-16 pt-6 md:min-h-screen md:items-center md:justify-center md:pb-0 md:pt-0 overflow-hidden"
     >
       {/* Soft light field — Apple-like depth */}
       <div className="pointer-events-none absolute inset-0">
