@@ -97,6 +97,8 @@ export const content: Record<Language, any> = {
       uploadMore: "Добавить ещё",
       uploadFormats: "PNG, JPG — можно несколько",
       artifactsLabel: "Артефакты",
+      artifactPlaceholderTitle: "Макеты скоро",
+      artifactPlaceholderHint: "Описание и прогресс кейса уже здесь",
       products: [
         {
           id: "taika",
@@ -209,6 +211,8 @@ export const content: Record<Language, any> = {
       subtitle: "Большинство людей закрывают один-два этапа. Я собираю всю систему.",
       previousStep: "Предыдущий этап",
       nextStep: "Следующий этап",
+      artifactPlaceholderTitle: "Артефакт скоро",
+      artifactPlaceholderHint: "Метод и структура этапа — ниже",
       stages: {
         1: {
           title: "Проблема",
@@ -627,6 +631,8 @@ export const content: Record<Language, any> = {
       uploadMore: "Add more",
       uploadFormats: "PNG, JPG — multiple files",
       artifactsLabel: "Artifacts",
+      artifactPlaceholderTitle: "Screens coming soon",
+      artifactPlaceholderHint: "Case description and progress are already here",
       products: [
         {
           id: "taika",
@@ -739,6 +745,8 @@ export const content: Record<Language, any> = {
       subtitle: "Most people close one or two stages. I build the whole system.",
       previousStep: "Previous step",
       nextStep: "Next step",
+      artifactPlaceholderTitle: "Artifact coming soon",
+      artifactPlaceholderHint: "Method and stage structure are below",
       stages: {
         1: {
           title: "Problem",
@@ -1166,6 +1174,8 @@ export const content: Record<Language, any> = {
       uploadMore: "เพิ่มอีก",
       uploadFormats: "PNG, JPG — หลายไฟล์ได้",
       artifactsLabel: "อาร์ติแฟกต์",
+      artifactPlaceholderTitle: "มาเร็ว ๆ นี้",
+      artifactPlaceholderHint: "มีรายละเอียดและความคืบหน้าของเคสแล้ว",
       products: [
         {
           id: "taika",
@@ -1278,6 +1288,8 @@ export const content: Record<Language, any> = {
       subtitle: "คนส่วนใหญ่ปิดหนึ่งหรือสองขั้นตอน ฉันสร้างระบบทั้งหมด",
       previousStep: "ขั้นตอนก่อนหน้า",
       nextStep: "ขั้นตอนถัดไป",
+      artifactPlaceholderTitle: "อาร์ติแฟกต์เร็ว ๆ นี้",
+      artifactPlaceholderHint: "วิธีการและโครงสร้างขั้นตอนอยู่ด้านล่าง",
       stages: {
         1: {
           title: "ปัญหา",

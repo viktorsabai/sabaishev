@@ -4,7 +4,10 @@ import { content } from "@/lib/content";
 import { useState, useRef, useEffect, useMemo } from "react";
 import { Upload, Trash2 } from "lucide-react";
 import SectionHeader from "./SectionHeader";
+import ArtifactPlaceholder from "./ArtifactPlaceholder";
 import { systemNumber, systemTag, textGradient, progressGradient } from "@/lib/systemUi";
+import { useArtifactAdmin } from "@/lib/artifactAdmin";
+import { getProcessPreview } from "@/lib/staticArtifacts";
 
 const INACTIVE = "#62626a";
 const SPRING = { type: "spring" as const, stiffness: 300, damping: 30 };
@@ -36,6 +39,7 @@ function artifactKey(stageIndex: number, artifactIndex: number) {
 export default function ProcessWorkspace() {
   const { language } = useLanguage();
   const processContent = content[language].process;
+  const isAdmin = useArtifactAdmin();
   const stages = useMemo(
     () => Object.values(processContent.stages) as Array<{
       title: string;
@@ -93,7 +97,8 @@ export default function ProcessWorkspace() {
   if (!currentStage) return null;
 
   const previewKey = artifactKey(currentStageIndex, activeArtifact);
-  const currentPreview = previews[previewKey];
+  const localPreview = previews[previewKey];
+  const currentPreview = getProcessPreview(previewKey, localPreview, isAdmin);
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -268,25 +273,29 @@ export default function ProcessWorkspace() {
                           <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
 
                           <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <button
-                              type="button"
-                              onClick={() => fileRef.current?.click()}
-                              className="p-2 rounded-full bg-black/55 text-white hover:bg-black/75 backdrop-blur-sm"
-                              title="Replace"
-                            >
-                              <Upload className="w-4 h-4" />
-                            </button>
-                            <button
-                              type="button"
-                              onClick={handleRemove}
-                              className="p-2 rounded-full bg-black/55 text-white hover:bg-white/20 backdrop-blur-sm"
-                              title="Remove"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
+                            {isAdmin && (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() => fileRef.current?.click()}
+                                  className="p-2 rounded-full bg-black/55 text-white hover:bg-black/75 backdrop-blur-sm"
+                                  title="Replace"
+                                >
+                                  <Upload className="w-4 h-4" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={handleRemove}
+                                  className="p-2 rounded-full bg-black/55 text-white hover:bg-white/20 backdrop-blur-sm"
+                                  title="Remove"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </>
+                            )}
                           </div>
                         </motion.div>
-                      ) : (
+                      ) : isAdmin ? (
                         <motion.label
                           key={previewKey + "-empty"}
                           initial={{ opacity: 0 }}
@@ -312,16 +321,32 @@ export default function ProcessWorkspace() {
                             className="hidden"
                           />
                         </motion.label>
+                      ) : (
+                        <motion.div
+                          key={previewKey + "-placeholder"}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="absolute inset-0"
+                        >
+                          <ArtifactPlaceholder
+                            title={processContent.artifactPlaceholderTitle ?? "Artifact coming soon"}
+                            hint={processContent.artifactPlaceholderHint}
+                            artifactName={currentStage.artifacts[activeArtifact]}
+                          />
+                        </motion.div>
                       )}
                     </AnimatePresence>
 
-                    <input
-                      ref={fileRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleUpload}
-                      className="hidden"
-                    />
+                    {isAdmin && (
+                      <input
+                        ref={fileRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleUpload}
+                        className="hidden"
+                      />
+                    )}
 
                     {/* Soft glass edge */}
                     <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/[0.04]" />

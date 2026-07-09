@@ -15,7 +15,10 @@ import {
 } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import SectionHeader from "./SectionHeader";
+import ArtifactPlaceholder from "./ArtifactPlaceholder";
 import { progressGradient, systemTag, systemNumber, textGradient } from "@/lib/systemUi";
+import { useArtifactAdmin } from "@/lib/artifactAdmin";
+import { getProductImages } from "@/lib/staticArtifacts";
 
 function getStatusMeta(status: string) {
   const s = status.toLowerCase();
@@ -148,6 +151,7 @@ function saveArtifacts(data: Record<string, string[]>) {
 export default function ProductModules() {
   const { language } = useLanguage();
   const productModules = content[language].productModules;
+  const isAdmin = useArtifactAdmin();
   const [selectedProduct, setSelectedProduct] = useState<string | null>(null);
   const [artifacts, setArtifacts] = useState<Record<string, string[]>>({});
 
@@ -287,7 +291,13 @@ export default function ProductModules() {
             <ProductDetailModal
               product={selected}
               labels={productModules}
-              images={artifacts[selected.id] ?? []}
+              images={getProductImages(
+                selected.id,
+                artifacts[selected.id] ?? [],
+                isAdmin
+              )}
+              localImages={artifacts[selected.id] ?? []}
+              isAdmin={isAdmin}
               onImagesChange={(images) => updateArtifacts(selected.id, images)}
               onClose={() => setSelectedProduct(null)}
             />
@@ -302,12 +312,16 @@ function ProductDetailModal({
   product,
   labels,
   images,
+  localImages,
+  isAdmin,
   onImagesChange,
   onClose,
 }: {
   product: any;
   labels: any;
   images: string[];
+  localImages: string[];
+  isAdmin: boolean;
   onImagesChange: (images: string[]) => void;
   onClose: () => void;
 }) {
@@ -341,15 +355,15 @@ function ProductDetailModal({
           })
       )
     ).then((results) => {
-      onImagesChange([...images, ...results]);
-      setSlide(images.length);
+      onImagesChange([...localImages, ...results]);
+      setSlide(localImages.length);
     });
 
     e.target.value = "";
   };
 
   const removeCurrent = () => {
-    const next = images.filter((_, i) => i !== slide);
+    const next = localImages.filter((_, i) => i !== slide);
     onImagesChange(next);
     setSlide((s) => Math.max(0, Math.min(s, next.length - 1)));
   };
@@ -485,24 +499,28 @@ function ProductDetailModal({
                   </div>
 
                   <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button
-                      type="button"
-                      onClick={() => fileRef.current?.click()}
-                      className="p-2 rounded-full bg-black/50 text-white hover:bg-black/70"
-                      title={labels.uploadMore}
-                    >
-                      <Upload className="w-4 h-4" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={removeCurrent}
-                      className="p-2 rounded-full bg-black/50 text-white hover:bg-white/20"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    {isAdmin && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => fileRef.current?.click()}
+                          className="p-2 rounded-full bg-black/50 text-white hover:bg-black/70"
+                          title={labels.uploadMore}
+                        >
+                          <Upload className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={removeCurrent}
+                          className="p-2 rounded-full bg-black/50 text-white hover:bg-white/20"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </>
+                    )}
                   </div>
                 </>
-              ) : (
+              ) : isAdmin ? (
                 <label className="w-full h-full flex flex-col items-center justify-center gap-3 cursor-pointer hover:bg-foreground/[0.02] transition-colors">
                   <Upload className="w-8 h-8 text-foreground-muted" />
                   <p className="text-sm text-foreground-muted">
@@ -519,16 +537,23 @@ function ProductDetailModal({
                     className="hidden"
                   />
                 </label>
+              ) : (
+                <ArtifactPlaceholder
+                  title={labels.artifactPlaceholderTitle ?? "Screens coming soon"}
+                  hint={labels.artifactPlaceholderHint}
+                />
               )}
 
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleUpload}
-                className="hidden"
-              />
+              {isAdmin && (
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleUpload}
+                  className="hidden"
+                />
+              )}
             </div>
           </div>
 
