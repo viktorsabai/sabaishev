@@ -214,6 +214,7 @@ export const content: Record<Language, any> = {
       nextStep: "Следующий этап",
       artifactPlaceholderTitle: "Артефакт скоро",
       artifactPlaceholderHint: "Метод и структура этапа — ниже",
+      openGallery: "Открыть",
       stages: {
         1: {
           title: "Проблема",
@@ -749,6 +750,7 @@ export const content: Record<Language, any> = {
       nextStep: "Next step",
       artifactPlaceholderTitle: "Artifact coming soon",
       artifactPlaceholderHint: "Method and stage structure are below",
+      openGallery: "Open",
       stages: {
         1: {
           title: "Problem",
@@ -1293,6 +1295,7 @@ export const content: Record<Language, any> = {
       nextStep: "ขั้นตอนถัดไป",
       artifactPlaceholderTitle: "อาร์ติแฟกต์เร็ว ๆ นี้",
       artifactPlaceholderHint: "วิธีการและโครงสร้างขั้นตอนอยู่ด้านล่าง",
+      openGallery: "เปิด",
       stages: {
         1: {
           title: "ปัญหา",

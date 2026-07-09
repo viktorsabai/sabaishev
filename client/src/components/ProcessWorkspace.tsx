@@ -1,14 +1,16 @@
 import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { content } from "@/lib/content";
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { Upload, Trash2, Download } from "lucide-react";
 import SectionHeader from "./SectionHeader";
 import ArtifactPlaceholder from "./ArtifactPlaceholder";
+import ProcessArtifactCarousel from "./ProcessArtifactCarousel";
 import { systemNumber, systemTag, textGradient, progressGradient } from "@/lib/systemUi";
 import { useArtifactAdmin } from "@/lib/artifactAdmin";
 import { getProcessPreview, processArtifactImages } from "@/lib/staticArtifacts";
 import { publishProcessArtifact } from "@/lib/artifactExport";
+import { toolsForArtifact } from "@/lib/artifactTools";
 
 const INACTIVE = "#62626a";
 const SPRING = { type: "spring" as const, stiffness: 300, damping: 30 };
@@ -55,6 +57,7 @@ export default function ProcessWorkspace() {
   const [activeArtifact, setActiveArtifact] = useState(0);
   const [inView, setInView] = useState(false);
   const [previews, setPreviews] = useState<ArtifactMap>({});
+  const [carouselOpen, setCarouselOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -100,6 +103,40 @@ export default function ProcessWorkspace() {
   const previewKey = artifactKey(currentStageIndex, activeArtifact);
   const localPreview = previews[previewKey];
   const currentPreview = getProcessPreview(previewKey, localPreview, isAdmin);
+
+  const stageGallery = useMemo(() => {
+    return currentStage.artifacts
+      .map((name, index) => {
+        const key = artifactKey(currentStageIndex, index);
+        const src = getProcessPreview(key, previews[key], isAdmin);
+        if (!src) return null;
+        return {
+          name,
+          src,
+          tools: toolsForArtifact(name),
+          index,
+        };
+      })
+      .filter(Boolean) as Array<{
+      name: string;
+      src: string;
+      tools: string[];
+      index: number;
+    }>;
+  }, [currentStage, currentStageIndex, previews, isAdmin]);
+
+  const carouselInitial = Math.max(
+    0,
+    stageGallery.findIndex((item) => item.index === activeArtifact)
+  );
+
+  const handleCarouselIndex = useCallback(
+    (galleryIndex: number) => {
+      const item = stageGallery[galleryIndex];
+      if (item) setActiveArtifact(item.index);
+    },
+    [stageGallery]
+  );
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -284,44 +321,68 @@ export default function ProcessWorkspace() {
                   <div className="relative flex-1 min-h-[240px] md:min-h-[320px] rounded-xl border border-border/70 bg-background/50 backdrop-blur-xl overflow-hidden group">
                     <AnimatePresence mode="wait">
                       {currentPreview ? (
-                        <motion.div
+                        <motion.button
+                          type="button"
                           key={previewKey + "-img"}
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
                           transition={{ duration: 0.25 }}
-                          className="absolute inset-0"
+                          className="absolute inset-0 cursor-zoom-in text-left"
+                          onClick={() => setCarouselOpen(true)}
                         >
                           <img
                             src={currentPreview}
                             alt={currentStage.artifacts[activeArtifact]}
-                            className="w-full h-full object-contain md:object-cover bg-black/20"
+                            className="h-full w-full object-contain bg-black/20"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
 
-                          <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                            {isAdmin && (
-                              <>
-                                <button
-                                  type="button"
-                                  onClick={() => fileRef.current?.click()}
-                                  className="p-2 rounded-full bg-black/55 text-white hover:bg-black/75 backdrop-blur-sm"
-                                  title="Replace"
-                                >
-                                  <Upload className="w-4 h-4" />
-                                </button>
-                                <button
-                                  type="button"
-                                  onClick={handleRemove}
-                                  className="p-2 rounded-full bg-black/55 text-white hover:bg-white/20 backdrop-blur-sm"
-                                  title="Remove"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </button>
-                              </>
-                            )}
+                          <div className="pointer-events-none absolute bottom-3 left-3 right-3 flex flex-wrap items-end justify-between gap-2">
+                            <div className="flex flex-wrap gap-1.5">
+                              <span className={`${systemTag.base} ${systemTag.active} text-[11px]`}>
+                                {currentStage.artifacts[activeArtifact]}
+                              </span>
+                              {toolsForArtifact(currentStage.artifacts[activeArtifact])
+                                .slice(0, 2)
+                                .map((tool) => (
+                                  <span
+                                    key={tool}
+                                    className={`${systemTag.base} ${systemTag.idle} text-[11px]`}
+                                  >
+                                    {tool}
+                                  </span>
+                                ))}
+                            </div>
+                            <span className="text-[11px] font-medium text-white/70">
+                              {processContent.openGallery ?? "Открыть"} →
+                            </span>
                           </div>
-                        </motion.div>
+
+                          {isAdmin && (
+                            <div
+                              className="absolute top-3 right-3 z-10 flex gap-2 opacity-0 transition-opacity group-hover:opacity-100"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <button
+                                type="button"
+                                onClick={() => fileRef.current?.click()}
+                                className="rounded-full bg-black/55 p-2 text-white backdrop-blur-sm hover:bg-black/75"
+                                title="Replace"
+                              >
+                                <Upload className="h-4 w-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={handleRemove}
+                                className="rounded-full bg-black/55 p-2 text-white backdrop-blur-sm hover:bg-white/20"
+                                title="Remove"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </button>
+                            </div>
+                          )}
+                        </motion.button>
                       ) : isAdmin ? (
                         <motion.label
                           key={previewKey + "-empty"}
@@ -417,6 +478,19 @@ export default function ProcessWorkspace() {
           </div>
         </div>
       </motion.div>
+
+      <AnimatePresence>
+        {carouselOpen && stageGallery.length > 0 && (
+          <ProcessArtifactCarousel
+            stageNumber={String(currentStageIndex + 1).padStart(2, "0")}
+            stageTitle={currentStage.title}
+            items={stageGallery}
+            initialIndex={carouselInitial >= 0 ? carouselInitial : 0}
+            onClose={() => setCarouselOpen(false)}
+            onIndexChange={handleCarouselIndex}
+          />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
