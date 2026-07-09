@@ -2,12 +2,13 @@ import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { content } from "@/lib/content";
 import { useState, useRef, useEffect, useMemo } from "react";
-import { Upload, Trash2 } from "lucide-react";
+import { Upload, Trash2, Download } from "lucide-react";
 import SectionHeader from "./SectionHeader";
 import ArtifactPlaceholder from "./ArtifactPlaceholder";
 import { systemNumber, systemTag, textGradient, progressGradient } from "@/lib/systemUi";
 import { useArtifactAdmin } from "@/lib/artifactAdmin";
-import { getProcessPreview } from "@/lib/staticArtifacts";
+import { getProcessPreview, processArtifactImages } from "@/lib/staticArtifacts";
+import { exportProcessArtifact } from "@/lib/artifactExport";
 
 const INACTIVE = "#62626a";
 const SPRING = { type: "spring" as const, stiffness: 300, damping: 30 };
@@ -123,6 +124,17 @@ export default function ProcessWorkspace() {
       saveMap(next);
       return next;
     });
+  };
+
+  const isDraft =
+    isAdmin && Boolean(localPreview) && !processArtifactImages[previewKey];
+
+  const handleExport = () => {
+    if (!localPreview) return;
+    const { filename } = exportProcessArtifact(previewKey, localPreview);
+    window.alert(
+      `Скачан файл: ${filename}\n\nСтрока для staticArtifacts.ts скопирована в буфер.\n\nДальше:\n1. Положи файл в client/public/artifacts/process/\n2. Вставь строку в staticArtifacts.ts\n3. git push — и все увидят на проде`
+    );
   };
 
   return (
@@ -351,6 +363,23 @@ export default function ProcessWorkspace() {
                     {/* Soft glass edge */}
                     <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/[0.04]" />
                   </div>
+
+                  {isDraft && (
+                    <div className="mt-3 rounded-xl border border-amber-400/20 bg-amber-400/[0.06] p-3 md:p-4">
+                      <p className="text-xs leading-relaxed text-amber-100/80">
+                        Черновик только в этом браузере. На прод сам не уедет — нужен
+                        экспорт в репозиторий.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={handleExport}
+                        className="mt-2 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-medium text-amber-50 transition-colors hover:bg-amber-400/20"
+                      >
+                        <Download className="h-3.5 w-3.5" />
+                        Скачать PNG + скопировать код
+                      </button>
+                    </div>
+                  )}
 
                   {/* Logic strip — compact, not a duplicate quote */}
                   {currentStage.logic && (
