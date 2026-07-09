@@ -8,7 +8,7 @@ import ArtifactPlaceholder from "./ArtifactPlaceholder";
 import { systemNumber, systemTag, textGradient, progressGradient } from "@/lib/systemUi";
 import { useArtifactAdmin } from "@/lib/artifactAdmin";
 import { getProcessPreview, processArtifactImages } from "@/lib/staticArtifacts";
-import { exportProcessArtifact } from "@/lib/artifactExport";
+import { publishProcessArtifact } from "@/lib/artifactExport";
 
 const INACTIVE = "#62626a";
 const SPRING = { type: "spring" as const, stiffness: 300, damping: 30 };
@@ -126,15 +126,30 @@ export default function ProcessWorkspace() {
     });
   };
 
+  const [exporting, setExporting] = useState(false);
+  const [exportMsg, setExportMsg] = useState<string | null>(null);
+
   const isDraft =
     isAdmin && Boolean(localPreview) && !processArtifactImages[previewKey];
 
-  const handleExport = () => {
-    if (!localPreview) return;
-    const { filename } = exportProcessArtifact(previewKey, localPreview);
-    window.alert(
-      `Скачан файл: ${filename}\n\nСтрока для staticArtifacts.ts скопирована в буфер.\n\nДальше:\n1. Положи файл в client/public/artifacts/process/\n2. Вставь строку в staticArtifacts.ts\n3. git push — и все увидят на проде`
-    );
+  const handleExport = async () => {
+    if (!localPreview || exporting) return;
+    setExporting(true);
+    setExportMsg(null);
+    try {
+      const result = await publishProcessArtifact(previewKey, localPreview);
+      setExportMsg(
+        `Сохранено в репо: ${result.publicPath ?? ""}\n\nДальше: git add + commit + push — и на проде увидят все.`
+      );
+    } catch (e) {
+      setExportMsg(
+        e instanceof Error
+          ? `Не вышло: ${e.message}\n\nНужен localhost (pnpm dev), не прод.`
+          : "Ошибка экспорта"
+      );
+    } finally {
+      setExporting(false);
+    }
   };
 
   return (
@@ -365,19 +380,28 @@ export default function ProcessWorkspace() {
                   </div>
 
                   {isDraft && (
-                    <div className="mt-3 rounded-xl border border-amber-400/20 bg-amber-400/[0.06] p-3 md:p-4">
-                      <p className="text-xs leading-relaxed text-amber-100/80">
-                        Черновик только в этом браузере. На прод сам не уедет — нужен
-                        экспорт в репозиторий.
+                    <div className="mt-3 rounded-xl border border-emerald-400/20 bg-emerald-400/[0.06] p-3 md:p-4">
+                      <p className="text-xs leading-relaxed text-emerald-100/85">
+                        Черновик в браузере. Нажми экспорт — файл сам ляжет в{" "}
+                        <span className="font-medium text-emerald-50">
+                          public/artifacts
+                        </span>{" "}
+                        и пропишется в коде. Потом только git push.
                       </p>
                       <button
                         type="button"
                         onClick={handleExport}
-                        className="mt-2 inline-flex items-center gap-2 rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-xs font-medium text-amber-50 transition-colors hover:bg-amber-400/20"
+                        disabled={exporting}
+                        className="mt-2 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1.5 text-xs font-medium text-emerald-50 transition-colors hover:bg-emerald-400/20 disabled:opacity-50"
                       >
                         <Download className="h-3.5 w-3.5" />
-                        Скачать PNG + скопировать код
+                        {exporting ? "Сохраняю…" : "Экспорт в репозиторий"}
                       </button>
+                      {exportMsg && (
+                        <p className="mt-2 whitespace-pre-line text-[11px] leading-relaxed text-emerald-100/70">
+                          {exportMsg}
+                        </p>
+                      )}
                     </div>
                   )}
 

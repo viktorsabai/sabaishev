@@ -12,13 +12,15 @@ import {
   Activity,
   CircleDot,
   Sparkles,
+  Download,
 } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import SectionHeader from "./SectionHeader";
 import ArtifactPlaceholder from "./ArtifactPlaceholder";
 import { progressGradient, systemTag, systemNumber, textGradient } from "@/lib/systemUi";
 import { useArtifactAdmin } from "@/lib/artifactAdmin";
-import { getProductImages } from "@/lib/staticArtifacts";
+import { getProductImages, productArtifactImages } from "@/lib/staticArtifacts";
+import { publishProductArtifacts } from "@/lib/artifactExport";
 
 function getStatusMeta(status: string) {
   const s = status.toLowerCase();
@@ -328,7 +330,14 @@ function ProductDetailModal({
   const statusMeta = getStatusMeta(product.status);
   const StatusIcon = statusMeta.Icon;
   const [slide, setSlide] = useState(0);
+  const [exporting, setExporting] = useState(false);
+  const [exportMsg, setExportMsg] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+
+  const isDraft =
+    isAdmin &&
+    localImages.length > 0 &&
+    !(productArtifactImages[product.id]?.length);
 
   useEffect(() => {
     setSlide(0);
@@ -366,6 +375,26 @@ function ProductDetailModal({
     const next = localImages.filter((_, i) => i !== slide);
     onImagesChange(next);
     setSlide((s) => Math.max(0, Math.min(s, next.length - 1)));
+  };
+
+  const handlePublish = async () => {
+    if (!localImages.length || exporting) return;
+    setExporting(true);
+    setExportMsg(null);
+    try {
+      await publishProductArtifacts(product.id, localImages);
+      setExportMsg(
+        "Сохранено в public/artifacts и staticArtifacts.ts.\nДальше: git push — и на проде увидят все."
+      );
+    } catch (e) {
+      setExportMsg(
+        e instanceof Error
+          ? `Не вышло: ${e.message}\nНужен localhost (pnpm dev).`
+          : "Ошибка экспорта"
+      );
+    } finally {
+      setExporting(false);
+    }
   };
 
   return (
@@ -555,6 +584,28 @@ function ProductDetailModal({
                 />
               )}
             </div>
+
+            {isDraft && (
+              <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/[0.06] p-3">
+                <p className="text-xs leading-relaxed text-emerald-100/85">
+                  Черновик в браузере. Экспорт сам положит файлы в репозиторий.
+                </p>
+                <button
+                  type="button"
+                  onClick={handlePublish}
+                  disabled={exporting}
+                  className="mt-2 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1.5 text-xs font-medium text-emerald-50 hover:bg-emerald-400/20 disabled:opacity-50"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  {exporting ? "Сохраняю…" : "Экспорт в репозиторий"}
+                </button>
+                {exportMsg && (
+                  <p className="mt-2 whitespace-pre-line text-[11px] text-emerald-100/70">
+                    {exportMsg}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
 
           {product.link && (

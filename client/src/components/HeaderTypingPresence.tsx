@@ -97,7 +97,7 @@ export default function HeaderTypingPresence() {
         className="shrink-0 text-[34px] leading-none md:text-[38px]"
         aria-hidden
       >
-        {"🧚‍♀️"}
+        {"\u{1F9DA}\u{200D}\u{2642}\u{FE0F}"}
       </span>
 
       <div
