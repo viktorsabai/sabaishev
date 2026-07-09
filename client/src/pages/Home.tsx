@@ -44,7 +44,7 @@ export default function Home() {
 
       <Header onContactClick={handleContactClick} />
 
-      <main className="pt-16 md:pt-20">
+      <main className="md:pt-20">
         <Hero onExploreClick={handleExploreClick} onContactClick={handleContactClick} />
         <StackCapabilities />
         <div ref={productsRef}>

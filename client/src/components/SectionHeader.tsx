@@ -22,7 +22,7 @@ export default function SectionHeader({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.5 }}
       transition={{ duration: 0.5 }}
-      className={`mb-12 md:mb-16 ${alignClass}`}
+      className={`mb-8 md:mb-16 ${alignClass}`}
     >
       {/* Section Number */}
       <motion.div

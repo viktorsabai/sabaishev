@@ -18,7 +18,6 @@ export default function Experience() {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedDetailId, setSelectedDetailId] = useState<string | null>(null);
-  const [pulseKey, setPulseKey] = useState(0);
 
   const selectedCompany = companies[activeIndex] ?? null;
   const relevantSkillIds: string[] = selectedCompany?.relevantSkills ?? [];
@@ -31,20 +30,16 @@ export default function Experience() {
   }, [allSkills, selectedCompany, relevantSkillIds]);
 
   const selectCompany = (index: number) => {
-    if (index === activeIndex) {
-      setPulseKey((k) => k + 1);
-      return;
-    }
+    if (index === activeIndex) return;
     setActiveIndex(index);
     setSelectedDetailId(null);
-    setPulseKey((k) => k + 1);
   };
 
   return (
     <ScrollReveal type="stagger" duration={0.7}>
       <section
         id="experience"
-        className="min-h-screen flex items-center justify-center py-20 px-4"
+        className="flex items-start justify-start px-4 py-14 md:min-h-screen md:items-center md:justify-center md:py-20"
       >
         <motion.div
           initial={{ opacity: 0 }}
@@ -56,11 +51,10 @@ export default function Experience() {
           <SectionHeader number={4} title={experience.title} subtitle={experience.intro} />
 
           {/* TIMELINE — tap only, no scroll hijack */}
-          <div className="mb-10 md:mb-12">
+          <div className="mb-8 md:mb-12">
             <LayoutGroup>
-              <div className="relative grid grid-cols-4 gap-2 md:gap-4 px-1 md:px-8">
-                {/* Static track between first and last node centers */}
-                <div className="pointer-events-none absolute left-[12.5%] right-[12.5%] top-[18px] h-px bg-border/50" />
+              <div className="relative grid grid-cols-4 gap-1 px-0 md:gap-4 md:px-8">
+                <div className="pointer-events-none absolute left-[12.5%] right-[12.5%] top-[18px] hidden h-px bg-border/50 md:block" />
 
                 {companies.map((company: any, idx: number) => {
                   const isActive = idx === activeIndex;
@@ -73,7 +67,7 @@ export default function Experience() {
                     >
                       {idx > 0 && (
                         <ChevronRight
-                          className={`pointer-events-none absolute left-0 top-[14px] h-3.5 w-3.5 -translate-x-1/2 transition-colors duration-300 ${
+                          className={`pointer-events-none absolute left-0 top-[14px] hidden h-3.5 w-3.5 -translate-x-1/2 md:block ${
                             isPast || isActive
                               ? "text-foreground-muted/60"
                               : "text-foreground-muted/25"
@@ -85,43 +79,28 @@ export default function Experience() {
                       <motion.button
                         type="button"
                         onClick={() => selectCompany(idx)}
-                        className="flex w-full flex-col items-center gap-4 outline-none"
+                        className="flex w-full flex-col items-center gap-2.5 outline-none md:gap-4"
                         whileHover={{ y: -2 }}
                         whileTap={{ scale: 0.96 }}
                       >
-                        <div className="relative flex h-9 w-9 items-center justify-center">
-                          <AnimatePresence>
-                            {isActive && (
-                              <motion.div
-                                key={`pulse-${pulseKey}`}
-                                initial={{ scale: 0.6, opacity: 0.65 }}
-                                animate={{ scale: 2.1, opacity: 0 }}
-                                exit={{ opacity: 0 }}
-                                transition={{ duration: 0.65, ease: "easeOut" }}
-                                className={`absolute inset-0 rounded-full ${progressGradient}`}
-                              />
-                            )}
-                          </AnimatePresence>
-
+                        <div className="relative flex h-8 w-8 items-center justify-center overflow-visible md:h-9 md:w-9">
                           {isActive && (
                             <motion.div
                               layoutId="activeTrackIndicator"
-                              className={`absolute inset-[-4px] rounded-full opacity-55 blur-md ${progressGradient}`}
+                              className="absolute inset-0 rounded-full bg-purple-500/25"
                               transition={SPRING}
                             />
                           )}
 
                           <motion.span
-                            animate={{
-                              scale: isActive ? 1.2 : 1,
-                            }}
+                            animate={{ scale: isActive ? 1.15 : 1 }}
                             transition={SPRING}
-                            className={`relative z-10 h-3.5 w-3.5 rounded-full transition-colors duration-300 ${
+                            className={`relative z-10 h-3 w-3 rounded-full md:h-3.5 md:w-3.5 ${
                               isActive
-                                ? "bg-foreground ring-2 ring-purple-400/45 shadow-[0_0_18px_rgba(168,85,247,0.4)]"
+                                ? "bg-foreground shadow-[0_0_12px_rgba(168,85,247,0.5)] ring-2 ring-purple-400/40"
                                 : isPast
-                                  ? "bg-purple-400/50"
-                                  : "bg-foreground/25"
+                                  ? "bg-purple-400/55"
+                                  : "bg-foreground/30"
                             }`}
                           />
                         </div>
@@ -129,13 +108,13 @@ export default function Experience() {
                         <motion.span
                           animate={{
                             opacity: isActive ? 1 : 0.55,
-                            scale: isActive ? 1.06 : 1,
+                            scale: isActive ? 1.04 : 1,
                           }}
                           transition={EASE}
-                          className={`text-center text-sm md:text-base tracking-tight ${
+                          className={`text-center text-[11px] leading-tight md:text-base ${
                             isActive
                               ? "font-bold text-foreground"
-                              : "font-semibold text-foreground-secondary"
+                              : "font-medium text-foreground-secondary"
                           }`}
                         >
                           {company.title}

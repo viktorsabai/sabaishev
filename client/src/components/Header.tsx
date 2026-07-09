@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import ThemeToggle from "./ThemeToggle";
 import LanguageToggle from "./LanguageToggle";
 import ContactButton from "./ContactButton";
-import { textGradient } from "@/lib/systemUi";
 
 interface HeaderProps {
   onContactClick: () => void;
@@ -26,20 +25,20 @@ export default function Header({ onContactClick }: HeaderProps) {
           onClick={scrollTop}
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
-          className="group flex items-center gap-2.5"
+          className="group flex min-w-0 items-center gap-2"
         >
           <span
-            className="flex h-8 w-8 items-center justify-center rounded-xl border border-border bg-surface text-lg leading-none transition-transform group-hover:scale-105"
+            className="flex h-8 w-8 shrink-0 items-center justify-center text-xl leading-none"
             aria-hidden
           >
-            🧙
+            {"🧚🏿‍♀️"}
           </span>
-          <span className={`text-sm font-bold tracking-tight md:text-[15px] ${textGradient}`}>
+          <span className="truncate text-sm font-semibold tracking-tight text-foreground md:text-[15px]">
             VIKTOR.SYSTEM
           </span>
         </motion.button>
 
-        <div className="flex items-center gap-2 md:gap-3">
+        <div className="flex shrink-0 items-center gap-1.5 md:gap-3">
           <LanguageToggle />
           <ThemeToggle />
           <ContactButton onClick={onContactClick} />
