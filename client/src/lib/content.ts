@@ -17,6 +17,7 @@ export const content: Record<Language, any> = {
     // Boot Screen
     boot: {
       title: "VIKTOR.SYSTEM",
+      line: "продукты, которые хочется открыть",
       sequence: [
         "Boot sequence...",
         "Loading modules...",
@@ -554,6 +555,7 @@ export const content: Record<Language, any> = {
     // Boot Screen
     boot: {
       title: "VIKTOR.SYSTEM",
+      line: "products you want to open",
       sequence: [
         "Boot sequence...",
         "Loading modules...",
@@ -1086,6 +1088,7 @@ export const content: Record<Language, any> = {
     // Boot Screen
     boot: {
       title: "VIKTOR.SYSTEM",
+      line: "ผลิตภัณฑ์ที่อยากเปิดดู",
       sequence: [
         "Boot sequence...",
         "Loading modules...",
