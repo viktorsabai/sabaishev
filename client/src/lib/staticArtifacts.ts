@@ -9,6 +9,8 @@
 
 export const productArtifactImages: Record<string, string[]> = {
   // taika: ["/artifacts/taika/01.png"],
+  taika: ["/artifacts/taika/taika-01.jpg"],
+
 };
 
 export const stackArtifactImages: Record<string, string[]> = {
