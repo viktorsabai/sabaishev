@@ -5,11 +5,18 @@ import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import SectionHeader from "./SectionHeader";
-import { systemTag, systemNumber, textGradient, progressGradient, systemTagTone, systemColorTag } from "@/lib/systemUi";
+import { systemTag, systemNumber, textGradient, systemTagTone, systemColorTag } from "@/lib/systemUi";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 const SPRING = { type: "spring" as const, stiffness: 320, damping: 28 };
 const EASE = { duration: 0.32, ease: [0.23, 1, 0.32, 1] as const };
+
+const CARD_TONES = [
+  "border-border hover:border-purple-400/30 bg-surface/80 hover:bg-surface",
+  "border-border hover:border-pink-400/25 bg-surface/70 hover:bg-surface",
+  "border-border hover:border-blue-400/25 bg-surface/80 hover:bg-surface",
+  "border-border hover:border-purple-400/20 bg-surface/60 hover:bg-surface",
+];
 
 type CompanyPosition = {
   role?: string;
@@ -83,6 +90,12 @@ export default function Experience() {
     ? getCompanyPosition(selectedCompany, selectedSkill.id)
     : null;
   const companyMeta = getCompanyMeta(selectedCompany);
+  const openDetailLabel =
+    language === "ru"
+      ? "Подробнее"
+      : language === "en"
+        ? "Learn more"
+        : "เพิ่มเติม";
 
   return (
     <ScrollReveal type="stagger" duration={0.7}>
@@ -266,19 +279,16 @@ export default function Experience() {
             </LayoutGroup>
           </motion.div>
 
-          {/* SKILL BLOCKS — CV details per company */}
+          {/* SKILL BLOCKS — same card format as Stack & Capabilities */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, amount: 0.3 }}
             transition={{ duration: 0.6 }}
-            className="mt-16"
           >
-            <div className="h-px bg-gradient-to-r from-transparent via-border/40 to-transparent mb-12" />
-
             <motion.div
               layout
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
+              className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5"
             >
               <AnimatePresence mode="popLayout" initial={false}>
                 {visibleBlocks.map((skill: any, idx: number) => {
@@ -289,54 +299,63 @@ export default function Experience() {
                     [];
 
                   return (
-                    <motion.div
+                    <motion.article
                       key={`${selectedCompany?.id ?? "all"}-${skill.id}`}
                       layout
-                      initial={{ opacity: 0, scale: 0.92, y: 14 }}
+                      initial={{ opacity: 0, y: 18 }}
                       animate={{
                         opacity: 1,
-                        scale: 1,
                         y: 0,
                         transition: { ...EASE, delay: idx * 0.06 },
                       }}
                       exit={{
                         opacity: 0,
-                        scale: 0.92,
                         y: -8,
                         transition: { duration: 0.2 },
                       }}
-                      transition={{ layout: SPRING }}
+                      whileHover={{ y: -4, scale: 1.01 }}
+                      transition={{ layout: SPRING, type: "spring", stiffness: 320, damping: 28 }}
                       onClick={() => setSelectedDetailId(skill.id)}
-                      className="group cursor-pointer rounded-2xl border border-border/60 bg-surface/50 p-6 md:p-7 backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-purple-400/25 hover:bg-surface hover:shadow-[0_0_40px_-16px_rgba(168,85,247,0.35)]"
+                      className={`group relative flex min-h-[280px] cursor-pointer flex-col overflow-hidden rounded-2xl border p-6 transition-colors duration-300 md:min-h-[320px] md:rounded-3xl md:p-8 ${CARD_TONES[idx % CARD_TONES.length]}`}
                     >
-                      <h3 className="text-heading-sm mb-3 font-semibold text-foreground">
-                        {skill.title}
-                      </h3>
-                      <p className="text-body-sm mb-4 line-clamp-3 text-foreground-secondary">
-                        {position?.details ?? skill.description}
-                      </p>
-                      {achievementTags.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
-                          {achievementTags.map((tag: string, tagIdx: number) => (
-                            <span key={tag} className={systemColorTag(tagIdx)}>
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                      <div className="mt-4 flex items-center gap-2 text-xs text-foreground-muted">
+                      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.04] via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+
+                      <div className="relative z-10 flex h-full flex-col">
                         <span
-                          className={`inline-block h-1.5 w-1.5 rounded-full ${progressGradient}`}
-                        />
-                        <span className="opacity-0 transition-opacity group-hover:opacity-100">
-                          {language === "ru"
-                            ? "Подробнее"
-                            : language === "en"
-                              ? "Learn more"
-                              : "เพิ่มเติม"}
+                          className={`${systemNumber.label} mb-4 text-xs ${textGradient}`}
+                        >
+                          {String(idx + 1).padStart(2, "0")}
+                        </span>
+
+                        <h3 className="mb-1.5 text-xl font-bold tracking-tight text-foreground md:text-2xl">
+                          {skill.title}
+                        </h3>
+                        <p className="mb-5 text-sm text-foreground-muted md:mb-6">
+                          {skill.description}
+                        </p>
+
+                        <p className="flex-1 text-sm leading-relaxed text-foreground-secondary md:text-[15px]">
+                          {position?.details ?? skill.details ?? skill.description}
+                        </p>
+
+                        {achievementTags.length > 0 && (
+                          <div className="mt-6 flex flex-wrap gap-2 md:mt-8">
+                            {achievementTags.map((tag: string, tagIdx: number) => (
+                              <span key={tag} className={systemColorTag(tagIdx)}>
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+
+                        <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-foreground group-hover:opacity-90">
+                          {openDetailLabel}
+                          <span className={`${textGradient} text-base leading-none`}>
+                            →
+                          </span>
                         </span>
                       </div>
-                    </motion.div>
+                    </motion.article>
                   );
                 })}
               </AnimatePresence>
