@@ -35,12 +35,17 @@ function writeDataUrl(filePath: string, dataUrl: string) {
   fs.writeFileSync(filePath, Buffer.from(base64, "base64"));
 }
 
+function tsMapKey(key: string): string {
+  return JSON.stringify(key);
+}
+
 function upsertMapEntry(
   filePath: string,
   mapName: "processArtifactImages" | "productArtifactImages" | "stackArtifactImages",
-  keyLiteral: string,
+  key: string,
   valueLiteral: string
 ) {
+  const keyLiteral = tsMapKey(key);
   let src = fs.readFileSync(filePath, "utf-8");
   const mapRe = new RegExp(
     `(export const ${mapName}[^=]*=\\s*\\{)([\\s\\S]*?)(\\n\\};)`
@@ -49,8 +54,9 @@ function upsertMapEntry(
   if (!match) throw new Error(`Could not find ${mapName} in staticArtifacts.ts`);
 
   let body = match[2];
+  const escapedKey = key.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const entryRe = new RegExp(
-    `\\n\\s*${keyLiteral.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\s*:\\s*[^,\\n]+,?`
+    `\\n\\s*(?:${keyLiteral.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}|${escapedKey})\\s*:\\s*[^\\n]+,?`
   );
 
   if (entryRe.test(body)) {
@@ -118,7 +124,7 @@ export function vitePluginArtifactExport(projectRoot: string): Plugin {
             upsertMapEntry(
               mapFile,
               "processArtifactImages",
-              `"${body.key}"`,
+              body.key,
               `"${publicPath}"`
             );
             res.writeHead(200, { "Content-Type": "application/json" });
