@@ -51,6 +51,8 @@ export const processArtifactImages: Record<string, string> = {
   "5:0": "/artifacts/process/process-5-0.png",
   "5:1": "/artifacts/process/process-5-1.png",
   "5:2": "/artifacts/process/process-5-2.png",
+  "5:3": "/artifacts/process/process-5-3.png",
+  "5:4": "/artifacts/process/process-5-4.png",
 
 };
 
@@ -84,7 +86,9 @@ export function getProcessPreview(
   const published = processArtifactImages[key];
   if (isAdmin) {
     if (localPreview === null) return undefined;
-    if (localPreview) return localPreview;
+    if (localPreview) {
+      return localPreview;
+    }
     return published;
   }
   if (published) return published;

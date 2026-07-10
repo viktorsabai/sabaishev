@@ -35,8 +35,11 @@ function saveMap(data: ArtifactMap) {
   }
 }
 
-function artifactKey(stageIndex: number, artifactIndex: number) {
-  return `${stageIndex}:${artifactIndex}`;
+function isProcessDraft(preview: string | null | undefined): preview is string {
+  return (
+    typeof preview === "string" &&
+    (preview.startsWith("data:") || preview.startsWith("blob:"))
+  );
 }
 
 export default function ProcessWorkspace() {
@@ -149,6 +152,7 @@ export default function ProcessWorkspace() {
         saveMap(next);
         return next;
       });
+      setPreviewVersion((v) => v + 1);
     };
     reader.readAsDataURL(file);
     e.target.value = "";
@@ -171,19 +175,29 @@ export default function ProcessWorkspace() {
 
   const [exporting, setExporting] = useState(false);
   const [exportMsg, setExportMsg] = useState<string | null>(null);
+  const [previewVersion, setPreviewVersion] = useState(0);
 
   const publishedPath = processArtifactImages[previewKey];
   const showExport =
     isAdmin && needsProcessArtifactExport(previewKey, localPreview);
 
   const handleExport = async () => {
-    if (!localPreview || exporting) return;
+    if (!isProcessDraft(localPreview) || exporting) return;
     setExporting(true);
     setExportMsg(null);
     try {
       const result = await publishProcessArtifact(previewKey, localPreview);
+      const publicPath = result.publicPath;
+      if (publicPath) {
+        setPreviews((prev) => {
+          const next = { ...prev, [previewKey]: publicPath };
+          saveMap(next);
+          return next;
+        });
+        setPreviewVersion((v) => v + 1);
+      }
       setExportMsg(
-        `Сохранено в репо: ${result.publicPath ?? ""}\n\nДальше: git add + commit + push — и на проде увидят все.`
+        `Сохранено в репо: ${publicPath ?? ""}\n\nДальше: git add + commit + push — и на проде увидят все.`
       );
     } catch (e) {
       setExportMsg(
@@ -339,7 +353,12 @@ export default function ProcessWorkspace() {
                           onClick={() => setCarouselOpen(true)}
                         >
                           <img
-                            src={currentPreview}
+                            src={
+                              currentPreview +
+                              (currentPreview.startsWith("/")
+                                ? `?v=${previewVersion}`
+                                : "")
+                            }
                             alt={currentStage.artifacts[activeArtifact]}
                             className="h-full w-full object-contain bg-black/20"
                           />
