@@ -13,7 +13,7 @@ import { content } from "@/lib/content";
 import ScrollReveal from "./ScrollReveal";
 import SectionHeader from "./SectionHeader";
 import ArtifactPlaceholder from "./ArtifactPlaceholder";
-import { systemTag, systemNumber, textGradient } from "@/lib/systemUi";
+import { systemTag, systemNumber, textGradient, systemColorTag } from "@/lib/systemUi";
 import { useArtifactAdmin } from "@/lib/artifactAdmin";
 import {
   getStackImages,
@@ -143,12 +143,10 @@ export default function StackCapabilities() {
 
                   {card.tags?.length > 0 && (
                     <div className="mt-6 flex flex-wrap gap-2 md:mt-8">
-                      {card.tags.slice(0, 4).map((tag: string, i: number) => (
+                      {card.tags.map((tag: string, i: number) => (
                         <span
                           key={tag}
-                          className={`${systemTag.base} ${
-                            i === 0 ? systemTag.active : systemTag.idle
-                          }`}
+                          className={systemColorTag(i)}
                         >
                           {tag}
                         </span>
@@ -444,9 +442,7 @@ function StackCardModal({
             {card.tags?.map((tag: string, i: number) => (
               <span
                 key={tag}
-                className={`${systemTag.base} ${
-                  i === 0 ? systemTag.active : systemTag.idle
-                }`}
+                className={systemColorTag(i)}
               >
                 {tag}
               </span>

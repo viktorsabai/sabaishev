@@ -17,7 +17,7 @@ import {
 import ScrollReveal from "./ScrollReveal";
 import SectionHeader from "./SectionHeader";
 import ArtifactPlaceholder from "./ArtifactPlaceholder";
-import { progressGradient, systemTag, systemNumber, textGradient } from "@/lib/systemUi";
+import { progressGradient, systemTag, systemNumber, textGradient, systemColorTag } from "@/lib/systemUi";
 import { useArtifactAdmin } from "@/lib/artifactAdmin";
 import { getProductImages, productArtifactImages } from "@/lib/staticArtifacts";
 import { publishProductArtifacts } from "@/lib/artifactExport";
@@ -256,10 +256,10 @@ export default function ProductModules() {
                   </div>
 
                   <div className="flex flex-wrap gap-2 mb-4">
-                    {product.tags.slice(0, 3).map((tag: string) => (
+                    {product.tags.slice(0, 3).map((tag: string, i: number) => (
                       <span
                         key={tag}
-                        className={`${systemTag.base} ${systemTag.idle}`}
+                        className={systemColorTag(i)}
                       >
                         {tag}
                       </span>
@@ -662,10 +662,10 @@ function ProductDetailModal({
               TAGS
             </p>
             <div className="flex flex-wrap gap-2">
-              {product.tags.map((tag: string) => (
+              {product.tags.map((tag: string, i: number) => (
                 <span
                   key={tag}
-                  className={`${systemTag.base} ${systemTag.idle}`}
+                  className={systemColorTag(i)}
                 >
                   {tag}
                 </span>

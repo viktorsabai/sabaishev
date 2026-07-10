@@ -8,13 +8,6 @@ interface HeroProps {
   onContactClick: () => void;
 }
 
-const FLOAT_PLANES = [
-  { label: "TAIKA", x: "6%", y: "16%", rotate: -10, delay: 0, w: "w-48 md:w-64" },
-  { label: "MOO", x: "70%", y: "20%", rotate: 8, delay: 0.12, w: "w-40 md:w-56" },
-  { label: "Hospital", x: "10%", y: "64%", rotate: 6, delay: 0.22, w: "w-52 md:w-72" },
-  { label: "Farang", x: "66%", y: "60%", rotate: -7, delay: 0.32, w: "w-44 md:w-60" },
-];
-
 export default function Hero({ onExploreClick, onContactClick }: HeroProps) {
   const { language } = useLanguage();
   const hero = content[language].hero;
@@ -80,46 +73,7 @@ export default function Hero({ onExploreClick, onContactClick }: HeroProps) {
         />
       </div>
 
-      <div className="pointer-events-none absolute inset-0 hidden md:block">
-        {FLOAT_PLANES.map((plane) => (
-          <motion.div
-            key={plane.label}
-            className={`absolute ${plane.w}`}
-            style={{ left: plane.x, top: plane.y }}
-            initial={{ opacity: 0, y: 28 }}
-            animate={{
-              opacity: 0.5,
-              y: [0, -12, 0],
-              rotate: [plane.rotate, plane.rotate + 1.2, plane.rotate],
-            }}
-            transition={{
-              opacity: { duration: 1, delay: 0.35 + plane.delay },
-              y: {
-                duration: 6 + plane.delay * 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: plane.delay,
-              },
-              rotate: {
-                duration: 8 + plane.delay * 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: plane.delay,
-              },
-            }}
-          >
-            <div className="aspect-[4/3] overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-white/[0.09] via-purple-500/[0.07] to-blue-500/[0.08] shadow-[0_40px_80px_-40px_rgba(0,0,0,0.9)]">
-              <div className="flex h-full flex-col justify-end p-5 md:p-6">
-                <p className="text-lg font-semibold tracking-tight text-foreground/55 md:text-xl">
-                  {plane.label}
-                </p>
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(15,15,18,0.5)_58%,rgba(15,15,18,0.92)_100%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(15,15,18,0.35)_70%,rgba(15,15,18,0.85)_100%)]" />
 
       <motion.div
         variants={containerVariants}

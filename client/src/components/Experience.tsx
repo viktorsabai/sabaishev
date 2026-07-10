@@ -5,7 +5,7 @@ import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import SectionHeader from "./SectionHeader";
-import { systemTag, systemNumber, textGradient, progressGradient } from "@/lib/systemUi";
+import { systemTag, systemNumber, textGradient, progressGradient, systemTagTone } from "@/lib/systemUi";
 
 const SPRING = { type: "spring" as const, stiffness: 320, damping: 28 };
 const EASE = { duration: 0.32, ease: [0.23, 1, 0.32, 1] as const };
@@ -163,7 +163,7 @@ export default function Experience() {
             <div className="h-px bg-gradient-to-r from-transparent via-border/40 to-transparent mb-10" />
 
             <LayoutGroup>
-              <div className="flex flex-wrap gap-2 md:gap-3 justify-center">
+              <div className="flex flex-wrap gap-2.5 md:gap-3 justify-center">
                 {allSkills.map((skill: any) => {
                   const isRelevant = relevantSkillIds.includes(skill.id);
                   const relevantIndex = isRelevant
@@ -176,8 +176,8 @@ export default function Experience() {
                       layout
                       initial={false}
                       animate={{
-                        opacity: isRelevant ? 1 : 0.32,
-                        scale: isRelevant ? 1 : 0.94,
+                        opacity: isRelevant ? 1 : 0.28,
+                        scale: isRelevant ? 1 : 0.92,
                       }}
                       transition={{
                         ...EASE,
@@ -191,8 +191,10 @@ export default function Experience() {
                       whileHover={isRelevant ? { scale: 1.06, y: -2 } : undefined}
                       whileTap={isRelevant ? { scale: 0.96 } : undefined}
                       disabled={!isRelevant}
-                      className={`${systemTag.base} origin-center ${
-                        isRelevant ? systemTag.ghostActive : systemTag.ghostDim
+                      className={`${systemTag.lg} border origin-center ${
+                        isRelevant
+                          ? systemTagTone(relevantIndex)
+                          : `${systemTag.ghostDim} border-white/5`
                       }`}
                     >
                       {skill.title}
