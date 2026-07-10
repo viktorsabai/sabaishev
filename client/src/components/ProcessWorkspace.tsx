@@ -42,6 +42,10 @@ function isProcessDraft(preview: string | null | undefined): preview is string {
   );
 }
 
+function artifactKey(stageIndex: number, artifactIndex: number) {
+  return `${stageIndex}:${artifactIndex}`;
+}
+
 export default function ProcessWorkspace() {
   const { language } = useLanguage();
   const processContent = content[language].process;
