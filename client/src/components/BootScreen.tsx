@@ -2,13 +2,11 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { content } from "@/lib/content";
+import FairyMark from "./FairyMark";
 
 interface BootScreenProps {
   onComplete: () => void;
 }
-
-/** Male fairy — same mark as header */
-const FAIRY = "\u{1F9DA}\u{200D}\u{2642}\u{FE0F}";
 
 export default function BootScreen({ onComplete }: BootScreenProps) {
   const { language } = useLanguage();
@@ -69,8 +67,8 @@ export default function BootScreen({ onComplete }: BootScreenProps) {
       />
 
       <div className="relative z-10 flex flex-col items-center px-6">
-        <motion.span
-          className="select-none text-[88px] leading-none drop-shadow-[0_0_40px_rgba(236,72,153,0.35)] md:text-[112px]"
+        <motion.div
+          className="drop-shadow-[0_0_40px_rgba(236,72,153,0.35)]"
           initial={{ opacity: 0, scale: 0.6, filter: "blur(12px)" }}
           animate={{
             opacity: phase === "exit" ? 0 : 1,
@@ -87,10 +85,9 @@ export default function BootScreen({ onComplete }: BootScreenProps) {
                 ? { duration: 3.2, repeat: Infinity, ease: "easeInOut" }
                 : { duration: 0.8 },
           }}
-          aria-hidden
         >
-          {FAIRY}
-        </motion.span>
+          <FairyMark className="h-[88px] w-[88px] md:h-[112px] md:w-[112px]" />
+        </motion.div>
 
         <motion.p
           className="mt-10 max-w-[18rem] text-center font-sans text-[17px] font-medium leading-snug tracking-[-0.01em] text-foreground/80 md:mt-12 md:max-w-sm md:text-[20px]"

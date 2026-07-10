@@ -9,7 +9,7 @@
 
 export const productArtifactImages: Record<string, string[]> = {
   // taika: ["/artifacts/taika/01.png"],
-  taika: ["/artifacts/taika/taika-01.jpg"],
+  taika: ["/artifacts/taika/taika-01.jpg", "/artifacts/taika/taika-02.jpg", "/artifacts/taika/taika-03.jpg", "/artifacts/taika/taika-04.jpg"],
 
 };
 

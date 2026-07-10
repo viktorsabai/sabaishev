@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { content } from "@/lib/content";
+import FairyMark from "./FairyMark";
 
 type Phase = "think" | "type" | "hold" | "erase";
 
@@ -93,12 +94,7 @@ export default function HeaderTypingPresence() {
 
   return (
     <div className="flex min-w-0 items-center gap-3">
-      <span
-        className="shrink-0 text-[34px] leading-none md:text-[38px]"
-        aria-hidden
-      >
-        {"\u{1F9DA}\u{200D}\u{2642}\u{FE0F}"}
-      </span>
+      <FairyMark className="h-[34px] w-[34px] shrink-0 md:h-[38px] md:w-[38px]" />
 
       <div
         className="flex min-h-9 min-w-0 max-w-[min(58vw,20rem)] items-center rounded-[20px] rounded-bl-[6px] border border-white/[0.08] bg-white/[0.06] px-3.5 py-2 md:max-w-md md:min-h-10 md:px-4"
