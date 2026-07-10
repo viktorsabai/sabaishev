@@ -20,7 +20,7 @@ import ArtifactPlaceholder from "./ArtifactPlaceholder";
 import { progressGradient, systemTag, systemNumber, textGradient, systemColorTag } from "@/lib/systemUi";
 import { useArtifactAdmin } from "@/lib/artifactAdmin";
 import { getProductImages, productArtifactImages } from "@/lib/staticArtifacts";
-import { publishProductArtifacts } from "@/lib/artifactExport";
+import { publishProductArtifacts, needsArtifactExport } from "@/lib/artifactExport";
 
 function getStatusMeta(status: string) {
   const s = status.toLowerCase();
@@ -334,10 +334,9 @@ function ProductDetailModal({
   const [exportMsg, setExportMsg] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const isDraft =
-    isAdmin &&
-    localImages.length > 0 &&
-    !(productArtifactImages[product.id]?.length);
+  const publishedCount = productArtifactImages[product.id]?.length ?? 0;
+  const showExport =
+    isAdmin && needsArtifactExport("product", product.id, localImages.length);
 
   useEffect(() => {
     setSlide(0);
@@ -585,10 +584,12 @@ function ProductDetailModal({
               )}
             </div>
 
-            {isDraft && (
+            {showExport && (
               <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/[0.06] p-3">
                 <p className="text-xs leading-relaxed text-emerald-100/85">
-                  Черновик в браузере. Экспорт сам положит файлы в репозиторий.
+                  {publishedCount === 0
+                    ? "Черновик в браузере. Экспорт сам положит файлы в репозиторий."
+                    : `В репозитории ${publishedCount} из ${localImages.length}. Нажми экспорт — сохранятся все ${localImages.length}.`}
                 </p>
                 <button
                   type="button"

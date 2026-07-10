@@ -1,3 +1,5 @@
+import { productArtifactImages, stackArtifactImages } from "./staticArtifacts";
+
 function extensionFromDataUrl(dataUrl: string): string {
   if (dataUrl.startsWith("data:image/png")) return "png";
   if (dataUrl.startsWith("data:image/webp")) return "webp";
@@ -21,6 +23,20 @@ type ExportOk = {
 };
 
 type ExportErr = { ok: false; error: string };
+
+/** Admin has local images that are not fully published yet */
+export function needsArtifactExport(
+  kind: "product" | "stack",
+  id: string,
+  localCount: number
+): boolean {
+  if (localCount === 0) return false;
+  const published =
+    kind === "product"
+      ? (productArtifactImages[id]?.length ?? 0)
+      : (stackArtifactImages[id]?.length ?? 0);
+  return published === 0 || localCount !== published;
+}
 
 /** Writes file into client/public/artifacts and updates staticArtifacts.ts (dev only). */
 export async function publishProcessArtifact(

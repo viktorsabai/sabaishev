@@ -19,7 +19,7 @@ import {
   getStackImages,
   stackArtifactImages,
 } from "@/lib/staticArtifacts";
-import { publishStackArtifacts } from "@/lib/artifactExport";
+import { publishStackArtifacts, needsArtifactExport } from "@/lib/artifactExport";
 
 const STACK_ARTIFACTS_KEY = "viktor.stackArtifacts";
 
@@ -215,10 +215,9 @@ function StackCardModal({
   const [exportMsg, setExportMsg] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const isDraft =
-    isAdmin &&
-    localImages.length > 0 &&
-    !(stackArtifactImages[card.id]?.length);
+  const publishedCount = stackArtifactImages[card.id]?.length ?? 0;
+  const showExport =
+    isAdmin && needsArtifactExport("stack", card.id, localImages.length);
 
   const handleUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
@@ -409,8 +408,14 @@ function StackCardModal({
               )}
             </div>
 
-            {isDraft && (
+            {showExport && (
               <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/[0.06] p-3">
+                {publishedCount > 0 && (
+                  <p className="mb-2 text-xs leading-relaxed text-emerald-100/85">
+                    В репозитории {publishedCount} из {localImages.length}. Экспорт
+                    обновит все файлы.
+                  </p>
+                )}
                 <button
                   type="button"
                   onClick={handlePublish}
