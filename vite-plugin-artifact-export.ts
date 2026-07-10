@@ -14,7 +14,13 @@ type ProductBody = {
   dataUrls: string[];
 };
 
-type Body = ProcessBody | ProductBody;
+type StackBody = {
+  kind: "stack";
+  stackId: string;
+  dataUrls: string[];
+};
+
+type Body = ProcessBody | ProductBody | StackBody;
 
 function extFromDataUrl(dataUrl: string): string {
   if (dataUrl.startsWith("data:image/png")) return "png";
@@ -31,7 +37,7 @@ function writeDataUrl(filePath: string, dataUrl: string) {
 
 function upsertMapEntry(
   filePath: string,
-  mapName: "processArtifactImages" | "productArtifactImages",
+  mapName: "processArtifactImages" | "productArtifactImages" | "stackArtifactImages",
   keyLiteral: string,
   valueLiteral: string
 ) {
@@ -152,6 +158,36 @@ export function vitePluginArtifactExport(projectRoot: string): Plugin {
                 ok: true,
                 kind: "product",
                 productId: safeId,
+                publicPaths,
+              })
+            );
+            return;
+          }
+
+          if (body.kind === "stack") {
+            if (!body.stackId || !body.dataUrls?.length) {
+              throw new Error("stackId and dataUrls required");
+            }
+            const safeId = body.stackId.replace(/[^a-zA-Z0-9_-]/g, "");
+            if (!safeId) throw new Error("invalid stackId");
+            const publicPaths: string[] = [];
+            body.dataUrls.forEach((dataUrl, i) => {
+              const ext = extFromDataUrl(dataUrl);
+              const num = String(i + 1).padStart(2, "0");
+              const filename = `${safeId}-${num}.${ext}`;
+              const abs = path.join(publicRoot, "stack", filename);
+              const publicPath = `/artifacts/stack/${filename}`;
+              writeDataUrl(abs, dataUrl);
+              publicPaths.push(publicPath);
+            });
+            const list = `[${publicPaths.map((p) => `"${p}"`).join(", ")}]`;
+            upsertMapEntry(mapFile, "stackArtifactImages", safeId, list);
+            res.writeHead(200, { "Content-Type": "application/json" });
+            res.end(
+              JSON.stringify({
+                ok: true,
+                kind: "stack",
+                stackId: safeId,
                 publicPaths,
               })
             );

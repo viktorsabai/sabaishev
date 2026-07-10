@@ -40,9 +40,19 @@ export const content: Record<Language, any> = {
         { label: "Продукт", stage: 3 },
         { label: "UX/UI", stage: 4 },
         { label: "AI", stage: 6 },
-        { label: "Мобиль", stage: 7 },
+        { label: "iOS", stage: 7 },
         { label: "Web", stage: 5 },
         { label: "Автоматизация", stage: 8 },
+        { label: "Исследование", stage: 2 },
+        { label: "Проблема", stage: 1 },
+        { label: "Figma", stage: 4 },
+        { label: "Notion", stage: 2 },
+        { label: "Прототип", stage: 7 },
+        { label: "Запуск", stage: 8 },
+        { label: "Swift", stage: 7 },
+        { label: "Telegram", stage: 8 },
+        { label: "Cursor", stage: 6 },
+        { label: "MVP", stage: 3 },
       ],
       cta: {
         explore: "Смотреть продукты",
@@ -53,6 +63,13 @@ export const content: Record<Language, any> = {
     stackCapabilities: {
       title: "Стек и возможности",
       subtitle: "Технический арсенал и инструменты для полного цикла разработки",
+      openCase: "Смотреть пруф",
+      artifactsLabel: "Пруф",
+      uploadHint: "Загрузить пруф",
+      uploadMore: "Добавить ещё",
+      uploadFormats: "PNG, JPG — можно несколько",
+      artifactPlaceholderTitle: "Пруф скоро",
+      artifactPlaceholderHint: "Описание уже здесь — скрины добавлю",
       cards: [
         {
           id: "design-to-code",
@@ -60,6 +77,7 @@ export const content: Record<Language, any> = {
           subtitle: "Figma → Xcode",
           description:
             "Проектирую UI/UX в Figma сразу с учётом ограничений SwiftUI/UIKit. Компоненты, стили и автолейауты переносятся в Xcode один в один без потери логики и пикселей. Строгая архитектура от концепта до нативного кода.",
+          proof: "Figma → Xcode без потери пикселей: компоненты, стили, нативная вёрстка.",
           tags: ["Figma", "Xcode", "SwiftUI", "UIKit", "Design Systems"],
         },
         {
@@ -68,6 +86,7 @@ export const content: Record<Language, any> = {
           subtitle: "Cursor IDE + AI",
           description:
             "Использую Cursor IDE на стероидах. Написал жёсткие кастомные инструкции (.cursorrules) под свои проекты, чтобы AI-ассистент с первого раза генерировал чистый, типизированный код без галлюцинаций. Это заменяет небольшую команду разработки.",
+          proof: "Cursor + кастомные rules: скорость команды, качество соло-разработчика.",
           tags: ["Cursor IDE", "Claude", "GPT-4", "Code Generation"],
         },
         {
@@ -76,6 +95,7 @@ export const content: Record<Language, any> = {
           subtitle: "Модели и агенты",
           description:
             "Внедряю AI под конкретные задачи интерфейса и логики. Умею комбинировать движки: Claude 3.5 Sonnet — для сложного кода, GPT-4o — для аналитики данных, а также специализированные модели (pitch-tracking, аудио, парсинг). Настраиваю промпт-инжиниринг для стабильного отклика.",
+          proof: "LLM под задачу: код, аналитика, аудио, стабильные промпты.",
           tags: ["Claude", "GPT-4o", "LLM", "Audio", "Analytics", "Specialized Models"],
         },
         {
@@ -84,6 +104,7 @@ export const content: Record<Language, any> = {
           subtitle: "Видение и аналитика",
           description:
             "Управляю полным циклом жизни продукта. Отсекаю лишний овердизайн на этапе гипотез, собираю MVP, настраиваю аналитику и итерирую продукт на основе метрик.",
+          proof: "От гипотезы до метрик: MVP, аналитика, итерации без овердизайна.",
           tags: ["Strategy", "MVP", "Analytics", "Research", "Roadmap"],
         },
       ],
@@ -123,8 +144,8 @@ export const content: Record<Language, any> = {
           number: "002",
           name: "Hospital AI",
           type: "AI-ассистент для медицинского приема",
-          status: "Концепт / MVP",
-          progress: 42,
+          status: "Концепт / обсуждение",
+          progress: 12,
           link: null,
           tags: ["Медицина", "AI", "SPA", "Transcription", "PDF Export", "Thailand"],
           cardDescription: "Врачебный интерфейс с записью приема, автоматической расшифровкой и AI-структурированием протокола.",
@@ -140,8 +161,8 @@ export const content: Record<Language, any> = {
           number: "003",
           name: "MOO",
           type: "Сервис подписки на еду",
-          status: "Прототип / Web",
-          progress: 64,
+          status: "Тестинг с заказчиком",
+          progress: 100,
           link: "https://moo-beryl.vercel.app/",
           tags: ["FoodTech", "Subscription", "Mobile Web", "UX/UI", "Telegram", "Checkout"],
           cardDescription: "Подписка на еду, где рацион собираешь сам: категории, корзина и лёгкий повторный заказ.",
@@ -387,16 +408,16 @@ export const content: Record<Language, any> = {
         {
           id: "hospital-ai",
           name: "Hospital AI",
-          progress: 42,
-          status: "MVP scope",
+          progress: 12,
+          status: "Concept / discussion",
           description: "AI-ассистент для медицинского приема и документирования.",
           details: "Врачебный интерфейс с записью приема, автоматической расшифровкой, AI-структурированием протокола и экспортом PDF. Разработан для небольших клиник в Таиланде.",
         },
         {
           id: "moo",
           name: "MOO",
-          progress: 64,
-          status: "Prototype",
+          progress: 100,
+          status: "Client testing",
           description: "Сервис подписки на еду с персональным составлением рациона.",
           details: "Мобильный сервис, где пользователь сам собирает рацион из доступных категорий и блюд. Фокус на простом выборе, понятной корзине и легком повторном заказе.",
         },
@@ -577,9 +598,19 @@ export const content: Record<Language, any> = {
         { label: "Product", stage: 3 },
         { label: "UX/UI", stage: 4 },
         { label: "AI", stage: 6 },
-        { label: "Mobile", stage: 7 },
+        { label: "iOS", stage: 7 },
         { label: "Web", stage: 5 },
         { label: "Automation", stage: 8 },
+        { label: "Research", stage: 2 },
+        { label: "Problem", stage: 1 },
+        { label: "Figma", stage: 4 },
+        { label: "Notion", stage: 2 },
+        { label: "Prototype", stage: 7 },
+        { label: "Launch", stage: 8 },
+        { label: "Swift", stage: 7 },
+        { label: "Telegram", stage: 8 },
+        { label: "Cursor", stage: 6 },
+        { label: "MVP", stage: 3 },
       ],
       cta: {
         explore: "View products",
@@ -589,6 +620,13 @@ export const content: Record<Language, any> = {
     stackCapabilities: {
       title: "The Stack & Capabilities",
       subtitle: "Technical arsenal and tools for the full development cycle",
+      openCase: "View proof",
+      artifactsLabel: "Proof",
+      uploadHint: "Upload proof",
+      uploadMore: "Add more",
+      uploadFormats: "PNG, JPG — multiple files",
+      artifactPlaceholderTitle: "Proof coming soon",
+      artifactPlaceholderHint: "Description is here — screens coming next",
       cards: [
         {
           id: "design-to-code",
@@ -596,6 +634,7 @@ export const content: Record<Language, any> = {
           subtitle: "Figma → Xcode",
           description:
             "I design UI/UX in Figma with SwiftUI/UIKit constraints in mind. Components, styles and auto-layouts transfer into Xcode one-to-one — no lost logic, no lost pixels. Strict architecture from concept to native code.",
+          proof: "Figma → Xcode without pixel loss: components, styles, native layout.",
           tags: ["Figma", "Xcode", "SwiftUI", "UIKit", "Design Systems"],
         },
         {
@@ -604,6 +643,7 @@ export const content: Record<Language, any> = {
           subtitle: "Cursor IDE + AI",
           description:
             "I run Cursor IDE on steroids. Custom .cursorrules tuned to my projects so the AI assistant ships clean, typed code on the first pass — without hallucinations. It replaces a small development team.",
+          proof: "Cursor + custom rules: team speed, solo-builder quality.",
           tags: ["Cursor IDE", "Claude", "GPT-4", "Code Generation"],
         },
         {
@@ -612,6 +652,7 @@ export const content: Record<Language, any> = {
           subtitle: "Models & Agents",
           description:
             "I embed AI for specific UI and logic jobs. I combine engines: Claude 3.5 Sonnet for complex code, GPT-4o for data analytics, plus specialized models (pitch-tracking, audio, parsing). Prompt engineering for stable responses.",
+          proof: "Right LLM for the job: code, analytics, audio, stable prompts.",
           tags: ["Claude", "GPT-4o", "LLM", "Audio Processing", "Data Analytics", "Specialized Models"],
         },
         {
@@ -620,6 +661,7 @@ export const content: Record<Language, any> = {
           subtitle: "Vision & Analytics",
           description:
             "I own the full product lifecycle. Cut overdesign at the hypothesis stage, ship MVP, wire analytics, and iterate from metrics.",
+          proof: "Hypothesis to metrics: MVP, analytics, iteration without overdesign.",
           tags: ["Product Strategy", "MVP", "Analytics", "User Research", "Roadmapping"],
         },
       ],
@@ -659,8 +701,8 @@ export const content: Record<Language, any> = {
           number: "002",
           name: "Hospital AI",
           type: "AI assistant for medical appointments",
-          status: "Concept / MVP scope",
-          progress: 42,
+          status: "Concept / discussion",
+          progress: 12,
           link: null,
           tags: ["Healthcare", "AI", "SPA", "Transcription", "PDF Export", "Thailand"],
           cardDescription: "Doctor interface with appointment recording, auto transcription and AI-structured protocol.",
@@ -676,8 +718,8 @@ export const content: Record<Language, any> = {
           number: "003",
           name: "MOO",
           type: "Food subscription service",
-          status: "Prototype / Web concept",
-          progress: 64,
+          status: "Client testing",
+          progress: 100,
           link: "https://moo-beryl.vercel.app/",
           tags: ["FoodTech", "Subscription", "Mobile Web", "UX/UI", "Telegram", "Checkout"],
           cardDescription: "Food subscription where you build your own diet: categories, cart and easy reordering.",
@@ -921,16 +963,16 @@ export const content: Record<Language, any> = {
         {
           id: "hospital-ai",
           name: "Hospital AI",
-          progress: 42,
-          status: "MVP scope",
+          progress: 12,
+          status: "Concept / discussion",
           description: "AI assistant for medical appointments and documentation.",
           details: "Doctor interface with appointment recording, automatic transcription, AI-structured protocol and PDF export. Developed for small clinics in Thailand.",
         },
         {
           id: "moo",
           name: "MOO",
-          progress: 64,
-          status: "Prototype",
+          progress: 100,
+          status: "Client testing",
           description: "Food subscription service with personalized diet composition.",
           details: "Mobile service where users build their own diet from available categories and dishes. Focus on simple selection, clear cart and easy reordering.",
         },
@@ -1111,9 +1153,19 @@ export const content: Record<Language, any> = {
         { label: "Product", stage: 3 },
         { label: "UX/UI", stage: 4 },
         { label: "AI", stage: 6 },
-        { label: "Mobile", stage: 7 },
+        { label: "iOS", stage: 7 },
         { label: "Web", stage: 5 },
         { label: "Automation", stage: 8 },
+        { label: "Research", stage: 2 },
+        { label: "Problem", stage: 1 },
+        { label: "Figma", stage: 4 },
+        { label: "Notion", stage: 2 },
+        { label: "Prototype", stage: 7 },
+        { label: "Launch", stage: 8 },
+        { label: "Swift", stage: 7 },
+        { label: "Telegram", stage: 8 },
+        { label: "Cursor", stage: 6 },
+        { label: "MVP", stage: 3 },
       ],
       cta: {
         explore: "ดูผลิตภัณฑ์",
@@ -1123,6 +1175,13 @@ export const content: Record<Language, any> = {
     stackCapabilities: {
       title: "สแต็กและความสามารถ",
       subtitle: "คลังเครื่องมือและเทคโนโลยีสำหรับวงจรการพัฒนาแบบครบวงจร",
+      openCase: "ดูหลักฐาน",
+      artifactsLabel: "หลักฐาน",
+      uploadHint: "อัปโหลดหลักฐาน",
+      uploadMore: "เพิ่มอีก",
+      uploadFormats: "PNG, JPG — หลายไฟล์ได้",
+      artifactPlaceholderTitle: "หลักฐานเร็ว ๆ นี้",
+      artifactPlaceholderHint: "มีคำอธิบายแล้ว — รอภาพหน้าจอ",
       cards: [
         {
           id: "design-to-code",
@@ -1130,6 +1189,7 @@ export const content: Record<Language, any> = {
           subtitle: "Figma → Xcode",
           description:
             "ออกแบบ UI/UX ใน Figma โดยคำนึงถึงข้อจำกัดของ SwiftUI/UIKit คอมโพเนนต์ สไตล์ และออโต้เลย์เอาต์ย้ายไป Xcode แบบหนึ่งต่อหนึ่ง โดยไม่สูญเสียตรรกะและพิกเซล",
+          proof: "Figma → Xcode ไม่เสียพิกเซล: คอมโพเนนต์ สไตล์ เลย์เอาต์เนทีฟ",
           tags: ["Figma", "Xcode", "SwiftUI", "UIKit", "Design Systems"],
         },
         {
@@ -1138,6 +1198,7 @@ export const content: Record<Language, any> = {
           subtitle: "Cursor IDE + AI",
           description:
             "ใช้ Cursor IDE แบบเต็มกำลัง พร้อม .cursorrules ที่ปรับแต่งเอง เพื่อให้ AI สร้างโค้ดที่สะอาดและมี type ตั้งแต่ครั้งแรก — แทนทีมพัฒนาขนาดเล็ก",
+          proof: "Cursor + rules กำหนดเอง: ความเร็วทีม คุณภาพ solo builder",
           tags: ["Cursor IDE", "Claude", "GPT-4", "Code Generation"],
         },
         {
@@ -1146,6 +1207,7 @@ export const content: Record<Language, any> = {
           subtitle: "Models & Agents",
           description:
             "ฝัง AI ตามงาน UI และลอจิกจริง รวมเอนจิน: Claude 3.5 Sonnet สำหรับโค้ดซับซ้อน, GPT-4o สำหรับวิเคราะห์ข้อมูล และโมเดลเฉพาะทาง พร้อม prompt engineering ที่เสถียร",
+          proof: "LLM ตรงงาน: โค้ด วิเคราะห์ เสียง พรอมปต์เสถียร",
           tags: ["Claude", "GPT-4o", "LLM", "Audio Processing", "Data Analytics", "Specialized Models"],
         },
         {
@@ -1154,6 +1216,7 @@ export const content: Record<Language, any> = {
           subtitle: "Vision & Analytics",
           description:
             "ดูแลวงจรชีวิตผลิตภัณฑ์ทั้งหมด ตัด overdesign ตั้งแต่สมมติฐาน สร้าง MVP ตั้งค่า analytics และวนซ้ำจากเมตริก",
+          proof: "จากสมมติฐานถึงเมตริก: MVP analytics วนซ้ำไม่ overdesign",
           tags: ["Product Strategy", "MVP", "Analytics", "User Research", "Roadmapping"],
         },
       ],
@@ -1204,8 +1267,8 @@ export const content: Record<Language, any> = {
           number: "002",
           name: "Hospital AI",
           type: "ผู้ช่วย AI สำหรับการนัดหมายแพทย์",
-          status: "แนวคิด / MVP",
-          progress: 42,
+          status: "แนวคิด / หารือ",
+          progress: 12,
           link: null,
           tags: ["Healthcare", "AI", "SPA", "Transcription", "PDF Export", "Thailand"],
           cardDescription: "อินเตอร์เฟซแพทย์พร้อมบันทึกนัดหมาย ถอดเสียงอัตโนมัติ และโปรโตคอล AI",
@@ -1221,8 +1284,8 @@ export const content: Record<Language, any> = {
           number: "003",
           name: "MOO",
           type: "บริการสมัครสมาชิกอาหาร",
-          status: "ต้นแบบ / Web",
-          progress: 64,
+          status: "ทดสอบกับลูกค้า",
+          progress: 100,
           link: "https://moo-beryl.vercel.app/",
           tags: ["FoodTech", "Subscription", "Mobile Web", "UX/UI", "Telegram", "Checkout"],
           cardDescription: "สมัครสมาชิกอาหารที่สร้างเมนูเอง: หมวดหมู่ ตะกร้า และสั่งซ้ำง่าย",
@@ -1466,16 +1529,16 @@ export const content: Record<Language, any> = {
         {
           id: "hospital-ai",
           name: "Hospital AI",
-          progress: 42,
-          status: "MVP scope",
+          progress: 12,
+          status: "Concept / discussion",
           description: "ผู้ช่วย AI สำหรับการนัดหมายแพทย์และการจัดเอกสาร",
           details: "อินเตอร์เฟซแพทย์พร้อมการบันทึกการนัดหมาย การถอดเสียงอัตโนมัติ โปรโตคอล AI-structured และการส่งออก PDF พัฒนาสำหรับคลินิกเล็ก ๆ ในประเทศไทย",
         },
         {
           id: "moo",
           name: "MOO",
-          progress: 64,
-          status: "Prototype",
+          progress: 100,
+          status: "Client testing",
           description: "บริการสมัครสมาชิกอาหารพร้อมการจัดส่วนประกอบอาหารแบบส่วนบุคคล",
           details: "บริการมือถือที่ผู้ใช้สร้างอาหารของตนเองจากหมวดหมู่และจานอาหารที่มีอยู่ เน้นการเลือกที่ง่าย ตะกร้าที่ชัดเจน และการสั่งซื้ำซ้ำที่ง่าย",
         },

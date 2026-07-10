@@ -59,6 +59,24 @@ export async function publishProductArtifacts(
   return json;
 }
 
+export async function publishStackArtifacts(
+  stackId: string,
+  dataUrls: string[]
+): Promise<ExportOk> {
+  const res = await fetch("/__viktor__/export-artifact", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ kind: "stack", stackId, dataUrls }),
+  });
+  const json = (await res.json()) as ExportOk | ExportErr;
+  if (!res.ok || !json.ok) {
+    throw new Error(
+      !json.ok ? json.error : `Export failed (${res.status})`
+    );
+  }
+  return json;
+}
+
 /** Fallback if not on vite dev server */
 export function exportProcessArtifact(key: string, dataUrl: string) {
   const ext = extensionFromDataUrl(dataUrl);

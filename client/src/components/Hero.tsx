@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { content } from "@/lib/content";
-import { systemTag } from "@/lib/systemUi";
+import HeroMarquee from "./HeroMarquee";
 
 interface HeroProps {
   onExploreClick: () => void;
@@ -54,9 +54,8 @@ export default function Hero({ onExploreClick, onContactClick }: HeroProps) {
   return (
     <section
       id="hero"
-      className="relative flex min-h-[calc(100dvh-4rem)] flex-col justify-center px-4 pb-16 pt-6 md:min-h-screen md:items-center md:justify-center md:pb-0 md:pt-0 overflow-hidden"
+      className="relative flex min-h-[calc(100dvh-4rem)] flex-col justify-center overflow-hidden px-4 pb-16 pt-6 md:min-h-screen md:items-center md:justify-center md:pb-0 md:pt-0"
     >
-      {/* Soft light field — Apple-like depth */}
       <div className="pointer-events-none absolute inset-0">
         <div
           className="absolute left-1/2 top-[18%] h-[42rem] w-[42rem] -translate-x-1/2 rounded-full opacity-45 blur-[110px]"
@@ -81,7 +80,6 @@ export default function Hero({ onExploreClick, onContactClick }: HeroProps) {
         />
       </div>
 
-      {/* Floating product planes — soft screens, not cards */}
       <div className="pointer-events-none absolute inset-0 hidden md:block">
         {FLOAT_PLANES.map((plane) => (
           <motion.div
@@ -112,7 +110,7 @@ export default function Hero({ onExploreClick, onContactClick }: HeroProps) {
           >
             <div className="aspect-[4/3] overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-white/[0.09] via-purple-500/[0.07] to-blue-500/[0.08] shadow-[0_40px_80px_-40px_rgba(0,0,0,0.9)]">
               <div className="flex h-full flex-col justify-end p-5 md:p-6">
-                <p className="text-lg md:text-xl font-semibold tracking-tight text-foreground/55">
+                <p className="text-lg font-semibold tracking-tight text-foreground/55 md:text-xl">
                   {plane.label}
                 </p>
               </div>
@@ -121,73 +119,41 @@ export default function Hero({ onExploreClick, onContactClick }: HeroProps) {
         ))}
       </div>
 
-      {/* Soft vignette so text stays readable */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(15,15,18,0.5)_58%,rgba(15,15,18,0.92)_100%)]" />
 
       <motion.div
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="relative z-10 text-center max-w-5xl mx-auto px-4"
+        className="relative z-10 mx-auto w-full max-w-5xl px-4 text-center"
       >
         <motion.h1
           variants={itemVariants}
-          className="text-4xl sm:text-5xl md:text-display-md lg:text-display-lg font-bold text-foreground mb-6 md:mb-10 lg:mb-12 leading-tight tracking-tight"
+          className="mb-6 text-4xl font-bold leading-tight tracking-tight text-foreground sm:text-5xl md:mb-10 md:text-display-md lg:mb-12 lg:text-display-lg"
         >
           {hero.title}
         </motion.h1>
 
         <motion.p
           variants={itemVariants}
-          className="text-sm sm:text-base md:text-lg lg:text-xl text-foreground-secondary mb-10 md:mb-14 max-w-2xl mx-auto leading-relaxed"
+          className="mx-auto mb-10 max-w-2xl text-sm leading-relaxed text-foreground-secondary sm:text-base md:mb-12 md:text-lg lg:text-xl"
         >
           {hero.subtitle}
         </motion.p>
 
-        <motion.div
-          variants={itemVariants}
-          className="flex flex-wrap gap-2.5 md:gap-3 justify-center mb-12 md:mb-16"
-        >
-          {quickLinks.map(
-            (link: { label: string; stage: number }, index: number) => (
-              <motion.button
-                key={link.label}
-                type="button"
-                initial={{ opacity: 0, scale: 0.88 }}
-                animate={{
-                  opacity: 1,
-                  scale: [1, 1.045, 1],
-                }}
-                transition={{
-                  opacity: { delay: 0.45 + index * 0.05, duration: 0.4 },
-                  scale: {
-                    delay: 0.9 + index * 0.35,
-                    duration: 2.8,
-                    repeat: Infinity,
-                    repeatDelay: 3.2,
-                    ease: "easeInOut",
-                  },
-                }}
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.96 }}
-                onClick={() => handleQuickLink(link.stage)}
-                className={`${systemTag.base} ${systemTag.interactive} shadow-[0_0_0_1px_rgba(255,255,255,0.02)]`}
-              >
-                {link.label}
-              </motion.button>
-            )
-          )}
+        <motion.div variants={itemVariants}>
+          <HeroMarquee links={quickLinks} onLinkTap={handleQuickLink} />
         </motion.div>
 
         <motion.div
           variants={itemVariants}
-          className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center"
+          className="flex flex-col justify-center gap-3 sm:flex-row md:gap-4"
         >
           <motion.button
             onClick={onExploreClick}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="px-7 md:px-9 py-3.5 md:py-4 bg-foreground text-background font-semibold rounded-xl text-sm md:text-base transition-all hover:shadow-[0_8px_30px_-8px_rgba(244,241,234,0.35)]"
+            className="rounded-xl bg-foreground px-7 py-3.5 text-sm font-semibold text-background transition-all hover:shadow-[0_8px_30px_-8px_rgba(244,241,234,0.35)] md:px-9 md:py-4 md:text-base"
           >
             {hero.cta.explore}
           </motion.button>
@@ -195,7 +161,7 @@ export default function Hero({ onExploreClick, onContactClick }: HeroProps) {
             onClick={onContactClick}
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            className="px-7 md:px-9 py-3.5 md:py-4 border border-foreground/40 text-foreground font-semibold rounded-xl text-sm md:text-base transition-all hover:border-foreground hover:bg-foreground/5"
+            className="rounded-xl border border-foreground/40 px-7 py-3.5 text-sm font-semibold text-foreground transition-all hover:border-foreground hover:bg-foreground/5 md:px-9 md:py-4 md:text-base"
           >
             {hero.cta.contact}
           </motion.button>
@@ -205,9 +171,9 @@ export default function Hero({ onExploreClick, onContactClick }: HeroProps) {
       <motion.div
         animate={{ y: [0, 8, 0] }}
         transition={{ duration: 2.2, repeat: Infinity }}
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 text-foreground-muted z-10"
+        className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 text-foreground-muted"
       >
-        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"

@@ -485,7 +485,7 @@ function ProductDetailModal({
                       key={`${product.id}-${slide}`}
                       src={images[slide]}
                       alt={`${product.name} artifact ${slide + 1}`}
-                      className="w-full h-full object-cover"
+                      className="h-full w-full object-contain"
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: -20 }}

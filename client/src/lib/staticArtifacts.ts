@@ -11,6 +11,10 @@ export const productArtifactImages: Record<string, string[]> = {
   // taika: ["/artifacts/taika/01.png"],
 };
 
+export const stackArtifactImages: Record<string, string[]> = {
+  // "design-to-code": ["/artifacts/stack/design-to-code-01.png"],
+};
+
 export const processArtifactImages: Record<string, string> = {
   "0:0": "/artifacts/process/process-0-0.png",
   "0:1": "/artifacts/process/process-0-1.png",
@@ -18,6 +22,17 @@ export const processArtifactImages: Record<string, string> = {
   "0:3": "/artifacts/process/process-0-3.png",
   "0:4": "/artifacts/process/process-0-4.png",
 };
+
+export function getStackImages(
+  stackId: string,
+  localImages: string[],
+  isAdmin: boolean
+): string[] {
+  const published = stackArtifactImages[stackId] ?? [];
+  if (isAdmin && localImages.length > 0) return localImages;
+  if (published.length > 0) return published;
+  return isAdmin ? localImages : [];
+}
 
 export function getProductImages(
   productId: string,
