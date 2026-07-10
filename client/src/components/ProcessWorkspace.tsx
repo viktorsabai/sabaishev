@@ -8,7 +8,7 @@ import ArtifactPlaceholder from "./ArtifactPlaceholder";
 import ProcessArtifactCarousel from "./ProcessArtifactCarousel";
 import { systemNumber, systemTag, textGradient, progressGradient } from "@/lib/systemUi";
 import { useArtifactAdmin } from "@/lib/artifactAdmin";
-import { getProcessPreview, processArtifactImages } from "@/lib/staticArtifacts";
+import { getProcessPreview, processArtifactImages, isProcessLocalDraft } from "@/lib/staticArtifacts";
 import { publishProcessArtifact, needsProcessArtifactExport } from "@/lib/artifactExport";
 import { toolsForArtifact } from "@/lib/artifactTools";
 
@@ -21,7 +21,30 @@ type ArtifactMap = Record<string, string | null>; // null = admin cleared publis
 function loadMap(): ArtifactMap {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : {};
+    if (!raw) return {};
+
+    const parsed = JSON.parse(raw) as ArtifactMap;
+    const cleaned: ArtifactMap = {};
+    let changed = false;
+
+    for (const [key, value] of Object.entries(parsed)) {
+      if (value === null) {
+        cleaned[key] = null;
+        continue;
+      }
+      if (typeof value !== "string") {
+        changed = true;
+        continue;
+      }
+      if (value.startsWith("/artifacts/") || !isProcessLocalDraft(value)) {
+        changed = true;
+        continue;
+      }
+      cleaned[key] = value;
+    }
+
+    if (changed) saveMap(cleaned);
+    return cleaned;
   } catch {
     return {};
   }
@@ -36,10 +59,7 @@ function saveMap(data: ArtifactMap) {
 }
 
 function isProcessDraft(preview: string | null | undefined): preview is string {
-  return (
-    typeof preview === "string" &&
-    (preview.startsWith("data:") || preview.startsWith("blob:"))
-  );
+  return isProcessLocalDraft(preview);
 }
 
 function artifactKey(stageIndex: number, artifactIndex: number) {
@@ -194,7 +214,8 @@ export default function ProcessWorkspace() {
       const publicPath = result.publicPath;
       if (publicPath) {
         setPreviews((prev) => {
-          const next = { ...prev, [previewKey]: publicPath };
+          const next = { ...prev };
+          delete next[previewKey];
           saveMap(next);
           return next;
         });

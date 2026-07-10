@@ -53,6 +53,7 @@ export const processArtifactImages: Record<string, string> = {
   "5:2": "/artifacts/process/process-5-2.png",
   "5:3": "/artifacts/process/process-5-3.png",
   "5:4": "/artifacts/process/process-5-4.png",
+  "6:0": "/artifacts/process/process-6-0.png",
 
 };
 
@@ -78,6 +79,16 @@ export function getProductImages(
   return isAdmin ? localImages : [];
 }
 
+export function isProcessLocalDraft(
+  preview: string | null | undefined
+): preview is string {
+  return (
+    typeof preview === "string" &&
+    (preview.startsWith("data:") || preview.startsWith("blob:")) &&
+    preview.length > 256
+  );
+}
+
 export function getProcessPreview(
   key: string,
   localPreview: string | null | undefined,
@@ -86,9 +97,7 @@ export function getProcessPreview(
   const published = processArtifactImages[key];
   if (isAdmin) {
     if (localPreview === null) return undefined;
-    if (localPreview) {
-      return localPreview;
-    }
+    if (isProcessLocalDraft(localPreview)) return localPreview;
     return published;
   }
   if (published) return published;

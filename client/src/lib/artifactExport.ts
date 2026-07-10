@@ -2,6 +2,7 @@ import {
   productArtifactImages,
   stackArtifactImages,
   processArtifactImages,
+  isProcessLocalDraft,
 } from "./staticArtifacts";
 
 function extensionFromDataUrl(dataUrl: string): string {
@@ -47,10 +48,7 @@ export function needsProcessArtifactExport(
   key: string,
   localPreview: string | null | undefined
 ): boolean {
-  if (!localPreview) return false;
-  const published = processArtifactImages[key];
-  if (!published) return true;
-  return localPreview.startsWith("data:") || localPreview.startsWith("blob:");
+  return isProcessLocalDraft(localPreview);
 }
 
 /** Writes file into client/public/artifacts and updates staticArtifacts.ts (dev only). */
