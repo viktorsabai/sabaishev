@@ -17,6 +17,8 @@ export const productArtifactImages: Record<string, string[]> = {
 export const stackArtifactImages: Record<string, string[]> = {
   // "design-to-code": ["/artifacts/stack/design-to-code-01.png"],
   "design-to-code": ["/artifacts/stack/design-to-code-01.png"],
+  "supercharged-dev": ["/artifacts/stack/supercharged-dev-01.jpg"],
+  "ai-integration": ["/artifacts/stack/ai-integration-01.png"],
 
 };
 
@@ -36,6 +38,19 @@ export const processArtifactImages: Record<string, string> = {
   "2:2": "/artifacts/process/process-2-2.png",
   "2:3": "/artifacts/process/process-2-3.png",
   "2:4": "/artifacts/process/process-2-4.png",
+  "3:0": "/artifacts/process/process-3-0.png",
+  "3:1": "/artifacts/process/process-3-1.png",
+  "3:2": "/artifacts/process/process-3-2.png",
+  "3:3": "/artifacts/process/process-3-3.png",
+  "3:4": "/artifacts/process/process-3-4.png",
+  "4:0": "/artifacts/process/process-4-0.png",
+  "4:1": "/artifacts/process/process-4-1.png",
+  "4:2": "/artifacts/process/process-4-2.png",
+  "4:3": "/artifacts/process/process-4-3.png",
+  "4:4": "/artifacts/process/process-4-4.png",
+  "5:0": "/artifacts/process/process-5-0.png",
+  "5:1": "/artifacts/process/process-5-1.png",
+  "5:2": "/artifacts/process/process-5-2.png",
 
 };
 
@@ -63,11 +78,15 @@ export function getProductImages(
 
 export function getProcessPreview(
   key: string,
-  localPreview: string | undefined,
+  localPreview: string | null | undefined,
   isAdmin: boolean
 ): string | undefined {
   const published = processArtifactImages[key];
-  if (isAdmin && localPreview) return localPreview;
+  if (isAdmin) {
+    if (localPreview === null) return undefined;
+    if (localPreview) return localPreview;
+    return published;
+  }
   if (published) return published;
-  return isAdmin ? localPreview : undefined;
+  return undefined;
 }

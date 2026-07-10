@@ -1,4 +1,8 @@
-import { productArtifactImages, stackArtifactImages } from "./staticArtifacts";
+import {
+  productArtifactImages,
+  stackArtifactImages,
+  processArtifactImages,
+} from "./staticArtifacts";
 
 function extensionFromDataUrl(dataUrl: string): string {
   if (dataUrl.startsWith("data:image/png")) return "png";
@@ -36,6 +40,17 @@ export function needsArtifactExport(
       ? (productArtifactImages[id]?.length ?? 0)
       : (stackArtifactImages[id]?.length ?? 0);
   return published === 0 || localCount !== published;
+}
+
+/** Process slot has a local draft that still needs (re-)export */
+export function needsProcessArtifactExport(
+  key: string,
+  localPreview: string | null | undefined
+): boolean {
+  if (!localPreview) return false;
+  const published = processArtifactImages[key];
+  if (!published) return true;
+  return localPreview.startsWith("data:") || localPreview.startsWith("blob:");
 }
 
 /** Writes file into client/public/artifacts and updates staticArtifacts.ts (dev only). */

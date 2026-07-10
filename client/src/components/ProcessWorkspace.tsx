@@ -9,14 +9,14 @@ import ProcessArtifactCarousel from "./ProcessArtifactCarousel";
 import { systemNumber, systemTag, textGradient, progressGradient } from "@/lib/systemUi";
 import { useArtifactAdmin } from "@/lib/artifactAdmin";
 import { getProcessPreview, processArtifactImages } from "@/lib/staticArtifacts";
-import { publishProcessArtifact } from "@/lib/artifactExport";
+import { publishProcessArtifact, needsProcessArtifactExport } from "@/lib/artifactExport";
 import { toolsForArtifact } from "@/lib/artifactTools";
 
 const INACTIVE = "#62626a";
 const SPRING = { type: "spring" as const, stiffness: 300, damping: 30 };
 const STORAGE_KEY = "viktor.processArtifacts";
 
-type ArtifactMap = Record<string, string>; // `${stageIndex}:${artifactIndex}` → dataURL
+type ArtifactMap = Record<string, string | null>; // null = admin cleared published slot
 
 function loadMap(): ArtifactMap {
   try {
@@ -154,10 +154,16 @@ export default function ProcessWorkspace() {
     e.target.value = "";
   };
 
-  const handleRemove = () => {
+  const handleRemove = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     setPreviews((prev) => {
       const next = { ...prev };
-      delete next[previewKey];
+      if (processArtifactImages[previewKey]) {
+        next[previewKey] = null;
+      } else {
+        delete next[previewKey];
+      }
       saveMap(next);
       return next;
     });
@@ -166,8 +172,9 @@ export default function ProcessWorkspace() {
   const [exporting, setExporting] = useState(false);
   const [exportMsg, setExportMsg] = useState<string | null>(null);
 
-  const isDraft =
-    isAdmin && Boolean(localPreview) && !processArtifactImages[previewKey];
+  const publishedPath = processArtifactImages[previewKey];
+  const showExport =
+    isAdmin && needsProcessArtifactExport(previewKey, localPreview);
 
   const handleExport = async () => {
     if (!localPreview || exporting) return;
@@ -366,7 +373,10 @@ export default function ProcessWorkspace() {
                             >
                               <button
                                 type="button"
-                                onClick={() => fileRef.current?.click()}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  fileRef.current?.click();
+                                }}
                                 className="rounded-full bg-black/55 p-2 text-white backdrop-blur-sm hover:bg-black/75"
                                 title="Replace"
                               >
@@ -440,14 +450,20 @@ export default function ProcessWorkspace() {
                     <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/[0.04]" />
                   </div>
 
-                  {isDraft && (
+                  {showExport && (
                     <div className="mt-3 rounded-xl border border-emerald-400/20 bg-emerald-400/[0.06] p-3 md:p-4">
                       <p className="text-xs leading-relaxed text-emerald-100/85">
-                        Черновик в браузере. Нажми экспорт — файл сам ляжет в{" "}
-                        <span className="font-medium text-emerald-50">
-                          public/artifacts
-                        </span>{" "}
-                        и пропишется в коде. Потом только git push.
+                        {publishedPath
+                          ? "Новая версия в браузере. Экспорт перезапишет файл в репозитории — потом git push."
+                          : "Черновик в браузере. Нажми экспорт — файл сам ляжет в "}
+                        {!publishedPath && (
+                          <>
+                            <span className="font-medium text-emerald-50">
+                              public/artifacts
+                            </span>{" "}
+                            и пропишется в коде. Потом только git push.
+                          </>
+                        )}
                       </p>
                       <button
                         type="button"
