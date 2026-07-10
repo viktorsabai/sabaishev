@@ -111,7 +111,7 @@ export const content: Record<Language, any> = {
     },
     // Product Modules
     productModules: {
-      title: "Модули продуктов",
+      title: "Продукты и кейсы",
       openCase: "Открыть кейс",
       visitSite: "Открыть сайт",
       progressLabel: "Прогресс",
@@ -228,8 +228,8 @@ export const content: Record<Language, any> = {
     },
     // Process Section
     process: {
-      caption: "PROCESS",
-      title: "Процесс",
+      caption: "КАК СОЗДАЮ",
+      title: "Как я создаю",
       subtitle: "Большинство людей закрывают один-два этапа. Я собираю всю систему.",
       previousStep: "Предыдущий этап",
       nextStep: "Следующий этап",
@@ -290,7 +290,7 @@ export const content: Record<Language, any> = {
     // Experience Section
     experience: {
       title: "Опыт",
-      intro: "15+ лет в продукте и IT",
+      intro: "17+ лет — от логистики и e-commerce до платформ, AI и собственных продуктов",
       // Companies (Career Path)
       companies: [
         {
@@ -298,40 +298,64 @@ export const content: Record<Language, any> = {
           title: "Яндекс",
           startYear: 2018,
           endYear: 2021,
-          relevantSkills: ["big-tech", "marketplaces", "web-products", "ai-products"],
+          relevantSkills: ["big-tech", "marketplaces", "web-products", "ecommerce"],
+          role: "Руководитель направления развития сервиса доставки",
           blurb:
-            "Крупнейшая IT-компания России — как Google + Amazon: поиск, карты, маркетплейсы, облако и AI для сотен миллионов.",
-          role: "Product & UX в big-tech продуктах",
+            "Развитие delivery-экосистемы одного из крупнейших маркетплейсов России — модели доставки, партнёрская сеть и интеграционная архитектура.",
+          highlights: [
+            "Запуск same-day и on-demand доставки",
+            "Масштабирование федеральной партнёрской сети",
+            "Оптимизация CPO и рост SLA",
+            "Продуктовые требования и развитие интеграционной архитектуры",
+          ],
         },
         {
           id: "sber",
           title: "Сбер",
           startYear: 2021,
           endYear: 2022,
-          relevantSkills: ["big-tech", "ai-products", "web-products", "mobile"],
+          relevantSkills: ["big-tech", "ai-products", "web-products", "ecommerce"],
+          role: "Head of Partner Integrations · SberTech",
           blurb:
-            "Экосистема банка и tech — как JPMorgan + Apple Pay / AWS: AI, финтех, облако и digital для миллионов.",
-          role: "AI-продукты и digital-сервисы",
+            "Руководство интеграциями с федеральными логистическими провайдерами: единая архитектура, масштаб и кросс-функциональная координация.",
+          highlights: [
+            "Агрегированная модель взаимодействия с партнёрами",
+            "Единая архитектура API-интеграций",
+            "Команда BA, SA, Dev, QA, Operations",
+            "Стратегия развития направления и масштабируемость",
+          ],
         },
         {
           id: "samokat",
           title: "Samokat",
           startYear: 2022,
           endYear: 2025,
-          relevantSkills: ["foodtech", "marketplaces", "mobile", "web-products"],
+          relevantSkills: ["foodtech", "marketplaces", "web-products", "ecommerce"],
+          role: "Head of Product · Ecom.tech",
           blurb:
-            "Лидер q-commerce — как Getir / DoorDash Instant: доставка за минуты, мобильный продукт и логистика на масштабе.",
-          role: "FoodTech и mobile UX",
+            "Продукт интеграционной платформы в федеральной e-grocery экосистеме — B2B-интеграции, стандарты и ускорение time-to-market.",
+          highlights: [
+            "Развитие B2B-партнёрских интеграций",
+            "Унификация интеграционных процессов",
+            "Сокращение time-to-market на ~20%",
+            "Roadmap и приоритизация по бизнес-метрикам",
+          ],
         },
         {
           id: "independent",
           title: "Independent",
           startYear: 2025,
           endYear: null,
-          relevantSkills: ["edtech", "healthcare", "ai-products", "mobile"],
+          relevantSkills: ["edtech", "foodtech", "healthcare", "ai-products", "mobile"],
+          role: "Product Lead · собственные цифровые продукты",
           blurb:
-            "Независимая продуктовая практика: AI, EdTech, Healthcare и собственные продукты end-to-end.",
-          role: "Самостоятельный product builder",
+            "Полный цикл своих продуктов в EdTech и FoodTech — discovery, MVP, монетизация, AI-функции и итерации по метрикам.",
+          highlights: [
+            "TAIKA — AI-обучение тайскому, подписка, speech practice",
+            "MOO — FoodTech B2B2C в Telegram",
+            "Hospital AI — медицинский AI-протокол для клиник в Таиланде",
+            "Go-to-market, retention и поведенческая аналитика",
+          ],
         },
       ],
       // Skills (Tags and Blocks)
@@ -339,59 +363,131 @@ export const content: Record<Language, any> = {
         {
           id: "big-tech",
           title: "Big Tech",
-          description: "Опыт работы в крупных технологических компаниях с миллионами пользователей. Масштабирование продуктов, работа с большими данными и оптимизация пользовательского опыта.",
-          details: "Работал в Яндексе и Сбере, где получил опыт в разработке продуктов для массовой аудитории, управлении сложных системах и работе в кросс-функциональных командах.",
+          description:
+            "Федеральный масштаб: продукты для миллионов пользователей, сложные системы и кросс-функциональные команды.",
+          details:
+            "Яндекс и Сбер — продукты и платформы с высокой нагрузкой, жёсткими SLA и интеграциями. Умею говорить на одном языке с IT, операциями и бизнесом.",
+          highlights: [
+            "Delivery-экосистема Яндекс Маркета",
+            "Партнёрские интеграции в SberTech",
+            "Roadmap и приоритизация по метрикам",
+            "Кросс-функциональное управление командами",
+          ],
         },
         {
           id: "ecommerce",
           title: "E-commerce",
-          description: "Проектирование и оптимизация платформ электронной коммерции. Фокус на конверсии, пользовательском пути и интеграции платежных систем.",
-          details: "Опыт в создании и развитии e-commerce решений, включая каталоги товаров, корзину, чекаут и аналитику продаж.",
+          description:
+            "E-commerce и логистика с нуля: OMS, 3PL, федеральные операторы и автоматизация high-volume процессов.",
+          details:
+            "Путь от операционной логистики до продуктового лидерства — ZASPORT, Otto Group, Ozon. Понимаю цепочку от склада до экрана пользователя.",
+          highlights: [
+            "Запуск e-commerce логистики с нуля (ZASPORT)",
+            "Интеграция 3PL: DHL, DPD, SPSR, Pony Express",
+            "OMS-процессы и автоматизация в SAPATO / Ozon",
+            "Оптимизация CPO и KPI курьерских служб",
+          ],
         },
         {
           id: "marketplaces",
           title: "Marketplaces",
-          description: "Разработка двусторонних платформ, где встречаются продавцы и покупатели. Балансирование интересов обеих сторон и создание сетевого эффекта.",
-          details: "Работал над маркетплейсами, включая управление продавцами, рейтинги, отзывы и механики вовлечения.",
+          description:
+            "Двусторонние платформы, delivery-сети и партнёрские модели — баланс интересов и масштабирование.",
+          details:
+            "Маркетплейсы и q-commerce: развитие delivery-моделей, партнёрских схем и интеграционных платформ для роста сети.",
+          highlights: [
+            "Same-day и on-demand доставка",
+            "Федеральная партнёрская сеть",
+            "B2B-интеграции в e-grocery",
+            "Сокращение time-to-market на ~20%",
+          ],
         },
         {
           id: "foodtech",
           title: "FoodTech",
-          description: "Создание продуктов в сфере доставки еды и управления ресторанами. Логистика, интеграция с ресторанами и оптимизация доставки.",
-          details: "Опыт в Samokat и других FoodTech проектах. Работал над продуктом для конечных пользователей и B2B решениями для ресторанов.",
+          description:
+            "От q-commerce до собственных продуктов: подписки, Telegram-экосистема, рестораны и B2B2C без агрегаторской комиссии.",
+          details:
+            "Samokat / Ecom.tech на федеральном масштабе плюс MOO и ресторанные концепты — продукт, UX и операционная логика еды.",
+          highlights: [
+            "Интеграционная платформа e-grocery",
+            "MOO — подписка на еду, mobile-first",
+            "B2B2C-модель в Telegram mini-app",
+            "Go-to-market и лояльность",
+          ],
         },
         {
           id: "edtech",
           title: "EdTech",
-          description: "Проектирование образовательных платформ и систем обучения. Геймификация, прогресс пользователя и адаптивное обучение.",
-          details: "Опыт в создании интерактивных курсов, систем отслеживания прогресса и персонализированных путей обучения.",
+          description:
+            "Обучающие продукты с подпиской, AI-контентом, голосовой практикой и фокусом на retention.",
+          details:
+            "TAIKA — AI-учительница тайского: курс, speech practice, персонализация и нативный mobile UX. Полный цикл discovery → MVP → итерации.",
+          highlights: [
+            "Архитектура subscription-продукта",
+            "AI speech и персонализация контента",
+            "Retention и поведенческая аналитика",
+            "iOS-прототип и контент-система",
+          ],
         },
         {
           id: "healthcare",
           title: "Медицина",
-          description: "Разработка медицинских решений и систем управления здравоохранением. Соответствие регуляциям, безопасность данных и удобство для врачей.",
-          details: "Работа над системами управления пациентами, электронными медицинскими картами и интеграцией с медицинским оборудованием.",
+          description:
+            "Медицинские интерфейсы с AI: запись приёма, расшифровка, структурирование протокола и экспорт.",
+          details:
+            "Hospital AI — MVP для небольших клиник в Таиланде: врачебный UX, AI-транскрипция и PDF-протокол без лишней бюрократии.",
+          highlights: [
+            "Врачебный single-user интерфейс",
+            "AI-структурирование медицинского протокола",
+            "Запись и расшифровка приёма",
+            "Фокус на реальных клиниках Таиланда",
+          ],
         },
         {
           id: "ai-products",
           title: "AI продукты",
-          description: "Интеграция искусственного интеллекта в потребительские и B2B продукты. Промпт-инженерия, LLM и автоматизация.",
-          details: "Опыт в создании AI-ассистентов, систем рекомендаций, автоматизации контента и интеграции современных LLM.",
+          description:
+            "LLM, speech, промпт-системы и автоматизация — AI как часть продукта, а не как декор.",
+          details:
+            "От промпт-архитектуры до production: Claude, GPT-4o, специализированные модели, QA-логика и стабильный отклик в интерфейсе.",
+          highlights: [
+            "Prompt system и LLM flow",
+            "Speech recognition в EdTech",
+            "AI transcription в Healthcare",
+            "Автоматизация и контроль качества",
+          ],
         },
         {
           id: "mobile",
           title: "Мобильные приложения",
-          description: "Разработка нативных и кросс-платформенных мобильных приложений. iOS, Android, UX для мобиля и оптимизация производительности.",
-          details: "Опыт в Swift, Kotlin и кросс-платформенных фреймворках. Работа над приложениями с миллионами установок.",
+          description:
+            "Нативный mobile UX: iOS, Swift, mobile-first веб и Telegram-экосистема.",
+          details:
+            "TAIKA на Swift/iOS, MOO как mobile-first веб, Farang и mini-apps — проектирую под реальные сценарии пальца, а не десктопный перенос.",
+          highlights: [
+            "Swift / iOS прототипы",
+            "Mobile-first checkout и подписки",
+            "Telegram mini-apps и боты",
+            "Figma → Xcode без потери пикселей",
+          ],
         },
         {
           id: "web-products",
           title: "Web продукты",
-          description: "Создание веб-приложений и SPA. React, Vue, TypeScript и современный веб-стек. Оптимизация производительности и SEO.",
-          details: "Опыт в создании сложных веб-приложений, от простых лендингов до полнофункциональных платформ с реал-тайм обновлениями.",
+          description:
+            "SPA, интеграционные платформы, real-time и аналитика — веб как рабочий инструмент, не витрина.",
+          details:
+            "Hospital AI SPA, MOO, интеграционные платформы в e-grocery — проектирую API-слой, состояния и метрики вместе с интерфейсом.",
+          highlights: [
+            "Web SPA с AI-workflow",
+            "Интеграционные платформы B2B",
+            "Real-time и аналитика",
+            "React / TypeScript стек",
+          ],
         },
       ],
-      timeline: "Yandex → Sber → Samokat → Independent Product Builder",
+      timeline: "Яндекс → Сбер → Samokat → Independent Product Builder",
     },
     // Now Building Section
     nowBuilding: {
@@ -668,7 +764,7 @@ export const content: Record<Language, any> = {
     },
     // Product Modules
     productModules: {
-      title: "Product modules",
+      title: "Products & cases",
       openCase: "Open case",
       visitSite: "Visit site",
       progressLabel: "Progress",
@@ -785,8 +881,8 @@ export const content: Record<Language, any> = {
     },
     // Process Section
     process: {
-      caption: "PROCESS",
-      title: "Process",
+      caption: "HOW I BUILD",
+      title: "How I build",
       subtitle: "Most people close one or two stages. I build the whole system.",
       previousStep: "Previous step",
       nextStep: "Next step",
@@ -847,103 +943,199 @@ export const content: Record<Language, any> = {
     // Experience Section
     experience: {
       title: "Experience",
-      intro: "15+ years in Product & IT",
+      intro: "17+ years — from logistics and e-commerce to platforms, AI and own products",
       companies: [
         {
           id: "yandex",
           title: "Yandex",
           startYear: 2018,
           endYear: 2021,
-          relevantSkills: ["big-tech", "marketplaces", "web-products", "ai-products"],
+          relevantSkills: ["big-tech", "marketplaces", "web-products", "ecommerce"],
+          role: "Head of Delivery Service Development",
           blurb:
-            "Think Google + Amazon for Russia — search, maps, marketplaces, cloud and AI used by hundreds of millions.",
-          role: "Product & UX in big-tech products",
+            "Scaled delivery for one of Russia's largest marketplaces — new delivery models, partner network and integration architecture.",
+          highlights: [
+            "Launched same-day and on-demand delivery",
+            "Expanded the federal partner network",
+            "Optimized CPO and improved SLA",
+            "Bridged product, IT and operations",
+          ],
         },
         {
           id: "sber",
           title: "Sber",
           startYear: 2021,
           endYear: 2022,
-          relevantSkills: ["big-tech", "ai-products", "web-products", "mobile"],
+          relevantSkills: ["big-tech", "ai-products", "web-products", "ecommerce"],
+          role: "Head of Partner Integrations · SberTech",
           blurb:
-            "Like JPMorgan meets Apple Pay / AWS — a banking + tech ecosystem with AI, fintech and digital services for millions.",
-          role: "AI products & digital services",
+            "Led integrations with federal logistics providers — unified API architecture, scale and cross-functional delivery.",
+          highlights: [
+            "Aggregated partner interaction model",
+            "Unified technical integration architecture",
+            "BA, SA, Dev, QA, Operations team",
+            "Scalability and process optimization",
+          ],
         },
         {
           id: "samokat",
           title: "Samokat",
           startYear: 2022,
           endYear: 2025,
-          relevantSkills: ["foodtech", "marketplaces", "mobile", "web-products"],
+          relevantSkills: ["foodtech", "marketplaces", "web-products", "ecommerce"],
+          role: "Head of Product · Ecom.tech",
           blurb:
-            "Russia's Getir / DoorDash Instant — ultra-fast grocery delivery, mobile product and logistics at city scale.",
-          role: "FoodTech product & mobile UX",
+            "Owned the integration platform product in a federal e-grocery ecosystem — B2B integrations, standards and faster time-to-market.",
+          highlights: [
+            "B2B partner integrations",
+            "Unified integration processes",
+            "~20% shorter time-to-market",
+            "Roadmap driven by business metrics",
+          ],
         },
         {
           id: "independent",
           title: "Independent",
           startYear: 2025,
           endYear: null,
-          relevantSkills: ["edtech", "healthcare", "ai-products", "mobile"],
+          relevantSkills: ["edtech", "foodtech", "healthcare", "ai-products", "mobile"],
+          role: "Product Lead · own digital products",
           blurb:
-            "Independent product practice — AI, EdTech, Healthcare and end-to-end product building as a solo system.",
-          role: "Solo product builder",
+            "Full-cycle own products in EdTech and FoodTech — discovery, MVP, monetization, AI features and metric-driven iteration.",
+          highlights: [
+            "TAIKA — AI Thai learning, subscription, speech practice",
+            "MOO — FoodTech B2B2C in Telegram",
+            "Hospital AI — medical AI protocol for clinics in Thailand",
+            "Go-to-market, retention and behavioral analytics",
+          ],
         },
       ],
       items: [
         {
           id: "big-tech",
           title: "Big Tech",
-          description: "Experience working at large tech companies with millions of users. Scaling products, working with big data and optimizing user experience.",
-          details: "Worked at Yandex and Sber, gaining experience in developing products for mass audiences, managing complex systems and working in cross-functional teams.",
+          description:
+            "Federal-scale products for millions of users, complex systems and cross-functional teams.",
+          details:
+            "Yandex and Sber — high-load products, strict SLAs and integrations. I align business, operations and engineering.",
+          highlights: [
+            "Yandex Market delivery ecosystem",
+            "Partner integrations at SberTech",
+            "Metric-driven roadmap and prioritization",
+            "Cross-functional team leadership",
+          ],
         },
         {
           id: "ecommerce",
           title: "E-commerce",
-          description: "Designing and optimizing e-commerce platforms. Focus on conversion, user journey and payment integration.",
-          details: "Experience in creating and developing e-commerce solutions, including product catalogs, shopping cart, checkout and sales analytics.",
+          description:
+            "E-commerce and logistics from scratch: OMS, 3PL, federal carriers and high-volume automation.",
+          details:
+            "From operational logistics to product leadership — ZASPORT, Otto Group, Ozon. I understand the chain from warehouse to UI.",
+          highlights: [
+            "E-commerce logistics launch from zero (ZASPORT)",
+            "3PL integrations: DHL, DPD, SPSR, Pony Express",
+            "OMS flows and automation at SAPATO / Ozon",
+            "CPO and courier KPI optimization",
+          ],
         },
         {
           id: "marketplaces",
           title: "Marketplaces",
-          description: "Developing two-sided platforms where sellers and buyers meet. Balancing interests of both sides and creating network effects.",
-          details: "Worked on marketplaces, including seller management, ratings, reviews and engagement mechanics.",
+          description:
+            "Two-sided platforms, delivery networks and partner models — balance and scale.",
+          details:
+            "Marketplaces and q-commerce: delivery models, partner schemes and integration platforms for network growth.",
+          highlights: [
+            "Same-day and on-demand delivery",
+            "Federal partner network",
+            "B2B integrations in e-grocery",
+            "~20% shorter time-to-market",
+          ],
         },
         {
           id: "foodtech",
           title: "FoodTech",
-          description: "Creating products in food delivery and restaurant management. Logistics, restaurant integration and delivery optimization.",
-          details: "Experience at Samokat and other FoodTech projects. Worked on both consumer and B2B restaurant solutions.",
+          description:
+            "From q-commerce to own products: subscriptions, Telegram ecosystem, restaurants and B2B2C.",
+          details:
+            "Samokat / Ecom.tech at federal scale plus MOO and restaurant concepts — product, UX and food operations logic.",
+          highlights: [
+            "E-grocery integration platform",
+            "MOO — food subscription, mobile-first",
+            "B2B2C model in Telegram mini-app",
+            "Go-to-market and loyalty",
+          ],
         },
         {
           id: "edtech",
           title: "EdTech",
-          description: "Designing educational platforms and learning systems. Gamification, user progress and adaptive learning.",
-          details: "Creating interactive courses, progress tracking systems and personalized learning paths.",
+          description:
+            "Learning products with subscriptions, AI content, voice practice and retention focus.",
+          details:
+            "TAIKA — AI Thai teacher: course, speech practice, personalization and native mobile UX. Full discovery → MVP → iteration cycle.",
+          highlights: [
+            "Subscription product architecture",
+            "AI speech and content personalization",
+            "Retention and behavioral analytics",
+            "iOS prototype and content system",
+          ],
         },
         {
           id: "healthcare",
           title: "Healthcare",
-          description: "Developing medical solutions and healthcare management systems. Compliance, data security and doctor convenience.",
-          details: "Work on patient management systems, electronic medical records and medical equipment integration.",
+          description:
+            "Medical interfaces with AI: visit recording, transcription, structured protocol and export.",
+          details:
+            "Hospital AI — MVP for small clinics in Thailand: doctor UX, AI transcription and PDF protocol without extra bureaucracy.",
+          highlights: [
+            "Single-user doctor interface",
+            "AI-structured medical protocol",
+            "Visit recording and transcription",
+            "Built for real clinics in Thailand",
+          ],
         },
         {
           id: "ai-products",
           title: "AI products",
-          description: "Integrating artificial intelligence into consumer and B2B products. Prompt engineering, LLMs and automation.",
-          details: "Experience in creating AI assistants, recommendation systems, content automation and modern LLM integration.",
+          description:
+            "LLMs, speech, prompt systems and automation — AI as part of the product, not decoration.",
+          details:
+            "From prompt architecture to production: Claude, GPT-4o, specialized models, QA logic and stable UI responses.",
+          highlights: [
+            "Prompt system and LLM flow",
+            "Speech recognition in EdTech",
+            "AI transcription in Healthcare",
+            "Automation and quality control",
+          ],
         },
         {
           id: "mobile",
           title: "Mobile apps",
-          description: "Developing native and cross-platform mobile applications. iOS, Android, mobile UX and performance optimization.",
-          details: "Experience with Swift, Kotlin and cross-platform frameworks. Worked on apps with millions of installs.",
+          description:
+            "Native mobile UX: iOS, Swift, mobile-first web and the Telegram ecosystem.",
+          details:
+            "TAIKA on Swift/iOS, MOO as mobile-first web, Farang and mini-apps — designed for thumb scenarios, not desktop ports.",
+          highlights: [
+            "Swift / iOS prototypes",
+            "Mobile-first checkout and subscriptions",
+            "Telegram mini-apps and bots",
+            "Figma → Xcode without pixel loss",
+          ],
         },
         {
           id: "web-products",
           title: "Web products",
-          description: "Creating web applications and SPAs. React, Vue, TypeScript and modern web stack. Performance and SEO optimization.",
-          details: "Experience in creating complex web applications, from simple landing pages to full-featured platforms with real-time updates.",
+          description:
+            "SPAs, integration platforms, real-time and analytics — web as a working tool.",
+          details:
+            "Hospital AI SPA, MOO, e-grocery integration platforms — API layer, states and metrics designed with the interface.",
+          highlights: [
+            "Web SPA with AI workflow",
+            "B2B integration platforms",
+            "Real-time and analytics",
+            "React / TypeScript stack",
+          ],
         },
       ],
       timeline: "Yandex → Sber → Samokat → Independent Product Builder",
@@ -1234,7 +1426,7 @@ export const content: Record<Language, any> = {
     },
     // Product Modules
     productModules: {
-      title: "โมดูลผลิตภัณฑ์",
+      title: "ผลิตภัณฑ์และเคส",
       openCase: "เปิดเคส",
       visitSite: "เปิดเว็บไซต์",
       progressLabel: "ความคืบหน้า",
@@ -1351,8 +1543,8 @@ export const content: Record<Language, any> = {
     },
     // Process Section
     process: {
-      caption: "PROCESS",
-      title: "กระบวนการ",
+      caption: "HOW I BUILD",
+      title: "วิธีที่ผมสร้าง",
       subtitle: "คนส่วนใหญ่ปิดหนึ่งหรือสองขั้นตอน ฉันสร้างระบบทั้งหมด",
       previousStep: "ขั้นตอนก่อนหน้า",
       nextStep: "ขั้นตอนถัดไป",
@@ -1413,47 +1605,71 @@ export const content: Record<Language, any> = {
     // Experience Section
     experience: {
       title: "ประสบการณ์",
-      intro: "15+ ปีในผลิตภัณฑ์และ IT",
+      intro: "17+ ปี — จากโลจิสติกส์และ e-commerce สู่แพลตฟอร์ม AI และผลิตภัณฑ์ของตัวเอง",
       companies: [
         {
           id: "yandex",
           title: "Yandex",
           startYear: 2018,
           endYear: 2021,
-          relevantSkills: ["big-tech", "marketplaces", "web-products", "ai-products"],
+          relevantSkills: ["big-tech", "marketplaces", "web-products", "ecommerce"],
+          role: "หัวหน้าพัฒนาบริการจัดส่ง",
           blurb:
-            "เหมือน Google + Amazon ของรัสเซีย — ค้นหา แผนที่ มาร์เก็ตเพลส คลาวด์ และ AI ที่ผู้ใช้หลายร้อยล้านคนใช้งาน",
-          role: "Product & UX ในผลิตภัณฑ์ big-tech",
+            "พัฒนาระบบนิเวศ delivery ของมาร์เก็ตเพลสขนาดใหญ่ — โมเดลจัดส่ง เครือข่ายพาร์ทเนอร์ และสถาปัตยกรรมการเชื่อมต่อ",
+          highlights: [
+            "เปิดตัว same-day และ on-demand delivery",
+            "ขยายเครือข่ายพาร์ทเนอร์ทั่วประเทศ",
+            "ปรับ CPO และเพิ่ม SLA",
+            "ทำงานร่วมกับ IT ผลิตภัณฑ์ และปฏิบัติการ",
+          ],
         },
         {
           id: "sber",
           title: "Sber",
           startYear: 2021,
           endYear: 2022,
-          relevantSkills: ["big-tech", "ai-products", "web-products", "mobile"],
+          relevantSkills: ["big-tech", "ai-products", "web-products", "ecommerce"],
+          role: "Head of Partner Integrations · SberTech",
           blurb:
-            "เหมือนธนาคารใหญ่ + ระบบนิเวศเทค (แนว SCB / Kasikorn + fintech) — AI คลาวด์ และบริการดิจิทัลสำหรับลูกค้าหลายล้านคน",
-          role: "ผลิตภัณฑ์ AI และบริการดิจิทัล",
+            "ดูแลการเชื่อมต่อกับผู้ให้บริการโลจิสติกส์ระดับประเทศ — สถาปัตยกรรม API รวมศูนย์และการขยายขนาด",
+          highlights: [
+            "โมเดลการทำงานร่วมกับพาร์ทเนอร์แบบรวมศูนย์",
+            "สถาปัตยกรรมการเชื่อมต่อเดียว",
+            "ทีม BA, SA, Dev, QA, Operations",
+            "เพิ่มความสามารถในการขยายขนาด",
+          ],
         },
         {
           id: "samokat",
           title: "Samokat",
           startYear: 2022,
           endYear: 2025,
-          relevantSkills: ["foodtech", "marketplaces", "mobile", "web-products"],
+          relevantSkills: ["foodtech", "marketplaces", "web-products", "ecommerce"],
+          role: "Head of Product · Ecom.tech",
           blurb:
-            "เหมือน GrabMart / foodpanda Instant ของรัสเซีย — ส่งของเร็วมาก ผลิตภัณฑ์มือถือและโลจิสติกส์ในระดับเมืองใหญ่",
-          role: "FoodTech และ UX มือถือ",
+            "ผลิตภัณฑ์แพลตฟอร์มการเชื่อมต่อในระบบนิเวศ e-grocery — B2B มาตรฐาน และ time-to-market ที่เร็วขึ้น",
+          highlights: [
+            "การเชื่อมต่อพาร์ทเนอร์ B2B",
+            "มาตรฐานกระบวนการเชื่อมต่อ",
+            "ลด time-to-market ~20%",
+            "Roadmap ตามเมตริกธุรกิจ",
+          ],
         },
         {
           id: "independent",
           title: "Independent",
           startYear: 2025,
           endYear: null,
-          relevantSkills: ["edtech", "healthcare", "ai-products", "mobile"],
+          relevantSkills: ["edtech", "foodtech", "healthcare", "ai-products", "mobile"],
+          role: "Product Lead · ผลิตภัณฑ์ดิจิทัลของตัวเอง",
           blurb:
-            "การสร้างผลิตภัณฑ์แบบอิสระ — AI, EdTech, Healthcare และระบบผลิตภัณฑ์แบบ end-to-end",
-          role: "สร้างผลิตภัณฑ์แบบ solo",
+            "วงจรเต็มรูปแบบของผลิตภัณฑ์ EdTech และ FoodTech — discovery, MVP, monetization และ AI",
+          highlights: [
+            "TAIKA — เรียนภาษาไทยด้วย AI",
+            "MOO — FoodTech B2B2C ใน Telegram",
+            "Hospital AI — โปรโตคอลแพทย์ด้วย AI",
+            "Go-to-market และ retention",
+          ],
         },
       ],
       items: [

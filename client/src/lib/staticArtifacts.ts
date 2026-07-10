@@ -54,6 +54,10 @@ export const processArtifactImages: Record<string, string> = {
   "5:3": "/artifacts/process/process-5-3.png",
   "5:4": "/artifacts/process/process-5-4.png",
   "6:0": "/artifacts/process/process-6-0.png",
+  "6:1": "/artifacts/process/process-6-1.png",
+  "6:2": "/artifacts/process/process-6-2.png",
+  "6:3": "/artifacts/process/process-6-3.png",
+  "6:4": "/artifacts/process/process-6-4.png",
 
 };
 

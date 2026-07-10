@@ -20,6 +20,7 @@ import {
   stackArtifactImages,
 } from "@/lib/staticArtifacts";
 import { publishStackArtifacts, needsArtifactExport } from "@/lib/artifactExport";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 const STACK_ARTIFACTS_KEY = "viktor.stackArtifacts";
 
@@ -210,6 +211,7 @@ function StackCardModal({
   onImagesChange: (images: string[]) => void;
   onClose: () => void;
 }) {
+  useBodyScrollLock(true);
   const [slide, setSlide] = useState(0);
   const [exporting, setExporting] = useState(false);
   const [exportMsg, setExportMsg] = useState<string | null>(null);

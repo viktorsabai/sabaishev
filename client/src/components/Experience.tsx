@@ -6,6 +6,7 @@ import { ChevronRight } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import SectionHeader from "./SectionHeader";
 import { systemTag, systemNumber, textGradient, progressGradient, systemTagTone } from "@/lib/systemUi";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 const SPRING = { type: "spring" as const, stiffness: 320, damping: 28 };
 const EASE = { duration: 0.32, ease: [0.23, 1, 0.32, 1] as const };
@@ -146,6 +147,19 @@ export default function Experience() {
                     <p className="text-sm md:text-[15px] leading-relaxed text-foreground-secondary text-left md:text-center">
                       {selectedCompany.blurb}
                     </p>
+                    {selectedCompany.highlights?.length > 0 && (
+                      <ul className="mt-4 space-y-2 text-left md:text-center">
+                        {selectedCompany.highlights.map((line: string) => (
+                          <li
+                            key={line}
+                            className="flex gap-2 text-sm leading-relaxed text-foreground-secondary/90"
+                          >
+                            <span className="shrink-0 text-purple-400/80">·</span>
+                            <span>{line}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -290,6 +304,7 @@ function SkillDetailModal({
   onClose: () => void;
   language: string;
 }) {
+  useBodyScrollLock(true);
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -337,10 +352,23 @@ function SkillDetailModal({
           <p className="text-body-md leading-relaxed text-foreground-secondary">
             {skill.description}
           </p>
-          <div className="rounded-xl border border-border bg-foreground/[0.03] p-4">
+          <div className="rounded-xl border border-border bg-foreground/[0.03] p-4 md:p-5">
             <p className="text-body-md leading-relaxed text-foreground-secondary">
               {skill.details}
             </p>
+            {skill.highlights?.length > 0 && (
+              <ul className="mt-4 space-y-2 border-t border-border/60 pt-4">
+                {skill.highlights.map((line: string) => (
+                  <li
+                    key={line}
+                    className="flex gap-2 text-sm leading-relaxed text-foreground-secondary"
+                  >
+                    <span className="shrink-0 text-purple-400/80">·</span>
+                    <span>{line}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         </div>
       </motion.div>

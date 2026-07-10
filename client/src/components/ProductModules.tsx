@@ -21,6 +21,7 @@ import { progressGradient, systemTag, systemNumber, textGradient, systemColorTag
 import { useArtifactAdmin } from "@/lib/artifactAdmin";
 import { getProductImages, productArtifactImages } from "@/lib/staticArtifacts";
 import { publishProductArtifacts, needsArtifactExport } from "@/lib/artifactExport";
+import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 function getStatusMeta(status: string) {
   const s = status.toLowerCase();
@@ -327,6 +328,7 @@ function ProductDetailModal({
   onImagesChange: (images: string[]) => void;
   onClose: () => void;
 }) {
+  useBodyScrollLock(true);
   const statusMeta = getStatusMeta(product.status);
   const StatusIcon = statusMeta.Icon;
   const [slide, setSlide] = useState(0);
