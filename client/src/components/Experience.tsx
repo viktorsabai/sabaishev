@@ -5,11 +5,51 @@ import { motion, AnimatePresence, LayoutGroup } from "framer-motion";
 import { ChevronRight } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import SectionHeader from "./SectionHeader";
-import { systemTag, systemNumber, textGradient, progressGradient, systemTagTone } from "@/lib/systemUi";
+import { systemTag, systemNumber, textGradient, progressGradient, systemTagTone, systemColorTag } from "@/lib/systemUi";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
 
 const SPRING = { type: "spring" as const, stiffness: 320, damping: 28 };
 const EASE = { duration: 0.32, ease: [0.23, 1, 0.32, 1] as const };
+
+type CompanyPosition = {
+  role?: string;
+  period?: string;
+  details: string;
+  highlights?: string[];
+  tags?: string[];
+};
+
+type CompanyMeta = {
+  role?: string;
+  period?: string;
+};
+
+function getCompanyMeta(
+  company: {
+    role?: string;
+    period?: string;
+    relevantSkills?: string[];
+    positions?: Record<string, CompanyPosition>;
+  } | null
+): CompanyMeta {
+  if (!company) return {};
+  if (company.role) {
+    return { role: company.role, period: company.period };
+  }
+  const firstSkillId = company.relevantSkills?.[0];
+  const firstPosition = firstSkillId ? company.positions?.[firstSkillId] : null;
+  return {
+    role: firstPosition?.role,
+    period: firstPosition?.period,
+  };
+}
+
+function getCompanyPosition(
+  company: { positions?: Record<string, CompanyPosition> } | null,
+  skillId: string
+): CompanyPosition | null {
+  return company?.positions?.[skillId] ?? null;
+}
 
 export default function Experience() {
   const { language } = useLanguage();
@@ -36,6 +76,14 @@ export default function Experience() {
     setSelectedDetailId(null);
   };
 
+  const selectedSkill = selectedDetailId
+    ? allSkills.find((i: { id: string }) => i.id === selectedDetailId)
+    : null;
+  const selectedPosition = selectedSkill
+    ? getCompanyPosition(selectedCompany, selectedSkill.id)
+    : null;
+  const companyMeta = getCompanyMeta(selectedCompany);
+
   return (
     <ScrollReveal type="stagger" duration={0.7}>
       <section
@@ -51,7 +99,7 @@ export default function Experience() {
         >
           <SectionHeader number={4} title={experience.title} subtitle={experience.intro} />
 
-          {/* TIMELINE — tap only, no scroll hijack */}
+          {/* TIMELINE */}
           <div className="mb-8 md:mb-12">
             <LayoutGroup>
               <div className="relative grid grid-cols-4 gap-1 px-0 md:gap-4 md:px-8">
@@ -127,7 +175,7 @@ export default function Experience() {
               </div>
             </LayoutGroup>
 
-            {/* Company briefing */}
+            {/* Company context — short, about the company */}
             <div className="mt-10 md:mt-12 min-h-[6.5rem]">
               <AnimatePresence mode="wait">
                 {selectedCompany && (
@@ -139,27 +187,26 @@ export default function Experience() {
                     transition={{ duration: 0.35, ease: [0.23, 1, 0.32, 1] }}
                     className="mx-auto max-w-2xl rounded-2xl border border-border/70 bg-surface/70 px-6 py-5 md:px-8 md:py-6"
                   >
-                    {selectedCompany.role && (
-                      <p className={`mb-2 text-[11px] ${systemNumber.label} ${textGradient}`}>
-                        {selectedCompany.role}
+                    <div className="mb-3 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                      <p
+                        className={`text-[11px] ${systemNumber.label} ${textGradient}`}
+                      >
+                        {selectedCompany.title}
+                      </p>
+                      {companyMeta.period && (
+                        <span className="text-[11px] text-foreground-muted tabular-nums">
+                          {companyMeta.period}
+                        </span>
+                      )}
+                    </div>
+                    {companyMeta.role && (
+                      <p className="mb-3 text-base font-semibold leading-snug text-foreground md:text-[17px]">
+                        {companyMeta.role}
                       </p>
                     )}
-                    <p className="text-sm md:text-[15px] leading-relaxed text-foreground-secondary text-left md:text-center">
+                    <p className="text-sm md:text-[15px] leading-relaxed text-foreground-secondary text-left">
                       {selectedCompany.blurb}
                     </p>
-                    {selectedCompany.highlights?.length > 0 && (
-                      <ul className="mt-4 space-y-2 text-left md:text-center">
-                        {selectedCompany.highlights.map((line: string) => (
-                          <li
-                            key={line}
-                            className="flex gap-2 text-sm leading-relaxed text-foreground-secondary/90"
-                          >
-                            <span className="shrink-0 text-purple-400/80">·</span>
-                            <span>{line}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -219,7 +266,7 @@ export default function Experience() {
             </LayoutGroup>
           </motion.div>
 
-          {/* SKILL BLOCKS */}
+          {/* SKILL BLOCKS — CV details per company */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -234,54 +281,75 @@ export default function Experience() {
               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
             >
               <AnimatePresence mode="popLayout" initial={false}>
-                {visibleBlocks.map((skill: any, idx: number) => (
-                  <motion.div
-                    key={skill.id}
-                    layout
-                    initial={{ opacity: 0, scale: 0.92, y: 14 }}
-                    animate={{
-                      opacity: 1,
-                      scale: 1,
-                      y: 0,
-                      transition: { ...EASE, delay: idx * 0.06 },
-                    }}
-                    exit={{
-                      opacity: 0,
-                      scale: 0.92,
-                      y: -8,
-                      transition: { duration: 0.2 },
-                    }}
-                    transition={{ layout: SPRING }}
-                    onClick={() => setSelectedDetailId(skill.id)}
-                    className="group cursor-pointer rounded-2xl border border-border/60 bg-surface/50 p-6 md:p-7 backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-purple-400/25 hover:bg-surface hover:shadow-[0_0_40px_-16px_rgba(168,85,247,0.35)]"
-                  >
-                    <h3 className="text-heading-sm mb-2 font-semibold text-foreground">
-                      {skill.title}
-                    </h3>
-                    <p className="text-body-sm line-clamp-3 text-foreground-secondary">
-                      {skill.description}
-                    </p>
-                    <div className="mt-4 flex items-center gap-2 text-xs text-foreground-muted">
-                      <span className={`inline-block h-1.5 w-1.5 rounded-full ${progressGradient}`} />
-                      <span className="opacity-0 transition-opacity group-hover:opacity-100">
-                        {language === "ru"
-                          ? "Подробнее"
-                          : language === "en"
-                            ? "Learn more"
-                            : "เพิ่มเติม"}
-                      </span>
-                    </div>
-                  </motion.div>
-                ))}
+                {visibleBlocks.map((skill: any, idx: number) => {
+                  const position = getCompanyPosition(selectedCompany, skill.id);
+                  const achievementTags =
+                    position?.tags ??
+                    position?.highlights?.slice(0, 3) ??
+                    [];
+
+                  return (
+                    <motion.div
+                      key={`${selectedCompany?.id ?? "all"}-${skill.id}`}
+                      layout
+                      initial={{ opacity: 0, scale: 0.92, y: 14 }}
+                      animate={{
+                        opacity: 1,
+                        scale: 1,
+                        y: 0,
+                        transition: { ...EASE, delay: idx * 0.06 },
+                      }}
+                      exit={{
+                        opacity: 0,
+                        scale: 0.92,
+                        y: -8,
+                        transition: { duration: 0.2 },
+                      }}
+                      transition={{ layout: SPRING }}
+                      onClick={() => setSelectedDetailId(skill.id)}
+                      className="group cursor-pointer rounded-2xl border border-border/60 bg-surface/50 p-6 md:p-7 backdrop-blur-sm transition-all hover:-translate-y-1 hover:border-purple-400/25 hover:bg-surface hover:shadow-[0_0_40px_-16px_rgba(168,85,247,0.35)]"
+                    >
+                      <h3 className="text-heading-sm mb-3 font-semibold text-foreground">
+                        {skill.title}
+                      </h3>
+                      <p className="text-body-sm mb-4 line-clamp-3 text-foreground-secondary">
+                        {position?.details ?? skill.description}
+                      </p>
+                      {achievementTags.length > 0 && (
+                        <div className="flex flex-wrap gap-2">
+                          {achievementTags.map((tag: string, tagIdx: number) => (
+                            <span key={tag} className={systemColorTag(tagIdx)}>
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                      <div className="mt-4 flex items-center gap-2 text-xs text-foreground-muted">
+                        <span
+                          className={`inline-block h-1.5 w-1.5 rounded-full ${progressGradient}`}
+                        />
+                        <span className="opacity-0 transition-opacity group-hover:opacity-100">
+                          {language === "ru"
+                            ? "Подробнее"
+                            : language === "en"
+                              ? "Learn more"
+                              : "เพิ่มเติม"}
+                        </span>
+                      </div>
+                    </motion.div>
+                  );
+                })}
               </AnimatePresence>
             </motion.div>
           </motion.div>
 
           <AnimatePresence>
-            {selectedDetailId && (
+            {selectedSkill && (
               <SkillDetailModal
-                skill={allSkills.find((i: { id: string }) => i.id === selectedDetailId)!}
+                skill={selectedSkill}
                 company={selectedCompany?.title}
+                companyMeta={companyMeta}
+                position={selectedPosition}
                 onClose={() => setSelectedDetailId(null)}
                 language={language}
               />
@@ -296,15 +364,21 @@ export default function Experience() {
 function SkillDetailModal({
   skill,
   company,
+  companyMeta,
+  position,
   onClose,
   language,
 }: {
   skill: any;
   company?: string;
+  companyMeta: CompanyMeta;
+  position: CompanyPosition | null;
   onClose: () => void;
   language: string;
 }) {
   useBodyScrollLock(true);
+  const highlights = position?.highlights ?? skill.highlights ?? [];
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -335,6 +409,12 @@ function SkillDetailModal({
                       ? "Experience at"
                       : "ประสบการณ์ที่"}{" "}
                   {company}
+                  {companyMeta.period ? ` · ${companyMeta.period}` : ""}
+                </p>
+              )}
+              {companyMeta.role && (
+                <p className="mt-2 text-sm font-medium text-foreground-secondary">
+                  {companyMeta.role}
                 </p>
               )}
             </div>
@@ -350,15 +430,19 @@ function SkillDetailModal({
 
         <div className="space-y-6 p-6 md:p-8">
           <p className="text-body-md leading-relaxed text-foreground-secondary">
-            {skill.description}
+            {position?.details ?? skill.details ?? skill.description}
           </p>
-          <div className="rounded-xl border border-border bg-foreground/[0.03] p-4 md:p-5">
-            <p className="text-body-md leading-relaxed text-foreground-secondary">
-              {skill.details}
-            </p>
-            {skill.highlights?.length > 0 && (
-              <ul className="mt-4 space-y-2 border-t border-border/60 pt-4">
-                {skill.highlights.map((line: string) => (
+          {highlights.length > 0 && (
+            <div className="rounded-xl border border-border bg-foreground/[0.03] p-4 md:p-5">
+              <p className="mb-3 text-[11px] font-semibold uppercase tracking-wide text-foreground-muted">
+                {language === "ru"
+                  ? "Задачи и результаты"
+                  : language === "en"
+                    ? "Scope & results"
+                    : "ขอบเขตและผลลัพธ์"}
+              </p>
+              <ul className="space-y-2">
+                {highlights.map((line: string) => (
                   <li
                     key={line}
                     className="flex gap-2 text-sm leading-relaxed text-foreground-secondary"
@@ -368,8 +452,8 @@ function SkillDetailModal({
                   </li>
                 ))}
               </ul>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </motion.div>
     </motion.div>

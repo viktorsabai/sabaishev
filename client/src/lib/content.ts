@@ -300,14 +300,53 @@ export const content: Record<Language, any> = {
           endYear: 2021,
           relevantSkills: ["big-tech", "marketplaces", "web-products", "ecommerce"],
           role: "Руководитель направления развития сервиса доставки",
+          period: "2018–2021",
           blurb:
-            "Развитие delivery-экосистемы одного из крупнейших маркетплейсов России — модели доставки, партнёрская сеть и интеграционная архитектура.",
-          highlights: [
-            "Запуск same-day и on-demand доставки",
-            "Масштабирование федеральной партнёрской сети",
-            "Оптимизация CPO и рост SLA",
-            "Продуктовые требования и развитие интеграционной архитектуры",
-          ],
+            "Крупнейшая IT-компания России — как Google + Amazon: поиск, карты, маркетплейсы, облако и AI для сотен миллионов.",
+          positions: {
+            "big-tech": {
+              details:
+                "Федеральный масштаб: delivery-продукт внутри экосистемы маркетплейса, кросс-функциональная работа с IT, операциями и бизнесом.",
+              highlights: [
+                "Запуск same-day и on-demand доставки",
+                "Оптимизация CPO и рост SLA",
+                "Продуктовые требования и интеграционная архитектура",
+              ],
+            },
+            marketplaces: {
+              role: "Руководитель направления развития сервиса доставки",
+              period: "2018–2021",
+              details:
+                "Развитие delivery-экосистемы одного из крупнейших маркетплейсов РФ — модели, партнёры, SLA.",
+              highlights: [
+                "Запуск same-day и on-demand моделей",
+                "Масштабирование федеральной партнёрской сети",
+                "Баланс интересов сети и операционной эффективности",
+              ],
+            },
+            "web-products": {
+              role: "Руководитель направления развития сервиса доставки",
+              period: "2018–2021",
+              details:
+                "Формирование продуктовых требований и участие в развитии интеграционной архитектуры delivery.",
+              highlights: [
+                "Сценарии для продавцов и логистических партнёров",
+                "Интеграции с операционным контуром",
+                "Метрики доставки и качества сервиса",
+              ],
+            },
+            ecommerce: {
+              role: "Руководитель направления развития сервиса доставки",
+              period: "2018–2021",
+              details:
+                "Операционная и продуктовая логика e-commerce доставки на high-volume масштабе.",
+              highlights: [
+                "Оптимизация CPO",
+                "Работа с федеральными логистическими операторами",
+                "Рост SLA и предсказуемости доставки",
+              ],
+            },
+          },
         },
         {
           id: "sber",
@@ -316,14 +355,55 @@ export const content: Record<Language, any> = {
           endYear: 2022,
           relevantSkills: ["big-tech", "ai-products", "web-products", "ecommerce"],
           role: "Head of Partner Integrations · SberTech",
+          period: "2021–2022",
           blurb:
-            "Руководство интеграциями с федеральными логистическими провайдерами: единая архитектура, масштаб и кросс-функциональная координация.",
-          highlights: [
-            "Агрегированная модель взаимодействия с партнёрами",
-            "Единая архитектура API-интеграций",
-            "Команда BA, SA, Dev, QA, Operations",
-            "Стратегия развития направления и масштабируемость",
-          ],
+            "Экосистема банка и tech — как JPMorgan + Apple Pay / AWS: AI, финтех, облако и digital для миллионов.",
+          positions: {
+            "big-tech": {
+              role: "Head of Partner Integrations · SberTech",
+              period: "2021–2022",
+              details:
+                "Руководство направлением интеграций с федеральными логистическими провайдерами.",
+              highlights: [
+                "Стратегия развития направления",
+                "Координация кросс-функциональной команды",
+                "Масштабирование процессов взаимодействия",
+              ],
+            },
+            "ai-products": {
+              role: "Head of Partner Integrations · SberTech",
+              period: "2021–2022",
+              details:
+                "Агрегированная модель взаимодействия с партнёрами и единая техническая архитектура.",
+              highlights: [
+                "Единая архитектура API-интеграций",
+                "Автоматизация обмена данными",
+                "Контроль качества интеграционных сценариев",
+              ],
+            },
+            "web-products": {
+              role: "Head of Partner Integrations · SberTech",
+              period: "2021–2022",
+              details:
+                "Проектирование интеграционных платформ и унификация процессов для партнёров.",
+              highlights: [
+                "BA, SA, Dev, QA, Operations в одном контуре",
+                "Стандартизация интеграционных процессов",
+                "Повышение масштабируемости решений",
+              ],
+            },
+            ecommerce: {
+              role: "Head of Partner Integrations · SberTech",
+              period: "2021–2022",
+              details:
+                "Интеграции для логистики и e-commerce сценариев внутри экосистемы Сбера.",
+              highlights: [
+                "Федеральные логистические провайдеры",
+                "Агрегированная модель взаимодействия",
+                "Оптимизация time-to-integration",
+              ],
+            },
+          },
         },
         {
           id: "samokat",
@@ -332,14 +412,55 @@ export const content: Record<Language, any> = {
           endYear: 2025,
           relevantSkills: ["foodtech", "marketplaces", "web-products", "ecommerce"],
           role: "Head of Product · Ecom.tech",
+          period: "2022–2025",
           blurb:
-            "Продукт интеграционной платформы в федеральной e-grocery экосистеме — B2B-интеграции, стандарты и ускорение time-to-market.",
-          highlights: [
-            "Развитие B2B-партнёрских интеграций",
-            "Унификация интеграционных процессов",
-            "Сокращение time-to-market на ~20%",
-            "Roadmap и приоритизация по бизнес-метрикам",
-          ],
+            "Лидер q-commerce — как Getir / DoorDash Instant: доставка за минуты, мобильный продукт и логистика на масштабе.",
+          positions: {
+            foodtech: {
+              role: "Head of Product · Ecom.tech",
+              period: "2022–2025",
+              details:
+                "Продукт интеграционной платформы в федеральной e-grocery экосистеме.",
+              highlights: [
+                "B2B-партнёрские интеграции",
+                "Новые схемы с логистическими партнёрами",
+                "Roadmap по бизнес-метрикам",
+              ],
+            },
+            marketplaces: {
+              role: "Head of Product · Ecom.tech",
+              period: "2022–2025",
+              details:
+                "Развитие B2B-направления и унификация интеграционных процессов для роста сети.",
+              highlights: [
+                "Сокращение time-to-market на ~20%",
+                "Стандартизация и декомпозиция задач",
+                "Запуск новых схем взаимодействия",
+              ],
+            },
+            "web-products": {
+              role: "Head of Product · Ecom.tech",
+              period: "2022–2025",
+              details:
+                "Интеграционная платформа: API, процессы, аналитика и интерфейсы для партнёров.",
+              highlights: [
+                "Унификация интеграционных процессов",
+                "Кросс-функциональная команда",
+                "Приоритизация по метрикам",
+              ],
+            },
+            ecommerce: {
+              role: "Head of Product · Ecom.tech",
+              period: "2022–2025",
+              details:
+                "E-grocery на федеральном масштабе: партнёры, логистика, скорость вывода фич.",
+              highlights: [
+                "Time-to-market −20%",
+                "B2B-интеграции",
+                "Операции + продукт + разработка в одном цикле",
+              ],
+            },
+          },
         },
         {
           id: "independent",
@@ -347,15 +468,67 @@ export const content: Record<Language, any> = {
           startYear: 2025,
           endYear: null,
           relevantSkills: ["edtech", "foodtech", "healthcare", "ai-products", "mobile"],
-          role: "Product Lead · собственные цифровые продукты",
+          role: "Product Lead · Independent",
+          period: "2025 — н.в.",
           blurb:
-            "Полный цикл своих продуктов в EdTech и FoodTech — discovery, MVP, монетизация, AI-функции и итерации по метрикам.",
-          highlights: [
-            "TAIKA — AI-обучение тайскому, подписка, speech practice",
-            "MOO — FoodTech B2B2C в Telegram",
-            "Hospital AI — медицинский AI-протокол для клиник в Таиланде",
-            "Go-to-market, retention и поведенческая аналитика",
-          ],
+            "Независимая продуктовая практика: AI, EdTech, Healthcare и собственные продукты end-to-end.",
+          positions: {
+            edtech: {
+              role: "Product Lead · Independent",
+              period: "2025 — н.в.",
+              details:
+                "TAIKA — AI-учительница тайского: subscription, speech practice, персонализация.",
+              highlights: [
+                "Архитектура обучающего продукта",
+                "AI speech и контент-система",
+                "Retention и поведенческая аналитика",
+              ],
+            },
+            foodtech: {
+              role: "Product Lead · Independent",
+              period: "2025 — н.в.",
+              details:
+                "MOO — FoodTech B2B2C в Telegram: подписка, заказы, лояльность без агрегаторской комиссии.",
+              highlights: [
+                "B2B2C-модель для локального бизнеса",
+                "Go-to-market и тестинг с заказчиком",
+                "Mobile-first checkout",
+              ],
+            },
+            healthcare: {
+              role: "Product Lead · Independent",
+              period: "2025 — н.в.",
+              details:
+                "Hospital AI — врачебный интерфейс с AI-транскрипцией и PDF-протоколом для клиник в Таиланде.",
+              highlights: [
+                "MVP scope для небольших клиник",
+                "Запись и расшифровка приёма",
+                "AI-структурирование протокола",
+              ],
+            },
+            "ai-products": {
+              role: "Product Lead · Independent",
+              period: "2025 — н.в.",
+              details:
+                "AI-функции в EdTech и Healthcare: LLM, speech, промпт-системы, QA-логика.",
+              highlights: [
+                "Персонализация и генерация контента",
+                "Стабильные промпты под UI",
+                "Полный цикл discovery → MVP → итерации",
+              ],
+            },
+            mobile: {
+              role: "Product Lead · Independent",
+              period: "2025 — н.в.",
+              details:
+                "Нативный mobile UX: TAIKA на iOS, MOO mobile-first, Telegram mini-apps.",
+              highlights: [
+                "Swift / iOS прототип",
+                "Figma → Xcode без потери пикселей",
+                "Сценарии под палец, не десктопный перенос",
+              ],
+            },
+          },
         },
       ],
       // Skills (Tags and Blocks)
@@ -952,14 +1125,55 @@ export const content: Record<Language, any> = {
           endYear: 2021,
           relevantSkills: ["big-tech", "marketplaces", "web-products", "ecommerce"],
           role: "Head of Delivery Service Development",
+          period: "2018–2021",
           blurb:
-            "Scaled delivery for one of Russia's largest marketplaces — new delivery models, partner network and integration architecture.",
-          highlights: [
-            "Launched same-day and on-demand delivery",
-            "Expanded the federal partner network",
-            "Optimized CPO and improved SLA",
-            "Bridged product, IT and operations",
-          ],
+            "Russia's largest IT company — like Google + Amazon: search, maps, marketplaces, cloud and AI for hundreds of millions.",
+          positions: {
+            "big-tech": {
+              role: "Head of Delivery Service Development",
+              period: "2018–2021",
+              details:
+                "Federal scale: delivery product inside a marketplace ecosystem, cross-functional work with IT, operations and business.",
+              highlights: [
+                "Launched same-day and on-demand delivery",
+                "Optimized CPO and improved SLA",
+                "Product requirements and integration architecture",
+              ],
+            },
+            marketplaces: {
+              role: "Head of Delivery Service Development",
+              period: "2018–2021",
+              details:
+                "Scaled delivery for one of Russia's largest marketplaces — models, partners, SLA.",
+              highlights: [
+                "Launched same-day and on-demand models",
+                "Expanded the federal partner network",
+                "Balanced network interests and operational efficiency",
+              ],
+            },
+            "web-products": {
+              role: "Head of Delivery Service Development",
+              period: "2018–2021",
+              details:
+                "Shaped product requirements and helped evolve delivery integration architecture.",
+              highlights: [
+                "Scenarios for sellers and logistics partners",
+                "Integrations with the operations layer",
+                "Delivery and service quality metrics",
+              ],
+            },
+            ecommerce: {
+              role: "Head of Delivery Service Development",
+              period: "2018–2021",
+              details:
+                "Operational and product logic of e-commerce delivery at high-volume scale.",
+              highlights: [
+                "CPO optimization",
+                "Federal logistics operators",
+                "SLA growth and delivery predictability",
+              ],
+            },
+          },
         },
         {
           id: "sber",
@@ -968,14 +1182,55 @@ export const content: Record<Language, any> = {
           endYear: 2022,
           relevantSkills: ["big-tech", "ai-products", "web-products", "ecommerce"],
           role: "Head of Partner Integrations · SberTech",
+          period: "2021–2022",
           blurb:
-            "Led integrations with federal logistics providers — unified API architecture, scale and cross-functional delivery.",
-          highlights: [
-            "Aggregated partner interaction model",
-            "Unified technical integration architecture",
-            "BA, SA, Dev, QA, Operations team",
-            "Scalability and process optimization",
-          ],
+            "Bank and tech ecosystem — like JPMorgan + Apple Pay / AWS: AI, fintech, cloud and digital for millions.",
+          positions: {
+            "big-tech": {
+              role: "Head of Partner Integrations · SberTech",
+              period: "2021–2022",
+              details:
+                "Led integrations with federal logistics providers.",
+              highlights: [
+                "Direction growth strategy",
+                "Cross-functional team coordination",
+                "Scaled partner interaction processes",
+              ],
+            },
+            "ai-products": {
+              role: "Head of Partner Integrations · SberTech",
+              period: "2021–2022",
+              details:
+                "Aggregated partner model and unified technical architecture.",
+              highlights: [
+                "Unified API integration architecture",
+                "Automated data exchange",
+                "Integration scenario quality control",
+              ],
+            },
+            "web-products": {
+              role: "Head of Partner Integrations · SberTech",
+              period: "2021–2022",
+              details:
+                "Designed integration platforms and unified processes for partners.",
+              highlights: [
+                "BA, SA, Dev, QA, Operations in one loop",
+                "Standardized integration processes",
+                "Improved solution scalability",
+              ],
+            },
+            ecommerce: {
+              role: "Head of Partner Integrations · SberTech",
+              period: "2021–2022",
+              details:
+                "Integrations for logistics and e-commerce scenarios inside Sber's ecosystem.",
+              highlights: [
+                "Federal logistics providers",
+                "Aggregated interaction model",
+                "Optimized time-to-integration",
+              ],
+            },
+          },
         },
         {
           id: "samokat",
@@ -984,14 +1239,55 @@ export const content: Record<Language, any> = {
           endYear: 2025,
           relevantSkills: ["foodtech", "marketplaces", "web-products", "ecommerce"],
           role: "Head of Product · Ecom.tech",
+          period: "2022–2025",
           blurb:
-            "Owned the integration platform product in a federal e-grocery ecosystem — B2B integrations, standards and faster time-to-market.",
-          highlights: [
-            "B2B partner integrations",
-            "Unified integration processes",
-            "~20% shorter time-to-market",
-            "Roadmap driven by business metrics",
-          ],
+            "Q-commerce leader — like Getir / DoorDash Instant: delivery in minutes, mobile product and logistics at scale.",
+          positions: {
+            foodtech: {
+              role: "Head of Product · Ecom.tech",
+              period: "2022–2025",
+              details:
+                "Integration platform product in a federal e-grocery ecosystem.",
+              highlights: [
+                "B2B partner integrations",
+                "New schemes with logistics partners",
+                "Roadmap driven by business metrics",
+              ],
+            },
+            marketplaces: {
+              role: "Head of Product · Ecom.tech",
+              period: "2022–2025",
+              details:
+                "B2B direction growth and unified integration processes for network expansion.",
+              highlights: [
+                "~20% shorter time-to-market",
+                "Standardization and task decomposition",
+                "Launched new interaction schemes",
+              ],
+            },
+            "web-products": {
+              role: "Head of Product · Ecom.tech",
+              period: "2022–2025",
+              details:
+                "Integration platform: API, processes, analytics and partner interfaces.",
+              highlights: [
+                "Unified integration processes",
+                "Cross-functional team",
+                "Metric-driven prioritization",
+              ],
+            },
+            ecommerce: {
+              role: "Head of Product · Ecom.tech",
+              period: "2022–2025",
+              details:
+                "Federal e-grocery: partners, logistics, faster feature rollout.",
+              highlights: [
+                "Time-to-market −20%",
+                "B2B integrations",
+                "Operations + product + engineering in one cycle",
+              ],
+            },
+          },
         },
         {
           id: "independent",
@@ -999,15 +1295,67 @@ export const content: Record<Language, any> = {
           startYear: 2025,
           endYear: null,
           relevantSkills: ["edtech", "foodtech", "healthcare", "ai-products", "mobile"],
-          role: "Product Lead · own digital products",
+          role: "Product Lead · Independent",
+          period: "2025 — present",
           blurb:
-            "Full-cycle own products in EdTech and FoodTech — discovery, MVP, monetization, AI features and metric-driven iteration.",
-          highlights: [
-            "TAIKA — AI Thai learning, subscription, speech practice",
-            "MOO — FoodTech B2B2C in Telegram",
-            "Hospital AI — medical AI protocol for clinics in Thailand",
-            "Go-to-market, retention and behavioral analytics",
-          ],
+            "Independent product practice: AI, EdTech, Healthcare and own products end-to-end.",
+          positions: {
+            edtech: {
+              role: "Product Lead · Independent",
+              period: "2025 — present",
+              details:
+                "TAIKA — AI Thai teacher: subscription, speech practice, personalization.",
+              highlights: [
+                "Learning product architecture",
+                "AI speech and content system",
+                "Retention and behavioral analytics",
+              ],
+            },
+            foodtech: {
+              role: "Product Lead · Independent",
+              period: "2025 — present",
+              details:
+                "MOO — FoodTech B2B2C in Telegram: subscription, orders, loyalty without aggregator fees.",
+              highlights: [
+                "B2B2C model for local businesses",
+                "Go-to-market and client testing",
+                "Mobile-first checkout",
+              ],
+            },
+            healthcare: {
+              role: "Product Lead · Independent",
+              period: "2025 — present",
+              details:
+                "Hospital AI — doctor interface with AI transcription and PDF protocol for clinics in Thailand.",
+              highlights: [
+                "MVP scope for small clinics",
+                "Visit recording and transcription",
+                "AI-structured protocol",
+              ],
+            },
+            "ai-products": {
+              role: "Product Lead · Independent",
+              period: "2025 — present",
+              details:
+                "AI features in EdTech and Healthcare: LLM, speech, prompt systems, QA logic.",
+              highlights: [
+                "Personalization and content generation",
+                "Stable prompts for UI",
+                "Full discovery → MVP → iteration cycle",
+              ],
+            },
+            mobile: {
+              role: "Product Lead · Independent",
+              period: "2025 — present",
+              details:
+                "Native mobile UX: TAIKA on iOS, MOO mobile-first, Telegram mini-apps.",
+              highlights: [
+                "Swift / iOS prototype",
+                "Figma → Xcode without pixel loss",
+                "Thumb-first scenarios, not desktop ports",
+              ],
+            },
+          },
         },
       ],
       items: [
@@ -1614,14 +1962,55 @@ export const content: Record<Language, any> = {
           endYear: 2021,
           relevantSkills: ["big-tech", "marketplaces", "web-products", "ecommerce"],
           role: "หัวหน้าพัฒนาบริการจัดส่ง",
+          period: "2018–2021",
           blurb:
-            "พัฒนาระบบนิเวศ delivery ของมาร์เก็ตเพลสขนาดใหญ่ — โมเดลจัดส่ง เครือข่ายพาร์ทเนอร์ และสถาปัตยกรรมการเชื่อมต่อ",
-          highlights: [
-            "เปิดตัว same-day และ on-demand delivery",
-            "ขยายเครือข่ายพาร์ทเนอร์ทั่วประเทศ",
-            "ปรับ CPO และเพิ่ม SLA",
-            "ทำงานร่วมกับ IT ผลิตภัณฑ์ และปฏิบัติการ",
-          ],
+            "บริษัท IT ที่ใหญ่ที่สุดของรัสเซีย — เหมือน Google + Amazon: ค้นหา แผนที่ มาร์เก็ตเพลส คลาวด์ และ AI สำหรับผู้ใช้หลายร้อยล้าน",
+          positions: {
+            "big-tech": {
+              role: "หัวหน้าพัฒนาบริการจัดส่ง",
+              period: "2018–2021",
+              details:
+                "ขนาดระดับประเทศ: ผลิตภัณฑ์ delivery ในระบบนิเวศมาร์เก็ตเพลส ทำงานข้ามฟังก์ชันกับ IT ปฏิบัติการ และธุรกิจ",
+              highlights: [
+                "เปิดตัว same-day และ on-demand delivery",
+                "ปรับ CPO และเพิ่ม SLA",
+                "ความต้องการผลิตภัณฑ์และสถาปัตยกรรมการเชื่อมต่อ",
+              ],
+            },
+            marketplaces: {
+              role: "หัวหน้าพัฒนาบริการจัดส่ง",
+              period: "2018–2021",
+              details:
+                "พัฒนาระบบนิเวศ delivery ของมาร์เก็ตเพลสขนาดใหญ่ — โมเดล พาร์ทเนอร์ SLA",
+              highlights: [
+                "เปิดตัวโมเดล same-day และ on-demand",
+                "ขยายเครือข่ายพาร์ทเนอร์ทั่วประเทศ",
+                "สมดุลผลประโยชน์เครือข่ายและประสิทธิภาพปฏิบัติการ",
+              ],
+            },
+            "web-products": {
+              role: "หัวหน้าพัฒนาบริการจัดส่ง",
+              period: "2018–2021",
+              details:
+                "กำหนดความต้องการผลิตภัณฑ์และพัฒนาสถาปัตยกรรมการเชื่อมต่อ delivery",
+              highlights: [
+                "สถานการณ์สำหรับผู้ขายและพาร์ทเนอร์โลจิสติกส์",
+                "การเชื่อมต่อกับชั้นปฏิบัติการ",
+                "เมตริกการจัดส่งและคุณภาพบริการ",
+              ],
+            },
+            ecommerce: {
+              role: "หัวหน้าพัฒนาบริการจัดส่ง",
+              period: "2018–2021",
+              details:
+                "ตรรกะปฏิบัติการและผลิตภัณฑ์ของ e-commerce delivery ในสเกล high-volume",
+              highlights: [
+                "ปรับ CPO",
+                "ผู้ให้บริการโลจิสติกส์ระดับประเทศ",
+                "เพิ่ม SLA และความคาดเดาได้ของการจัดส่ง",
+              ],
+            },
+          },
         },
         {
           id: "sber",
@@ -1630,14 +2019,55 @@ export const content: Record<Language, any> = {
           endYear: 2022,
           relevantSkills: ["big-tech", "ai-products", "web-products", "ecommerce"],
           role: "Head of Partner Integrations · SberTech",
+          period: "2021–2022",
           blurb:
-            "ดูแลการเชื่อมต่อกับผู้ให้บริการโลจิสติกส์ระดับประเทศ — สถาปัตยกรรม API รวมศูนย์และการขยายขนาด",
-          highlights: [
-            "โมเดลการทำงานร่วมกับพาร์ทเนอร์แบบรวมศูนย์",
-            "สถาปัตยกรรมการเชื่อมต่อเดียว",
-            "ทีม BA, SA, Dev, QA, Operations",
-            "เพิ่มความสามารถในการขยายขนาด",
-          ],
+            "ระบบนิเวศธนาคารและเทค — เหมือน JPMorgan + Apple Pay / AWS: AI ฟินเทค คลาวด์ และดิจิทัลสำหรับผู้ใช้หลายล้าน",
+          positions: {
+            "big-tech": {
+              role: "Head of Partner Integrations · SberTech",
+              period: "2021–2022",
+              details:
+                "ดูแลการเชื่อมต่อกับผู้ให้บริการโลจิสติกส์ระดับประเทศ",
+              highlights: [
+                "กลยุทธ์การพัฒนาทิศทาง",
+                "ประสานงานทีมข้ามฟังก์ชัน",
+                "ขยายกระบวนการทำงานร่วมกับพาร์ทเนอร์",
+              ],
+            },
+            "ai-products": {
+              role: "Head of Partner Integrations · SberTech",
+              period: "2021–2022",
+              details:
+                "โมเดลพาร์ทเนอร์แบบรวมศูนย์และสถาปัตยกรรมเทคนิคเดียว",
+              highlights: [
+                "สถาปัตยกรรม API การเชื่อมต่อรวมศูนย์",
+                "ระบบอัตโนมัติแลกเปลี่ยนข้อมูล",
+                "ควบคุมคุณภาพสถานการณ์การเชื่อมต่อ",
+              ],
+            },
+            "web-products": {
+              role: "Head of Partner Integrations · SberTech",
+              period: "2021–2022",
+              details:
+                "ออกแบบแพลตฟอร์มการเชื่อมต่อและกระบวนการรวมศูนย์สำหรับพาร์ทเนอร์",
+              highlights: [
+                "BA, SA, Dev, QA, Operations ในวงจรเดียว",
+                "มาตรฐานกระบวนการเชื่อมต่อ",
+                "เพิ่มความสามารถในการขยายขนาด",
+              ],
+            },
+            ecommerce: {
+              role: "Head of Partner Integrations · SberTech",
+              period: "2021–2022",
+              details:
+                "การเชื่อมต่อสำหรับโลจิสติกส์และ e-commerce ในระบบนิเวศ Sber",
+              highlights: [
+                "ผู้ให้บริการโลจิสติกส์ระดับประเทศ",
+                "โมเดลการทำงานร่วมแบบรวมศูนย์",
+                "ปรับ time-to-integration",
+              ],
+            },
+          },
         },
         {
           id: "samokat",
@@ -1646,14 +2076,55 @@ export const content: Record<Language, any> = {
           endYear: 2025,
           relevantSkills: ["foodtech", "marketplaces", "web-products", "ecommerce"],
           role: "Head of Product · Ecom.tech",
+          period: "2022–2025",
           blurb:
-            "ผลิตภัณฑ์แพลตฟอร์มการเชื่อมต่อในระบบนิเวศ e-grocery — B2B มาตรฐาน และ time-to-market ที่เร็วขึ้น",
-          highlights: [
-            "การเชื่อมต่อพาร์ทเนอร์ B2B",
-            "มาตรฐานกระบวนการเชื่อมต่อ",
-            "ลด time-to-market ~20%",
-            "Roadmap ตามเมตริกธุรกิจ",
-          ],
+            "ผู้นำ q-commerce — เหมือน Getir / DoorDash Instant: จัดส่งในไม่กี่นาที ผลิตภัณฑ์มือถือและโลจิสติกส์ในสเกลใหญ่",
+          positions: {
+            foodtech: {
+              role: "Head of Product · Ecom.tech",
+              period: "2022–2025",
+              details:
+                "ผลิตภัณฑ์แพลตฟอร์มการเชื่อมต่อในระบบนิเวศ e-grocery ระดับประเทศ",
+              highlights: [
+                "การเชื่อมต่อพาร์ทเนอร์ B2B",
+                "โครงสร้างใหม่กับพาร์ทเนอร์โลจิสติกส์",
+                "Roadmap ตามเมตริกธุรกิจ",
+              ],
+            },
+            marketplaces: {
+              role: "Head of Product · Ecom.tech",
+              period: "2022–2025",
+              details:
+                "พัฒนาทิศทาง B2B และมาตรฐานกระบวนการเชื่อมต่อเพื่อขยายเครือข่าย",
+              highlights: [
+                "ลด time-to-market ~20%",
+                "มาตรฐานและการแบ่งงาน",
+                "เปิดตัวโครงสร้างการทำงานร่วมใหม่",
+              ],
+            },
+            "web-products": {
+              role: "Head of Product · Ecom.tech",
+              period: "2022–2025",
+              details:
+                "แพลตฟอร์มการเชื่อมต่อ: API กระบวนการ การวิเคราะห์และอินเทอร์เฟซพาร์ทเนอร์",
+              highlights: [
+                "มาตรฐานกระบวนการเชื่อมต่อ",
+                "ทีมข้ามฟังก์ชัน",
+                "จัดลำดับความสำคัญตามเมตริก",
+              ],
+            },
+            ecommerce: {
+              role: "Head of Product · Ecom.tech",
+              period: "2022–2025",
+              details:
+                "E-grocery ระดับประเทศ: พาร์ทเนอร์ โลจิสติกส์ ความเร็วในการปล่อยฟีเจอร์",
+              highlights: [
+                "Time-to-market −20%",
+                "การเชื่อมต่อ B2B",
+                "ปฏิบัติการ + ผลิตภัณฑ์ + พัฒนาในวงจรเดียว",
+              ],
+            },
+          },
         },
         {
           id: "independent",
@@ -1661,15 +2132,67 @@ export const content: Record<Language, any> = {
           startYear: 2025,
           endYear: null,
           relevantSkills: ["edtech", "foodtech", "healthcare", "ai-products", "mobile"],
-          role: "Product Lead · ผลิตภัณฑ์ดิจิทัลของตัวเอง",
+          role: "Product Lead · Independent",
+          period: "2025 — ปัจจุบัน",
           blurb:
-            "วงจรเต็มรูปแบบของผลิตภัณฑ์ EdTech และ FoodTech — discovery, MVP, monetization และ AI",
-          highlights: [
-            "TAIKA — เรียนภาษาไทยด้วย AI",
-            "MOO — FoodTech B2B2C ใน Telegram",
-            "Hospital AI — โปรโตคอลแพทย์ด้วย AI",
-            "Go-to-market และ retention",
-          ],
+            "การทำผลิตภัณฑ์อิสระ: AI, EdTech, Healthcare และผลิตภัณฑ์ของตัวเองแบบ end-to-end",
+          positions: {
+            edtech: {
+              role: "Product Lead · Independent",
+              period: "2025 — ปัจจุบัน",
+              details:
+                "TAIKA — ครูสอนภาษาไทย AI: subscription ฝึกเสียง การปรับแต่งส่วนบุคคล",
+              highlights: [
+                "สถาปัตยกรรมผลิตภัณฑ์การเรียนรู้",
+                "AI speech และระบบเนื้อหา",
+                "Retention และการวิเคราะห์พฤติกรรม",
+              ],
+            },
+            foodtech: {
+              role: "Product Lead · Independent",
+              period: "2025 — ปัจจุบัน",
+              details:
+                "MOO — FoodTech B2B2C ใน Telegram: subscription คำสั่งซื้อ ความภักดีโดยไม่มีค่าคอมมิชชันแพลตฟอร์ม",
+              highlights: [
+                "โมเดล B2B2C สำหรับธุรกิจท้องถิ่น",
+                "Go-to-market และการทดสอบกับลูกค้า",
+                "Mobile-first checkout",
+              ],
+            },
+            healthcare: {
+              role: "Product Lead · Independent",
+              period: "2025 — ปัจจุบัน",
+              details:
+                "Hospital AI — อินเทอร์เฟซแพทย์พร้อม AI transcription และโปรโตคอล PDF สำหรับคลินิกในประเทศไทย",
+              highlights: [
+                "ขอบเขต MVP สำหรับคลินิกเล็ก",
+                "บันทึกและถอดเสียงการนัดหมาย",
+                "โปรโตคอลที่จัดโครงสร้างด้วย AI",
+              ],
+            },
+            "ai-products": {
+              role: "Product Lead · Independent",
+              period: "2025 — ปัจจุบัน",
+              details:
+                "ฟีเจอร์ AI ใน EdTech และ Healthcare: LLM, speech, prompt systems, QA logic",
+              highlights: [
+                "การปรับแต่งส่วนบุคคลและสร้างเนื้อหา",
+                "Prompt ที่เสถียรสำหรับ UI",
+                "วงจร discovery → MVP → iteration เต็มรูปแบบ",
+              ],
+            },
+            mobile: {
+              role: "Product Lead · Independent",
+              period: "2025 — ปัจจุบัน",
+              details:
+                "Native mobile UX: TAIKA บน iOS, MOO mobile-first, Telegram mini-apps",
+              highlights: [
+                "ต้นแบบ Swift / iOS",
+                "Figma → Xcode โดยไม่สูญเสียพิกเซล",
+                "สถานการณ์สำหรับนิ้ว ไม่ใช่การย้ายจากเดสก์ท็อป",
+              ],
+            },
+          },
         },
       ],
       items: [
