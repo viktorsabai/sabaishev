@@ -39,7 +39,7 @@ export default function HeaderTypingPresence() {
 
   const message = messages[index % messages.length];
   const longestMessage = useMemo(
-    () => messages.reduce((a, b) => (a.length >= b.length ? a : b), ""),
+    () => messages.reduce((a: string, b: string) => (a.length >= b.length ? a : b), ""),
     [messages]
   );
 

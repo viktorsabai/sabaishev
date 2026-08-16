@@ -42,7 +42,8 @@ function getStatusMeta(status: string) {
     s.includes("กำลังพัฒนา") ||
     s.includes("ต้นแบบ") ||
     s.includes("ทดลอง") ||
-    s.includes("แนวคิด");
+    s.includes("แนวคิด") ||
+    s.includes("test flight");
 
   // Icons must NOT use text-system-gradient (background-clip makes SVG strokes invisible)
   if (isLive) {
