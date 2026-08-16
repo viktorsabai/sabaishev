@@ -22,6 +22,7 @@ import { useArtifactAdmin } from "@/lib/artifactAdmin";
 import { getProductImages, productArtifactImages } from "@/lib/staticArtifacts";
 import { publishProductArtifacts, needsArtifactExport } from "@/lib/artifactExport";
 import { useBodyScrollLock } from "@/hooks/useBodyScrollLock";
+import { trackConversion } from "@/lib/analytics";
 
 function getStatusMeta(status: string) {
   const s = status.toLowerCase();
@@ -238,7 +239,10 @@ export default function ProductModules() {
                     key={product.id}
                     variants={itemVariants}
                     whileHover={{ y: -6, scale: 1.01 }}
-                    onClick={() => setSelectedProduct(product.id)}
+                    onClick={() => {
+                      trackConversion("featured_case_view", { productId: product.id, name: product.name });
+                      setSelectedProduct(product.id);
+                    }}
                     className="group relative cursor-pointer rounded-2xl border border-accent/25 bg-surface/60 p-6 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-surface hover:shadow-lg hover:shadow-accent/10 md:p-8"
                   >
                     <div className="mb-4 flex items-start justify-between gap-4">
@@ -302,7 +306,10 @@ export default function ProductModules() {
                     key={product.id}
                     variants={itemVariants}
                     whileHover={{ y: -6, scale: 1.01 }}
-                    onClick={() => setSelectedProduct(product.id)}
+                    onClick={() => {
+                      trackConversion("featured_case_view", { productId: product.id, name: product.name });
+                      setSelectedProduct(product.id);
+                    }}
                     className="group relative cursor-pointer rounded-2xl border border-border bg-surface/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-white/18 hover:bg-surface hover:shadow-lg hover:shadow-foreground/5 md:p-8"
                   >
                     <div className="mb-4 flex items-start justify-between gap-4">

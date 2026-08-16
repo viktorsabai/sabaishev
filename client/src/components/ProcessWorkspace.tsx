@@ -253,6 +253,20 @@ export default function ProcessWorkspace() {
           subtitle={processContent.subtitle}
         />
 
+        {/* Executive summary banner for clients */}
+        <div className="mb-6 rounded-xl border border-accent/20 bg-surface/55 px-5 py-4 backdrop-blur-md md:px-7 md:py-5">
+          <p className="text-xs uppercase tracking-widest text-accent font-mono mb-1">
+            {language === "ru" ? "Как снимается риск" : language === "th" ? "วิธีลดความเสี่ยง" : "How risk is mitigated"}
+          </p>
+          <p className="text-sm md:text-base text-foreground/90 leading-relaxed font-normal">
+            {language === "ru"
+              ? "От проблемы и продуктовой логики до нативного прототипа и запуска — вся цепочка закрывается в одном контуре без потери смыслов на стыках."
+              : language === "th"
+                ? "ตั้งแต่ปัญหาและตรรกะผลิตภัณฑ์ จนถึงต้นแบบและการเปิดตัว — ปิดจบทุกขั้นตอนในที่เดียวโดยไม่สูญเสียความหมาย"
+                : "From problem statement and product logic to native prototype and launch — the entire cycle is closed in one loop without losing context."}
+          </p>
+        </div>
+
         {/* Monolithic dashboard shell */}
         <div className="rounded-2xl border border-border/60 bg-surface/40 backdrop-blur-md overflow-hidden shadow-[0_0_0_1px_rgba(255,255,255,0.02)]">
           <div className="flex flex-col lg:flex-row min-h-[560px] lg:min-h-[640px]">
@@ -367,15 +381,23 @@ export default function ProcessWorkspace() {
                   <div className="relative flex-1 min-h-[240px] md:min-h-[320px] rounded-xl border border-border/70 bg-background/50 backdrop-blur-xl overflow-hidden group">
                     <AnimatePresence mode="wait">
                       {currentPreview ? (
-                        <motion.button
-                          type="button"
+                        <motion.div
                           key={previewKey + "-img"}
+                          role="button"
+                          tabIndex={0}
+                          aria-label={processContent.openGallery ?? "Open artifact gallery"}
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
                           exit={{ opacity: 0 }}
                           transition={{ duration: 0.25 }}
-                          className="absolute inset-0 cursor-zoom-in text-left"
+                          className="absolute inset-0 cursor-zoom-in text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/70"
                           onClick={() => setCarouselOpen(true)}
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter" || event.key === " ") {
+                              event.preventDefault();
+                              setCarouselOpen(true);
+                            }
+                          }}
                         >
                           <img
                             src={
@@ -436,7 +458,7 @@ export default function ProcessWorkspace() {
                               </button>
                             </div>
                           )}
-                        </motion.button>
+                        </motion.div>
                       ) : isAdmin ? (
                         <motion.label
                           key={previewKey + "-empty"}

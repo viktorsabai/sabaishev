@@ -112,6 +112,20 @@ export default function Experience() {
         >
           <SectionHeader number={4} title={experience.title} subtitle={experience.intro} />
 
+          {/* Credibility banner */}
+          <div className="mb-10 max-w-3xl mx-auto rounded-xl border border-border/70 bg-surface/40 px-6 py-4 backdrop-blur-md text-center">
+            <p className="text-xs uppercase tracking-widest text-accent font-mono mb-1">
+              {language === "ru" ? "Уровень экспертизы" : language === "th" ? "ระดับความเชี่ยวชาญ" : "Scale & Track Record"}
+            </p>
+            <p className="text-sm md:text-base text-foreground/90 leading-relaxed font-normal">
+              {language === "ru"
+                ? "Опыт в федеральных экосистемах (Яндекс, Сбер, Самокат): запуск масштабных delivery-продуктов, управление операционными системами и высокая отказоустойчивость."
+                : language === "th"
+                  ? "ประสบการณ์ในระบบนิเวศระดับประเทศ (Yandex, Sber, Samokat): เปิดตัวผลิตภัณฑ์จัดส่งขนาดใหญ่ บริหารระบบปฏิบัติการ"
+                  : "Track record in tier-1 ecosystems (Yandex, Sber, Samokat): launching large-scale delivery products and managing resilient high-volume systems."}
+            </p>
+          </div>
+
           {/* TIMELINE */}
           <div className="mb-8 md:mb-12">
             <LayoutGroup>

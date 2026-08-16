@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { content } from "@/lib/content";
 import HeroMarquee from "./HeroMarquee";
+import { trackConversion } from "@/lib/analytics";
 
 interface HeroProps {
   onExploreClick: () => void;
@@ -34,7 +35,8 @@ export default function Hero({ onExploreClick, onContactClick }: HeroProps) {
     },
   };
 
-  const handleQuickLink = (stage: number) => {
+  const handleQuickLink = (stage: number, label?: string) => {
+    trackConversion("quick_link_click", { stage, label });
     const processEl = document.getElementById("process");
     processEl?.scrollIntoView({ behavior: "smooth", block: "start" });
     window.dispatchEvent(

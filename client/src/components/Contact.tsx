@@ -12,6 +12,7 @@ import {
   textGradient,
 } from "@/lib/systemUi";
 import { Slider } from "@/components/ui/slider";
+import { trackConversion } from "@/lib/analytics";
 
 const SPRING = { type: "spring" as const, stiffness: 300, damping: 30 };
 
@@ -137,6 +138,7 @@ export default function Contact() {
 
   const handleSubmit = () => {
     if (!canSubmit) return;
+    trackConversion("brief_submit", { need, domain, budget, currency, channel });
     const body = `${form.submitMessage}\n\n${briefText}`;
     const encoded = encodeURIComponent(body);
 
@@ -155,6 +157,9 @@ export default function Contact() {
   };
 
   const goNext = () => {
+    if (activeStep === 0) {
+      trackConversion("brief_start", { need });
+    }
     if (activeStep < steps.length - 1 && canGoNext) {
       setActiveStep((s) => s + 1);
     }
@@ -400,21 +405,28 @@ export default function Contact() {
                           {form.next}
                         </motion.button>
                       ) : (
-                        <motion.button
-                          type="button"
-                          whileHover={{ scale: canSubmit ? 1.02 : 1 }}
-                          whileTap={{ scale: canSubmit ? 0.98 : 1 }}
-                          disabled={!canSubmit}
-                          onClick={handleSubmit}
-                          className={`inline-flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-semibold ${
-                            canSubmit
-                              ? "bg-foreground text-background"
-                              : "bg-white/8 text-foreground-muted cursor-not-allowed"
-                          }`}
-                        >
-                          <Send className="h-4 w-4" />
-                          {sent ? form.sent : form.submit}
-                        </motion.button>
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-3 w-full justify-between">
+                          {sent && (
+                            <span className="text-xs text-emerald-400 font-medium inline-flex items-center gap-1.5 animate-pulse">
+                              ✓ {language === "ru" ? "Бриф открыт в мессенджере. Отвечу в течение часа." : language === "th" ? "เปิดบรีฟเรียบร้อยแล้ว จะตอบกลับภายในหนึ่งชั่วโมง" : "Brief dispatched. I will reply today."}
+                            </span>
+                          )}
+                          <motion.button
+                            type="button"
+                            whileHover={{ scale: canSubmit ? 1.02 : 1 }}
+                            whileTap={{ scale: canSubmit ? 0.98 : 1 }}
+                            disabled={!canSubmit}
+                            onClick={handleSubmit}
+                            className={`inline-flex items-center gap-2 px-7 py-3 rounded-xl text-sm font-semibold ${
+                              canSubmit
+                                ? "bg-foreground text-background"
+                                : "bg-white/8 text-foreground-muted cursor-not-allowed"
+                            }`}
+                          >
+                            <Send className="h-4 w-4" />
+                            {sent ? form.sent : form.submit}
+                          </motion.button>
+                        </div>
                       )}
                     </div>
                   </motion.div>
