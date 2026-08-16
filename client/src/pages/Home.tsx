@@ -13,6 +13,7 @@ import SideNavigation from "@/components/SideNavigation";
 import DynamicBackground from "@/components/DynamicBackground";
 import ScrollProgressBar from "@/components/ScrollProgressBar";
 import MobileBreadcrumb from "@/components/MobileBreadcrumb";
+import ConversionPrompt from "@/components/ConversionPrompt";
 
 export default function Home() {
   const [showBoot, setShowBoot] = useState(true);
@@ -50,8 +51,24 @@ export default function Home() {
         <div ref={productsRef}>
           <ProductModules />
         </div>
+        <ConversionPrompt
+          titleRu="Нашли похожую задачу?"
+          titleEn="Found a similar challenge?"
+          titleTh="เจอโจทย์ที่ใกล้เคียงไหม?"
+          subtitleRu="Соберите бриф за минуту — без долгой переписки и лишних звонков."
+          subtitleEn="Build a brief in a minute — no lengthy emails or unnecessary calls."
+          subtitleTh="สร้างบรีฟในหนึ่งนาที — ไม่ต้องพิมพ์ยาวหรือโทรหลายครั้ง"
+        />
         <ProcessWorkspace />
         <Experience />
+        <ConversionPrompt
+          titleRu="Готовы обсудить контекст?"
+          titleEn="Ready to discuss the context?"
+          titleTh="พร้อมคุยเรื่องบริบทของโปรเจกต์ไหม?"
+          subtitleRu="Перейдём от примеров и опыта к вашей задаче. Отвечу сегодня."
+          subtitleEn="Let's move from examples and experience to your challenge. I reply today."
+          subtitleTh="เปลี่ยนจากตัวอย่างและประสบการณ์มาคุยเรื่องโจทย์ของคุณ ผมจะตอบกลับวันนี้"
+        />
         <div ref={contactRef}>
           <Contact />
         </div>

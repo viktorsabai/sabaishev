@@ -191,6 +191,18 @@ export default function ProductModules() {
   const selected = selectedProduct
     ? productModules.products.find((p: { id: string }) => p.id === selectedProduct)
     : null;
+  const featuredProducts = productModules.products.filter((product: { id: string }) =>
+    ["taika", "moo"].includes(product.id)
+  );
+  const explorationProducts = productModules.products.filter(
+    (product: { id: string }) => !["taika", "moo"].includes(product.id)
+  );
+  const groupCopy =
+    language === "ru"
+      ? { featured: "Проверено в работе", exploration: "Другие направления" }
+      : language === "th"
+        ? { featured: "ผลงานที่ใช้งานจริง", exploration: "ทิศทางอื่น ๆ" }
+        : { featured: "Featured proof", exploration: "Other directions" };
 
   return (
     <ScrollReveal type="build" duration={0.8}>
@@ -204,90 +216,123 @@ export default function ProductModules() {
         >
           <SectionHeader number={2} title={productModules.title} />
 
-          <motion.div
-            variants={containerVariants}
-            className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8"
-          >
-            {productModules.products.map((product: any) => {
-              const statusMeta = getStatusMeta(product.status);
-              const StatusIcon = statusMeta.Icon;
-              const preview =
-                product.cardDescription ?? product.description;
+          <div className="mb-12">
+            <div className="mb-4 flex items-center gap-3">
+              <span className="h-px flex-1 bg-border/70" />
+              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-accent">
+                {groupCopy.featured}
+              </span>
+              <span className="h-px flex-1 bg-border/70" />
+            </div>
+            <motion.div
+              variants={containerVariants}
+              className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8"
+            >
+              {featuredProducts.map((product: any) => {
+                const statusMeta = getStatusMeta(product.status);
+                const StatusIcon = statusMeta.Icon;
+                const preview = product.cardDescription ?? product.description;
 
-              return (
-                <motion.div
-                  key={product.id}
-                  variants={itemVariants}
-                  whileHover={{ y: -6, scale: 1.01 }}
-                  onClick={() => setSelectedProduct(product.id)}
-                  className="relative p-6 md:p-8 bg-surface/50 backdrop-blur-sm border border-border rounded-2xl cursor-pointer transition-all duration-300 hover:bg-surface hover:shadow-lg hover:shadow-foreground/5 hover:border-white/18 group"
-                >
-                  <div className="flex items-start justify-between gap-4 mb-4">
-                    <div
-                      className={`${systemNumber.label} text-[11px] md:text-xs ${textGradient}`}
-                    >
-                      MODULE {product.number}
+                return (
+                  <motion.div
+                    key={product.id}
+                    variants={itemVariants}
+                    whileHover={{ y: -6, scale: 1.01 }}
+                    onClick={() => setSelectedProduct(product.id)}
+                    className="group relative cursor-pointer rounded-2xl border border-accent/25 bg-surface/60 p-6 backdrop-blur-sm transition-all duration-300 hover:border-accent/50 hover:bg-surface hover:shadow-lg hover:shadow-accent/10 md:p-8"
+                  >
+                    <div className="mb-4 flex items-start justify-between gap-4">
+                      <div className={`${systemNumber.label} text-[11px] md:text-xs ${textGradient}`}>
+                        MODULE {product.number}
+                      </div>
+                      <div className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 ${statusMeta.className}`}>
+                        <StatusIcon className={`h-3.5 w-3.5 shrink-0 ${statusMeta.iconClass}`} strokeWidth={2} />
+                        <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-wide leading-none md:text-[11px]">
+                          {product.status}
+                        </span>
+                      </div>
                     </div>
-
-                    <div
-                      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border ${statusMeta.className}`}
-                    >
-                      <StatusIcon
-                        className={`w-3.5 h-3.5 shrink-0 ${statusMeta.iconClass}`}
-                        strokeWidth={2}
-                      />
-                      <span className="text-[10px] md:text-[11px] font-semibold uppercase tracking-wide whitespace-nowrap leading-none">
-                        {product.status}
-                      </span>
+                    <h3 className="mb-2 text-heading-md font-bold text-foreground md:text-heading-lg">{product.name}</h3>
+                    <p className="mb-5 text-body-sm text-foreground-secondary">{product.type}</p>
+                    <div className="mb-5">
+                      <AnimatedProgress value={product.progress ?? 0} label={productModules.progressLabel ?? "Progress"} />
                     </div>
-                  </div>
-
-                  <h3 className="text-heading-md md:text-heading-lg font-bold text-foreground mb-2">
-                    {product.name}
-                  </h3>
-
-                  <p className="text-body-sm text-foreground-secondary mb-5">
-                    {product.type}
-                  </p>
-
-                  <div className="mb-5">
-                    <AnimatedProgress
-                      value={product.progress ?? 0}
-                      label={productModules.progressLabel ?? "Progress"}
-                    />
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {product.tags.slice(0, 3).map((tag: string, i: number) => (
-                      <span
-                        key={tag}
-                        className={systemColorTag(i)}
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                  <p className="text-sm text-foreground-secondary leading-relaxed min-h-[3.5rem]">
-                    {preview}
-                  </p>
-
-                  <div className="mt-6 flex items-center justify-between gap-3">
-                    <span className="text-sm font-semibold text-foreground group-hover:opacity-90 transition-opacity inline-flex items-center gap-1.5">
-                      {productModules.openCase ?? "Open case"}
-                      <span className={`${textGradient} text-base leading-none`}>→</span>
-                    </span>
-                    {product.link && (
-                      <span className="inline-flex items-center gap-1 text-xs text-foreground-muted">
-                        <ExternalLink className="w-3.5 h-3.5" />
-                        live
-                      </span>
+                    <div className="mb-4 flex flex-wrap gap-2">
+                      {product.tags.slice(0, 3).map((tag: string, i: number) => (
+                        <span key={tag} className={systemColorTag(i)}>{tag}</span>
+                      ))}
+                    </div>
+                    <p className="min-h-[3.5rem] text-sm leading-relaxed text-foreground-secondary">{preview}</p>
+                    {product.proof && (
+                      <p className="mt-4 border-t border-border/50 pt-3 text-xs leading-relaxed text-foreground-muted">
+                        <span className="font-semibold text-foreground-secondary">{language === "ru" ? "Доказательство" : language === "th" ? "หลักฐาน" : "Proof"}:</span> {product.proof}
+                      </p>
                     )}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
+                    <div className="mt-6 flex items-center justify-between gap-3">
+                      <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground transition-opacity group-hover:opacity-90">
+                        {productModules.openCase ?? "Open case"}
+                        <span className={`${textGradient} text-base leading-none`}>→</span>
+                      </span>
+                      {product.link && (
+                        <span className="inline-flex items-center gap-1 text-xs text-foreground-muted"><ExternalLink className="h-3.5 w-3.5" />live</span>
+                      )}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </div>
+
+          <div>
+            <div className="mb-4 flex items-center gap-3">
+              <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-foreground-muted">{groupCopy.exploration}</span>
+              <span className="h-px flex-1 bg-border/70" />
+            </div>
+            <motion.div
+              variants={containerVariants}
+              className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8"
+            >
+              {explorationProducts.map((product: any) => {
+                const statusMeta = getStatusMeta(product.status);
+                const StatusIcon = statusMeta.Icon;
+                const preview = product.cardDescription ?? product.description;
+
+                return (
+                  <motion.div
+                    key={product.id}
+                    variants={itemVariants}
+                    whileHover={{ y: -6, scale: 1.01 }}
+                    onClick={() => setSelectedProduct(product.id)}
+                    className="group relative cursor-pointer rounded-2xl border border-border bg-surface/50 p-6 backdrop-blur-sm transition-all duration-300 hover:border-white/18 hover:bg-surface hover:shadow-lg hover:shadow-foreground/5 md:p-8"
+                  >
+                    <div className="mb-4 flex items-start justify-between gap-4">
+                      <div className={`${systemNumber.label} text-[11px] md:text-xs ${textGradient}`}>MODULE {product.number}</div>
+                      <div className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 ${statusMeta.className}`}>
+                        <StatusIcon className={`h-3.5 w-3.5 shrink-0 ${statusMeta.iconClass}`} strokeWidth={2} />
+                        <span className="whitespace-nowrap text-[10px] font-semibold uppercase tracking-wide leading-none md:text-[11px]">{product.status}</span>
+                      </div>
+                    </div>
+                    <h3 className="mb-2 text-heading-md font-bold text-foreground md:text-heading-lg">{product.name}</h3>
+                    <p className="mb-5 text-body-sm text-foreground-secondary">{product.type}</p>
+                    <div className="mb-5"><AnimatedProgress value={product.progress ?? 0} label={productModules.progressLabel ?? "Progress"} /></div>
+                    <div className="mb-4 flex flex-wrap gap-2">
+                      {product.tags.slice(0, 3).map((tag: string, i: number) => <span key={tag} className={systemColorTag(i)}>{tag}</span>)}
+                    </div>
+                    <p className="min-h-[3.5rem] text-sm leading-relaxed text-foreground-secondary">{preview}</p>
+                    {product.proof && (
+                      <p className="mt-4 border-t border-border/50 pt-3 text-xs leading-relaxed text-foreground-muted">
+                        <span className="font-semibold text-foreground-secondary">{language === "ru" ? "Доказательство" : language === "th" ? "หลักฐาน" : "Proof"}:</span> {product.proof}
+                      </p>
+                    )}
+                    <div className="mt-6 flex items-center justify-between gap-3">
+                      <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-foreground transition-opacity group-hover:opacity-90">{productModules.openCase ?? "Open case"}<span className={`${textGradient} text-base leading-none`}>→</span></span>
+                      {product.link && <span className="inline-flex items-center gap-1 text-xs text-foreground-muted"><ExternalLink className="h-3.5 w-3.5" />live</span>}
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </div>
         </motion.div>
 
         <AnimatePresence>
