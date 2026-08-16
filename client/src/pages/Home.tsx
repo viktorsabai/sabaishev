@@ -8,6 +8,7 @@ import ProductModules from "@/components/ProductModules";
 import ProcessWorkspace from "@/components/ProcessWorkspace";
 import Experience from "@/components/Experience";
 import Contact from "@/components/Contact";
+import ScrollAssemblyBanner from "@/components/ScrollAssemblyBanner";
 import SiteFooter from "@/components/SiteFooter";
 import SideNavigation from "@/components/SideNavigation";
 import DynamicBackground from "@/components/DynamicBackground";
@@ -60,6 +61,7 @@ export default function Home() {
           subtitleTh="สร้างบรีฟในหนึ่งนาที — ไม่ต้องพิมพ์ยาวหรือโทรหลายครั้ง"
         />
         <ProcessWorkspace />
+        <ScrollAssemblyBanner />
         <Experience />
         <ConversionPrompt
           titleRu="Готовы обсудить контекст?"

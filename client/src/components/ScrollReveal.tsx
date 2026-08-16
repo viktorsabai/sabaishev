@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { motion, Variants } from "framer-motion";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { ReactNode } from "react";
 
@@ -16,65 +16,65 @@ export default function ScrollReveal({
   children,
   type = "reveal",
   delay = 0,
-  duration = 0.6,
+  duration = 0.35,
   className = "",
 }: ScrollRevealProps) {
   const { ref, isVisible } = useScrollAnimation({
-    threshold: 0.2,
-    rootMargin: "0px 0px -50px 0px",
+    threshold: 0.05,
+    rootMargin: "0px 0px -20px 0px",
     triggerOnce: true,
   });
 
-  const variants = {
-    // Reveal: Fade in + subtle scale
+  const variants: Record<RevealType, Variants> = {
     reveal: {
-      hidden: { opacity: 0, scale: 0.98, y: 20 },
+      hidden: { opacity: 0, y: 14 },
       visible: {
         opacity: 1,
-        scale: 1,
         y: 0,
         transition: {
-          duration,
+          type: "spring" as const,
+          stiffness: 350,
+          damping: 30,
           delay,
         },
       },
     },
-
-    // Build: Elements appear in stages
     build: {
-      hidden: { opacity: 0, scale: 0.95 },
+      hidden: { opacity: 0, scale: 0.98 },
       visible: {
         opacity: 1,
         scale: 1,
         transition: {
-          duration: duration * 0.8,
+          type: "spring" as const,
+          stiffness: 400,
+          damping: 28,
           delay,
         },
       },
     },
-
-    // Stagger: For list items
     stagger: {
-      hidden: { opacity: 0, x: -20 },
+      hidden: { opacity: 0, y: 10 },
       visible: {
         opacity: 1,
-        x: 0,
+        y: 0,
         transition: {
-          duration: duration * 0.6,
+          type: "spring" as const,
+          stiffness: 350,
+          damping: 30,
           delay,
         },
       },
     },
-
-    // Morph: Expand from center
     morph: {
-      hidden: { opacity: 0, scale: 0.9, y: 30 },
+      hidden: { opacity: 0, scale: 0.96, y: 16 },
       visible: {
         opacity: 1,
         scale: 1,
         y: 0,
         transition: {
-          duration: duration * 1.2,
+          type: "spring" as const,
+          stiffness: 300,
+          damping: 30,
           delay,
         },
       },
@@ -94,7 +94,6 @@ export default function ScrollReveal({
   );
 }
 
-// Container for staggering multiple children
 interface ScrollRevealContainerProps {
   children: ReactNode;
   type?: RevealType;
@@ -105,33 +104,35 @@ interface ScrollRevealContainerProps {
 export function ScrollRevealContainer({
   children,
   type = "stagger",
-  staggerDelay = 0.1,
+  staggerDelay = 0.04,
   className = "",
 }: ScrollRevealContainerProps) {
   const { ref, isVisible } = useScrollAnimation({
-    threshold: 0.15,
-    rootMargin: "0px 0px -50px 0px",
+    threshold: 0.05,
+    rootMargin: "0px 0px -20px 0px",
     triggerOnce: true,
   });
 
-  const containerVariants = {
+  const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
         staggerChildren: staggerDelay,
-        delayChildren: 0.1,
+        delayChildren: 0.02,
       },
     },
   };
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 12 },
     visible: {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.5,
+        type: "spring" as const,
+        stiffness: 400,
+        damping: 30,
       },
     },
   };
