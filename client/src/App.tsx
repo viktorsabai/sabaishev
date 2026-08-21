@@ -13,6 +13,8 @@ function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/workspace/material/:slug"} component={Workspace} />
+      <Route path={"/workspace/route/:slug"} component={Workspace} />
       <Route path={"/workspace"} component={Workspace} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
