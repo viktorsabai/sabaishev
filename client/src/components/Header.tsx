@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { Link } from "wouter";
 import LanguageToggle from "./LanguageToggle";
 import ContactButton from "./ContactButton";
 import HeaderTypingPresence from "./HeaderTypingPresence";
@@ -31,6 +32,12 @@ export default function Header({ onContactClick }: HeaderProps) {
         </motion.button>
 
         <div className="flex shrink-0 items-center gap-1.5 md:gap-2">
+          <Link
+            href="/workspace"
+            className="hidden rounded-full border border-cyan-200/20 bg-cyan-200/[0.05] px-3 py-2 font-mono text-[10px] tracking-[0.14em] text-cyan-100/80 transition-colors hover:border-cyan-200/45 hover:bg-cyan-200/[0.10] hover:text-cyan-100 sm:inline-flex"
+          >
+            WORKSPACE
+          </Link>
           <LanguageToggle />
           <ContactButton onClick={onContactClick} />
         </div>
