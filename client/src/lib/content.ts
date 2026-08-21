@@ -5,19 +5,19 @@ export const content: Record<Language, any> = {
     // Header
     header: {
       title: "VIKTOR.SYSTEM",
-      status: "Online",
+      status: "На связи",
       messages: [
-        "Свободен для нового проекта",
-        "Соберу MVP под ключ",
-        "Product · UX · AI в одном",
-        "Оставь бриф внизу",
-        "Отвечу сегодня",
+        "Могу взять новый проект",
+        "Помогу довести идею до первого запуска",
+        "Продукт, UX и AI — в одной системе",
+        "Опишите задачу в брифе",
+        "Отвечу в течение дня",
       ],
     },
     // Boot Screen
     boot: {
       title: "VIKTOR.SYSTEM",
-      line: "продукты, которые хочется открыть",
+      line: "продукты, которыми хочется пользоваться",
       sequence: [
         "Boot sequence...",
         "Loading modules...",
@@ -31,8 +31,8 @@ export const content: Record<Language, any> = {
     },
     // Hero Section
     hero: {
-      title: "Я создаю продукты.",
-      subtitle: "Превращаю идеи, сложные процессы и AI-фичи в работающие продукты — от первой логики до запуска.",
+      title: "Есть идея. Или процесс, который давно пора упростить.",
+      subtitle: "Разбираюсь в задаче, помогаю выбрать правильный формат и собираю решение: сайт, приложение, AI-фичу или внутреннюю систему. Без разработки ради разработки.",
       tags: ["Новый продукт", "AI-фича", "Мобильное приложение", "Web-продукт", "Автоматизация", "Редизайн"],
       // Quick links → Process stages (1-based stage numbers)
       // stage = 1-based Process stage (UI shows 01–08)
@@ -47,17 +47,17 @@ export const content: Record<Language, any> = {
         { label: "Сложный процесс", stage: 1 },
       ],
       cta: {
-        explore: "Смотреть продукты",
-        contact: "Связаться",
+        explore: "Посмотреть проекты",
+        contact: "Рассказать о задаче",
       },
     },
     // The Stack & Capabilities (replaces Track Record)
     stackCapabilities: {
-      title: "Стек и возможности",
-      subtitle: "Технический арсенал и инструменты для полного цикла разработки",
-      openCase: "Смотреть пруф",
-      artifactsLabel: "Пруф",
-      uploadHint: "Загрузить пруф",
+      title: "Если продукт должен не просто выглядеть хорошо",
+      subtitle: "Сначала разбираемся, где проблема. Потом решаем, что действительно нужно сделать — и только после этого идём в дизайн и разработку.",
+      openCase: "Посмотреть пример",
+      artifactsLabel: "Материалы",
+      uploadHint: "Добавить материал",
       uploadMore: "Добавить ещё",
       uploadFormats: "PNG, JPG — можно несколько",
       artifactPlaceholderTitle: "Пруф скоро",
@@ -103,10 +103,10 @@ export const content: Record<Language, any> = {
     },
     // Product Modules
     productModules: {
-      title: "Продукты и кейсы",
-      openCase: "Открыть кейс",
-      visitSite: "Открыть сайт",
-      progressLabel: "Прогресс",
+      title: "Вот что я уже собирал",
+      openCase: "Посмотреть, как это устроено",
+      visitSite: "Открыть проект",
+      progressLabel: "На каком этапе",
       uploadHint: "Загрузить артефакт",
       uploadMore: "Добавить ещё",
       uploadFormats: "PNG, JPG — можно несколько",
@@ -119,7 +119,7 @@ export const content: Record<Language, any> = {
           number: "001",
           name: "TAIKA",
           type: "AI-платформа для изучения тайского языка",
-          status: "TEST FLIGHT",
+          status: "Тестирование",
           progress: 100,
           link: "https://taikaa.online/",
           tags: ["iOS", "Swift", "AI Lessons", "Speech Recognition", "Thai/Russian", "EdTech"],
@@ -127,9 +127,9 @@ export const content: Record<Language, any> = {
           description: "Персональная AI-учительница тайского языка для русскоязычных пользователей. Курс, голосовая практика, AI-контент, игровые механики и нативный мобильный UX.",
           challenge: "Сделать изучение тайского не академическим, а живым, разговорным и ежедневным.",
           solution: "AI-курс, голосовая практика, игровые упражнения, русско-тайская подача, персональный onboarding.",
-          role: "Product, UX/UI, AI logic, content system, iOS prototype.",
-          stack: "Swift, iOS, Python, LLM, Speech Recognition.",
-          proof: "MVP in progress, full course architecture, onboarding, lesson system, speech practice.",
+          role: "Продуктовая логика, UX/UI, AI-сценарии и прототип iOS.",
+          stack: "Swift, iOS, Python, LLM, распознавание речи.",
+          proof: "Собрана архитектура MVP, onboarding, уроки и голосовая практика.",
         },
         {
           id: "hospital-ai",
@@ -144,9 +144,9 @@ export const content: Record<Language, any> = {
           description: "Однопользовательский врачебный интерфейс: карточка пациента, запись приема, расшифровка, AI-протокол и PDF. MVP для небольшой клиники в Таиланде.",
           challenge: "Сократить ручное заполнение медицинских протоколов.",
           solution: "Запись речи врача, автоматическая расшифровка, AI-структурирование протокола, PDF.",
-          role: "Product scope, UX architecture, interface design, AI workflow.",
-          stack: "Web SPA, AI transcription, LLM, PDF export.",
-          proof: "Defined MVP scope, 3-4 core screens, business proposal.",
+          role: "MVP, UX-архитектура, интерфейс и AI-сценарий.",
+          stack: "Web-приложение, расшифровка речи, LLM и PDF.",
+          proof: "Определён MVP, ключевые экраны и предложение для бизнеса.",
         },
         {
           id: "moo",
@@ -161,9 +161,9 @@ export const content: Record<Language, any> = {
           description: "Мобильный сервис подписки на еду: пользователь сам собирает рацион из категорий и блюд. Простой выбор, понятная корзина, повторный заказ.",
           challenge: "Сделать выбор подписки на еду простым без готовых рационов.",
           solution: "Категории, карусель блюд, подписка, корзина, Telegram welcome flow.",
-          role: "Product logic, UX/UI, visual identity, mobile flow.",
-          stack: "Web, mobile-first, Telegram, checkout logic.",
-          proof: "Visual prototypes, subscription flow, mobile screens.",
+          role: "Продуктовая логика, UX/UI, визуальная система и mobile-flow.",
+          stack: "Web, mobile-first, Telegram и логика оплаты.",
+          proof: "Прототипы, сценарий подписки и мобильные экраны.",
         },
         {
           id: "farang",
@@ -178,9 +178,9 @@ export const content: Record<Language, any> = {
           description: "Персональный AI-гид для иностранцев в Таиланде: еда, жилье, транспорт, культура, язык и бонусы. Профиль пользователя и персональные рекомендации.",
           challenge: "Помочь иностранцу быстро разобраться в жизни в Таиланде.",
           solution: "Профили, категории, AI-рекомендации, локальные сценарии.",
-          role: "Product concept, UX, onboarding, content architecture.",
-          stack: "Mobile app concept, AI assistant, multilingual UX.",
-          proof: "Product concept document, user flows, content structure.",
+          role: "Концепция продукта, UX, onboarding и структура контента.",
+          stack: "Концепция mobile app, AI-ассистент и мультиязычный UX.",
+          proof: "Концепция продукта, пользовательские сценарии и структура контента.",
         },
         {
           id: "don-hazza",
@@ -195,9 +195,9 @@ export const content: Record<Language, any> = {
           description: "Система управления для сетей ресторанов: меню, заказы, кухня, доставка, аналитика. Фокус на операциях и контроле качества.",
           challenge: "Централизовать управление несколькими ресторанами без потери качества.",
           solution: "Единая система меню, заказов, кухни, доставки и аналитики.",
-          role: "Product strategy, B2B UX, operations design.",
-          stack: "Web platform, real-time updates, analytics.",
-          proof: "Market research, competitor analysis, user interviews.",
+          role: "Продуктовая стратегия, B2B UX и дизайн операций.",
+          stack: "Web-платформа, обновления в реальном времени и аналитика.",
+          proof: "Исследование рынка, анализ конкурентов и интервью с пользователями.",
         },
         {
           id: "telegram-mini-apps",
@@ -212,19 +212,19 @@ export const content: Record<Language, any> = {
           description: "Серия экспериментальных мини-приложений в Telegram: игры, утилиты, боты. Быстрое прототипирование и валидация идей.",
           challenge: "Найти product-market fit для Telegram-экосистемы.",
           solution: "Быстрые итерации, A/B тестирование, feedback loop.",
-          role: "Product experiments, UX/UI, rapid prototyping.",
-          stack: "Telegram Bot API, Web technologies, real-time updates.",
-          proof: "Multiple working prototypes, user testing results.",
+          role: "Продуктовые эксперименты, UX/UI и быстрое прототипирование.",
+          stack: "Telegram Bot API, web-технологии и обновления в реальном времени.",
+          proof: "Несколько рабочих прототипов и результаты тестирования.",
         },
       ],
     },
     // Process Section
     process: {
       caption: "КАК СОЗДАЮ",
-      title: "Как я создаю",
-      subtitle: "Большинство людей закрывают один-два этапа. Я собираю всю систему.",
-      previousStep: "Предыдущий этап",
-      nextStep: "Следующий этап",
+      title: "Как мы доходим от идеи до работающей версии",
+      subtitle: "Код — не первый шаг. Сначала нужно понять, для кого мы это делаем и что должно измениться после запуска.",
+      previousStep: "Назад",
+      nextStep: "Дальше",
       artifactPlaceholderTitle: "Артефакт скоро",
       artifactPlaceholderHint: "Метод и структура этапа — ниже",
       openGallery: "Открыть",
@@ -281,8 +281,8 @@ export const content: Record<Language, any> = {
     },
     // Experience Section
     experience: {
-      title: "Опыт",
-      intro: "17+ лет — от логистики и e-commerce до платформ, AI и собственных продуктов",
+      title: "Опыт, который помогает не изобретать велосипед",
+      intro: "17+ лет в больших системах, продуктах и собственных запусках — от логистики и e-commerce до AI.",
       // Companies (Career Path)
       companies: [
         {
@@ -656,13 +656,13 @@ export const content: Record<Language, any> = {
     },
     // Now Building Section
     nowBuilding: {
-      title: "Сейчас создаю",
+      title: "Что сейчас в работе",
       projects: [
         {
           id: "taika",
           name: "TAIKA",
           progress: 100,
-          status: "TEST FLIGHT",
+          status: "Тестирование",
           description: "Персональная AI-учительница тайского языка для русскоязычных пользователей.",
           details: "Платформа объединяет интерактивный курс, голосовую практику, AI-контент, игровые механики и нативный мобильный UX. Фокус на разговорном языке и ежедневной практике.",
         },
@@ -670,7 +670,7 @@ export const content: Record<Language, any> = {
           id: "hospital-ai",
           name: "Hospital AI",
           progress: 12,
-          status: "Concept / discussion",
+          status: "Концепт / обсуждение",
           description: "AI-ассистент для медицинского приема и документирования.",
           details: "Врачебный интерфейс с записью приема, автоматической расшифровкой, AI-структурированием протокола и экспортом PDF. Разработан для небольших клиник в Таиланде.",
         },
@@ -678,7 +678,7 @@ export const content: Record<Language, any> = {
           id: "moo",
           name: "MOO",
           progress: 100,
-          status: "Client testing",
+          status: "Тестирование с клиентом",
           description: "Сервис подписки на еду с персональным составлением рациона.",
           details: "Мобильный сервис, где пользователь сам собирает рацион из доступных категорий и блюд. Фокус на простом выборе, понятной корзине и легком повторном заказе.",
         },
@@ -686,7 +686,7 @@ export const content: Record<Language, any> = {
           id: "new-product",
           name: "New product",
           progress: 0,
-          status: "Research",
+          status: "Исследование",
           description: "Новый продукт на этапе исследования и валидации.",
           details: "Находится на этапе глубокого исследования рынка, интервью с пользователями и формирования MVP scope. Скоро будут обновления.",
         },
@@ -694,7 +694,7 @@ export const content: Record<Language, any> = {
           id: "secret",
           name: "Secret",
           progress: 0,
-          status: "Coming soon",
+          status: "Скоро",
           description: "Секретный проект, над которым ведется работа.",
           details: "Детали будут раскрыты позже. Следите за обновлениями в социальных сетях и Telegram.",
         },
@@ -702,7 +702,7 @@ export const content: Record<Language, any> = {
     },
     // Contact Section
     contact: {
-      title: "Давайте создавать.",
+      title: "Расскажите, что нужно сделать.",
       links: {
         telegram: "https://t.me/bayshev",
         instagram: "https://instagram.com/bayshev",
@@ -714,29 +714,29 @@ export const content: Record<Language, any> = {
         email: "Email",
       },
       form: {
-        subtitle: "Собери бриф за минуту — только тапы и слайдер, без ручного ввода.",
-        briefLabel: "Brief",
-        next: "Дальше",
-        submit: "Отправить бриф",
-        sent: "Открыто",
+        subtitle: "Пара вопросов — и станет понятнее, какой формат решения вам подходит. Длинное ТЗ не нужно.",
+        briefLabel: "Пара вопросов о задаче",
+        next: "Понятно, дальше",
+        submit: "Отправить задачу",
+        sent: "Открыть контакт",
         submitSubject: "Бриф · VIKTOR.SYSTEM",
         submitMessage: "Привет! Хочу обсудить проект.",
-        summaryTitle: "Сводка",
+        summaryTitle: "Вот что я понял",
         steps: {
-          need: "Что нужно",
-          domain: "Сфера",
-          budget: "Бюджет",
-          location: "Локация",
-          timeline: "Сроки",
-          channel: "Связь",
+          need: "Что хотите сделать",
+          domain: "Ваш бизнес",
+          budget: "Примерный бюджет",
+          location: "Где работаете",
+          timeline: "Когда хотите начать",
+          channel: "Куда ответить",
         },
         hints: {
-          need: "Можно отметить несколько.",
-          domain: "Можно отметить несколько — всё, что близко к задаче.",
-          budget: "Потяни слайдер. Валюта — одним тапом.",
-          location: "Где будет жить продукт.",
-          timeline: "Когда хочешь стартовать.",
-          channel: "Куда отправить бриф.",
+          need: "Выберите всё, что похоже на вашу задачу.",
+          domain: "Можно выбрать несколько вариантов.",
+          budget: "Выберите примерный диапазон. Точную смету посчитаем после разговора.",
+          location: "Где находится ваша команда или аудитория.",
+          timeline: "Когда вам нужно начать работу.",
+          channel: "Куда удобнее получить мой ответ.",
         },
         summary: {
           need: "Нужно",
@@ -808,17 +808,17 @@ export const content: Record<Language, any> = {
         },
       },
       footer: {
-        tagline: "AI Product Builder. От идеи и UX до запуска.",
+        tagline: "Помогаю превращать идеи и сложные процессы в работающие digital-продукты.",
         navTitle: "Навигация",
         contactTitle: "Контакты",
         rights: "Все права защищены.",
-        built: "Built as a personal OS.",
+        built: "Собрано как личная рабочая система.",
       },
     },
     // SEO
     seo: {
-      title: "VIKTOR.SYSTEM — AI Product Builder",
-      description: "Персональная система проектов Виктора: AI, UX/UI, mobile, web, automation and product strategy.",
+      title: "VIKTOR.SYSTEM — продукты, UX и AI",
+      description: "Опыт и проекты Виктора: продуктовая стратегия, UX/UI, AI, мобильные и web-продукты, автоматизация.",
     },
   },
 
@@ -826,7 +826,7 @@ export const content: Record<Language, any> = {
     // Header
     header: {
       title: "VIKTOR.SYSTEM",
-      status: "Online",
+      status: "На связи",
       messages: [
         "Available for a new project",
         "I'll ship your MVP end-to-end",
@@ -1099,7 +1099,7 @@ export const content: Record<Language, any> = {
     },
     // Experience Section
     experience: {
-      title: "Experience",
+      title: "Опыт",
       intro: "17+ years — from logistics and e-commerce to platforms, AI and own products",
       companies: [
         {
@@ -1644,7 +1644,7 @@ export const content: Record<Language, any> = {
     // Header
     header: {
       title: "VIKTOR.SYSTEM",
-      status: "Online",
+      status: "На связи",
       messages: [
         "ว่างรับโปรเจกต์ใหม่",
         "ทำ MVP ให้ครบวงจร",
