@@ -17,7 +17,9 @@ import "./process.css";
 const reduced = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const COL = 70; // px per week
 const GX = 150; // gantt timeline x (after row labels)
-const CODE_START = 1.0; // s after a layer change: playhead, row and panel go first
+const CODE_START = 1.75; // s after a layer change: playhead, row, panel and the how-steps go first
+const HOW_AT = [0.95, 1.2, 1.45]; // when each how-step ticks
+const LEAVE_MS = 450; // the previous layer's panel lifts away while the new one comes in
 const DOC_CYCLE = 3800;
 const AUTOPLAY = 5200;
 
@@ -89,6 +91,52 @@ function DocLayer({ doc, mode }: { doc: StageDoc; mode: "enter" | "leave" }) {
   );
 }
 
+// The left panel of a layer: the business's pain, what I do, how I do it (ticked step by step),
+// and the output code typed line by line. mode "out" is the leaving copy: shown complete and
+// lifting away; "static" shows everything at once (reduced motion).
+function LayerPanel({ copy, sel, biz, mode, lit, code }: { copy: ProcessCopy; sel: number; biz: number; mode: "in" | "out" | "static"; lit: number; code?: Code }) {
+  const st = copy.stages[sel - 1];
+  const B = copy.biz[biz - 1];
+  const w = STAGE_WEEKS[sel - 1];
+  const lines = (code ?? buildCode(copy, sel)).lines;
+  const typed = mode === "in";
+  return (
+    <div className={`absolute z-[7] w-[400px]${mode === "out" ? " pn-out" : ""}`} style={{ left: 70, top: 146, animation: typed ? "pnIn .8s cubic-bezier(.2,.9,.25,1) .45s both" : undefined }} aria-hidden={mode === "out"}>
+      <div className="flex items-center gap-3">
+        <span className="mono gt uppercase" style={{ fontSize: 11, letterSpacing: ".14em" }}>{copy.stage} 0{sel} / 07</span>
+        <span className="block h-px w-9" style={{ background: "var(--sx-grad)" }} />
+        <span className="mono" style={{ fontSize: 10.5, letterSpacing: ".14em", color: "rgba(241,238,232,.62)" }}>W{w.s + 1}{w.d > 1 ? `–W${w.s + w.d}` : ""}</span>
+      </div>
+      <h2 className="gt" style={{ margin: "12px 0 0", fontSize: st.name.length > 11 ? 44 : 54, lineHeight: 0.95, fontWeight: 500, letterSpacing: "-.06em" }}>{st.name}</h2>
+      <div className="mono uppercase" style={{ marginTop: 20, fontSize: 10, letterSpacing: ".16em", color: "rgba(241,238,232,.5)" }}>{copy.familiar}</div>
+      <div style={{ marginTop: 6, fontSize: 19, lineHeight: 1.25, letterSpacing: "-.02em" }}>«{B.p[sel - 1][0]}»</div>
+      <div className="mono gt uppercase" style={{ marginTop: 16, fontSize: 10, letterSpacing: ".16em" }}>{copy.whatIDo}</div>
+      <div style={{ marginTop: 6, fontSize: 15, lineHeight: 1.45, color: "rgba(241,238,232,.82)" }}>{B.p[sel - 1][1]}</div>
+      <div className="mono uppercase" style={{ marginTop: 16, fontSize: 10, letterSpacing: ".16em", color: "rgba(241,238,232,.5)" }}>{copy.howTitle}</div>
+      <ol className="how">
+        {st.how.map((h, i) => (
+          <li key={h} style={typed ? { animationDelay: `${HOW_AT[i]}s` } : { animation: "none", opacity: 1 }}>
+            <i className="tick" style={typed ? { animationDelay: `${HOW_AT[i] + 0.15}s` } : { animation: "none", transform: "none" }} aria-hidden="true" />
+            {h}
+          </li>
+        ))}
+      </ol>
+      <div className="mono gt uppercase" style={{ marginTop: 16, fontSize: 10, letterSpacing: ".16em" }}>{copy.output}</div>
+      <div style={{ marginTop: 8, padding: "12px 16px", borderRadius: 12, border: "1px solid rgba(255,255,255,.12)", background: "rgba(10,12,20,.5)" }}>
+        {lines.map((l, i) => (
+          <span
+            key={i}
+            className={`tl${lit === i ? " lit" : ""}`}
+            style={{ ["--n" as string]: l.n, animation: typed ? `typL ${l.dur.toFixed(2)}s steps(${l.n}) ${l.delay.toFixed(2)}s forwards` : "none", width: typed ? undefined : "auto", borderRightColor: typed ? undefined : "transparent", marginTop: l.gap ? 6 : undefined }}
+          >
+            {l.parts.map((p, j) => <span key={j} className={p.k}>{p.t}</span>)}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // stage 0 = nothing shown yet (the first document comes up with the first output item).
 // ?biz=N (1–5) opens that business right away, ?layer=N (1–7) a layer — e.g. for ads per niche.
 function fromQuery(key: string, max: number) {
@@ -121,7 +169,18 @@ export default function ProcessScene() {
   const code = useMemo(() => buildCode(copy, sel), [copy, sel]);
   const fast = reduced();
 
-  const goLayer = (n: number) => { setSel(n); setTn((t) => t + 1); };
+  // The panel of the layer being left stays for a moment and lifts away (see LayerPanel).
+  const [leaving, setLeaving] = useState<{ sel: number; biz: number; key: number } | null>(null);
+  const goLayer = (n: number) => {
+    if (biz) setLeaving({ sel, biz, key: tn });
+    setSel(n);
+    setTn((t) => t + 1);
+  };
+  useEffect(() => {
+    if (!leaving) return;
+    const id = window.setTimeout(() => setLeaving(null), LEAVE_MS);
+    return () => window.clearTimeout(id);
+  }, [leaving]);
   const next = () => goLayer(sel >= 7 ? 1 : sel + 1);
   const prev = () => goLayer(sel <= 1 ? 7 : sel - 1);
   const pick = (i: number) => {
@@ -303,31 +362,9 @@ export default function ProcessScene() {
               ))}
             </div>
 
-            {/* Layer panel */}
-            <div key={`panel-${tn}`} className="absolute z-[7] w-[400px]" style={{ left: 70, top: 150, animation: fast ? undefined : "pnIn .8s cubic-bezier(.2,.9,.25,1) .45s both" }}>
-              <div className="flex items-center gap-3">
-                <span className="mono gt uppercase" style={{ fontSize: 11, letterSpacing: ".14em" }}>{copy.stage} 0{sel} / 07</span>
-                <span className="block h-px w-9" style={{ background: "var(--sx-grad)" }} />
-                <span className="mono" style={{ fontSize: 10.5, letterSpacing: ".14em", color: "rgba(241,238,232,.62)" }}>W{weeks.s + 1}{weeks.d > 1 ? `–W${weeks.s + weeks.d}` : ""}</span>
-              </div>
-              <h2 className="gt" style={{ margin: "14px 0 0", fontSize: st.name.length > 11 ? 48 : 62, lineHeight: 0.95, fontWeight: 500, letterSpacing: "-.06em" }}>{st.name}</h2>
-              <div className="mono uppercase" style={{ marginTop: 26, fontSize: 10, letterSpacing: ".16em", color: "rgba(241,238,232,.5)" }}>{copy.familiar}</div>
-              <div style={{ marginTop: 7, fontSize: 21, lineHeight: 1.25, letterSpacing: "-.02em" }}>«{B.p[sel - 1][0]}»</div>
-              <div className="mono gt uppercase" style={{ marginTop: 22, fontSize: 10, letterSpacing: ".16em" }}>{copy.whatIDo}</div>
-              <div style={{ marginTop: 7, fontSize: 16, lineHeight: 1.45, color: "rgba(241,238,232,.82)" }}>{B.p[sel - 1][1]}</div>
-              <div className="mono gt uppercase" style={{ marginTop: 26, fontSize: 10, letterSpacing: ".16em" }}>{copy.output}</div>
-              <div style={{ marginTop: 10, padding: "14px 16px", borderRadius: 12, border: "1px solid rgba(255,255,255,.12)", background: "rgba(10,12,20,.5)" }}>
-                {code.lines.map((l, i) => (
-                  <span
-                    key={i}
-                    className={`tl${lit === i ? " lit" : ""}`}
-                    style={{ ["--n" as string]: l.n, animation: `typL ${l.dur.toFixed(2)}s steps(${l.n}) ${l.delay.toFixed(2)}s forwards`, marginTop: l.gap ? 8 : undefined }}
-                  >
-                    {l.parts.map((p, j) => <span key={j} className={p.k}>{p.t}</span>)}
-                  </span>
-                ))}
-              </div>
-            </div>
+            {/* Layer panel; the previous one lifts away while this one comes in */}
+            {leaving && <LayerPanel key={`out-${leaving.key}`} copy={copy} sel={leaving.sel} biz={leaving.biz} mode="out" lit={-1} />}
+            <LayerPanel key={`panel-${tn}`} copy={copy} sel={sel} biz={biz} mode={fast ? "static" : "in"} lit={lit} code={code} />
 
             {/* Controls */}
             <div className="absolute z-[7] flex items-center justify-between" style={{ left: 70, right: 70, bottom: 46 }}>

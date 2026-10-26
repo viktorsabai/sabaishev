@@ -23,12 +23,13 @@ export const STAGE_DOCS: StageDoc[][] = [
   [{ name: "Launch Plan · TAIKA", img: art("7-0") }, { name: "Analytics Dashboard · TAIKA", img: art("7-1") }, { name: "Roadmap · TAIKA", img: art("7-3") }],
 ];
 
-export type ProcStage = { name: string; out: { doc: string; inside: [string, string, string]; can: string }; proof: string };
+// how: three steps of how I do the layer (handoff stages[].how)
+export type ProcStage = { name: string; out: { doc: string; inside: [string, string, string]; can: string }; proof: string; how: [string, string, string] };
 export type Business = { name: string; hint: string; p: [string, string][] };
 
 export type ProcessCopy = {
   eyebrow: string; title: string; accent: string; lead: string;
-  familiar: string; whatIDo: string; output: string;
+  familiar: string; whatIDo: string; output: string; howTitle: string;
   business: string; stage: string; layer: string; next: string; restart: string;
   autoOn: string; autoOff: string; discuss: string; weeksNote: string; docOfStage: string;
   prevLayer: string;
@@ -41,20 +42,20 @@ export const processContent: Record<Language, ProcessCopy> = {
   ru: {
     eyebrow: "Процесс", title: "Какой у вас ", accent: "бизнес?",
     lead: "Выберите — и я покажу ваш путь от боли до запуска: слой за слоем, с тем, что вы получите на каждом этапе.",
-    familiar: "Знакомо?", whatIDo: "Что делаю я", output: "На выходе этапа — вы получаете",
+    familiar: "Знакомо?", whatIDo: "Что делаю я", howTitle: "Как делаю", output: "На выходе этапа — вы получаете",
     business: "Бизнес", stage: "Этап", layer: "Слой", next: "Дальше", restart: "Сначала",
     autoOn: "Автоплей · вкл", autoOff: "Автоплей · выкл", discuss: "Обсудить мой путь",
     weeksNote: "Ориентир по неделям · сроки уточняются под задачу", docOfStage: "Документ этапа",
     prevLayer: "Предыдущий слой",
     code: { out: "выход", doc: "документ", inside: "внутри", can: "вы_сможете", proof: "так было в" },
     stages: [
-      { name: "Формулируем", out: { doc: "Карта продукта", inside: ["цель и метрики успеха", "гипотезы по приоритету", "границы первой версии"], can: "объяснить продукт за 5 минут" }, proof: "TAIKA · MOO" },
-      { name: "Аудируем", out: { doc: "Аудит и карта болей", inside: ["что работает и что нет", "сравнение с конкурентами", "SEO-аудит"], can: "решить, что чинить первым" }, proof: "Paradise" },
-      { name: "Проектируем", out: { doc: "Архитектура продукта", inside: ["путь клиента и структура экранов", "кликабельный прототип", "дизайн-система"], can: "отдать любой команде в работу" }, proof: "TAIKA · EON" },
-      { name: "Собираем", out: { doc: "Продукт и описание интеграций", inside: ["код и API", "схема интеграций", "все доступы"], can: "развивать продукт без меня" }, proof: "MOO · Paradise" },
-      { name: "Тестируем", out: { doc: "Отчёт по тестам", inside: ["записи тестов с людьми", "найденные ошибки", "список правок"], can: "увидеть, что проверено на людях" }, proof: "MOO — тест с заказчиком" },
-      { name: "Обучаем", out: { doc: "Инструкции и обучение", inside: ["документация", "видео-гайды", "сессия с вашей командой"], can: "работать командой самостоятельно" }, proof: "" },
-      { name: "Запускаем", out: { doc: "План запуска и роста", inside: ["чек-лист релиза и SEO", "дашборд аналитики", "roadmap роста"], can: "видеть результат в цифрах" }, proof: "Paradise · EON — онлайн" },
+      { name: "Формулируем", out: { doc: "Карта продукта", inside: ["цель и метрики успеха", "гипотезы по приоритету", "границы первой версии"], can: "объяснить продукт за 5 минут" }, proof: "TAIKA · MOO", how: ["слушаю вас и вашу команду", "фиксирую цель на одной странице", "согласуем до старта работ"] },
+      { name: "Аудируем", out: { doc: "Аудит и карта болей", inside: ["что работает и что нет", "сравнение с конкурентами", "SEO-аудит"], can: "решить, что чинить первым" }, proof: "Paradise", how: ["смотрю данные, продукт, конкурентов", "нахожу, где теряются деньги", "отдаю карту болей по приоритету"] },
+      { name: "Проектируем", out: { doc: "Архитектура продукта", inside: ["путь клиента и структура экранов", "кликабельный прототип", "дизайн-система"], can: "отдать любой команде в работу" }, proof: "TAIKA · EON", how: ["рисую путь клиента на схеме", "собираю прототип без дизайна", "проверяем логику до визуала"] },
+      { name: "Собираем", out: { doc: "Продукт и описание интеграций", inside: ["код и API", "схема интеграций", "все доступы"], can: "развивать продукт без меня" }, proof: "MOO · Paradise", how: ["разработка короткими шагами", "регулярно показываю рабочую версию", "вы видите прогресс, а не отчёты"] },
+      { name: "Тестируем", out: { doc: "Отчёт по тестам", inside: ["записи тестов с людьми", "найденные ошибки", "список правок"], can: "увидеть, что проверено на людях" }, proof: "MOO — тест с заказчиком", how: ["даю прототип живым людям", "собираю, где они спотыкаются", "правим до релиза, а не после"] },
+      { name: "Обучаем", out: { doc: "Инструкции и обучение", inside: ["документация", "видео-гайды", "сессия с вашей командой"], can: "работать командой самостоятельно" }, proof: "", how: ["записываю инструкции и видео", "провожу сессию с вашей командой", "документация остаётся у вас"] },
+      { name: "Запускаем", out: { doc: "План запуска и роста", inside: ["чек-лист релиза и SEO", "дашборд аналитики", "roadmap роста"], can: "видеть результат в цифрах" }, proof: "Paradise · EON — онлайн", how: ["выпускаю на рабочую среду", "включаю аналитику и мониторинг", "договариваемся о плане роста"] },
     ],
     biz: [
       { name: "Недвижимость", hint: "Каталог, заявки, лиды с сайта", p: [
@@ -107,20 +108,20 @@ export const processContent: Record<Language, ProcessCopy> = {
   en: {
     eyebrow: "Process", title: "What's your ", accent: "business?",
     lead: "Pick one and I'll show your path from pain to launch, layer by layer, with what you get at every stage.",
-    familiar: "Sound familiar?", whatIDo: "What I do", output: "Stage output — what you get",
+    familiar: "Sound familiar?", whatIDo: "What I do", howTitle: "How I do it", output: "Stage output — what you get",
     business: "Business", stage: "Stage", layer: "Layer", next: "Next", restart: "Start over",
     autoOn: "Autoplay · on", autoOff: "Autoplay · off", discuss: "Discuss my path",
     weeksNote: "Approximate weeks · timing is set per project", docOfStage: "Stage document",
     prevLayer: "Previous layer",
     code: { out: "output", doc: "document", inside: "inside", can: "you_can", proof: "done for" },
     stages: [
-      { name: "Frame", out: { doc: "Product map", inside: ["goal and success metrics", "prioritised hypotheses", "scope of version one"], can: "explain the product in 5 minutes" }, proof: "TAIKA · MOO" },
-      { name: "Audit", out: { doc: "Audit and pain map", inside: ["what works and what doesn't", "competitor comparison", "SEO audit"], can: "decide what to fix first" }, proof: "Paradise" },
-      { name: "Design", out: { doc: "Product architecture", inside: ["customer path and screen structure", "clickable prototype", "design system"], can: "hand it to any team to build" }, proof: "TAIKA · EON" },
-      { name: "Build", out: { doc: "Product and integration docs", inside: ["code and API", "integration map", "all access"], can: "grow the product without me" }, proof: "MOO · Paradise" },
-      { name: "Test", out: { doc: "Test report", inside: ["recordings of user tests", "bugs found", "fix list"], can: "see what was tested with people" }, proof: "MOO — client testing" },
-      { name: "Train", out: { doc: "Guides and training", inside: ["documentation", "video guides", "session with your team"], can: "run it as a team on your own" }, proof: "" },
-      { name: "Launch", out: { doc: "Launch and growth plan", inside: ["release and SEO checklist", "analytics dashboard", "growth roadmap"], can: "see results in numbers" }, proof: "Paradise · EON — live" },
+      { name: "Frame", out: { doc: "Product map", inside: ["goal and success metrics", "prioritised hypotheses", "scope of version one"], can: "explain the product in 5 minutes" }, proof: "TAIKA · MOO", how: ["I listen to you and your team", "I pin the goal on one page", "we agree on it before work starts"] },
+      { name: "Audit", out: { doc: "Audit and pain map", inside: ["what works and what doesn't", "competitor comparison", "SEO audit"], can: "decide what to fix first" }, proof: "Paradise", how: ["I look at data, product, competitors", "I find where money leaks", "you get a pain map by priority"] },
+      { name: "Design", out: { doc: "Product architecture", inside: ["customer path and screen structure", "clickable prototype", "design system"], can: "hand it to any team to build" }, proof: "TAIKA · EON", how: ["I map the customer path", "I build a prototype without styling", "we check the logic before visuals"] },
+      { name: "Build", out: { doc: "Product and integration docs", inside: ["code and API", "integration map", "all access"], can: "grow the product without me" }, proof: "MOO · Paradise", how: ["development in short steps", "I regularly show a working version", "you see progress, not reports"] },
+      { name: "Test", out: { doc: "Test report", inside: ["recordings of user tests", "bugs found", "fix list"], can: "see what was tested with people" }, proof: "MOO — client testing", how: ["I put the prototype in front of real people", "I collect where they stumble", "we fix before release, not after"] },
+      { name: "Train", out: { doc: "Guides and training", inside: ["documentation", "video guides", "session with your team"], can: "run it as a team on your own" }, proof: "", how: ["I record guides and videos", "I run a session with your team", "the documentation stays with you"] },
+      { name: "Launch", out: { doc: "Launch and growth plan", inside: ["release and SEO checklist", "analytics dashboard", "growth roadmap"], can: "see results in numbers" }, proof: "Paradise · EON — live", how: ["I ship to production", "I switch on analytics and monitoring", "we agree on a growth plan"] },
     ],
     biz: [
       { name: "Real estate", hint: "Listings, enquiries, leads from the site", p: [
@@ -173,20 +174,20 @@ export const processContent: Record<Language, ProcessCopy> = {
   th: {
     eyebrow: "กระบวนการ", title: "ธุรกิจของคุณ", accent: "คืออะไร?",
     lead: "เลือกแล้วผมจะแสดงเส้นทางจากปัญหาถึงการเปิดตัว ทีละชั้น พร้อมสิ่งที่คุณได้ในแต่ละขั้นตอน",
-    familiar: "คุ้นๆ ไหม?", whatIDo: "สิ่งที่ผมทำ", output: "ผลลัพธ์ของขั้นตอน — สิ่งที่คุณได้",
+    familiar: "คุ้นๆ ไหม?", whatIDo: "สิ่งที่ผมทำ", howTitle: "วิธีที่ผมทำ", output: "ผลลัพธ์ของขั้นตอน — สิ่งที่คุณได้",
     business: "ธุรกิจ", stage: "ขั้นตอน", layer: "ชั้น", next: "ถัดไป", restart: "เริ่มใหม่",
     autoOn: "เล่นอัตโนมัติ · เปิด", autoOff: "เล่นอัตโนมัติ · ปิด", discuss: "คุยเรื่องเส้นทางของฉัน",
     weeksNote: "สัปดาห์โดยประมาณ · ระยะเวลาปรับตามงาน", docOfStage: "เอกสารของขั้นตอน",
     prevLayer: "ชั้นก่อนหน้า",
     code: { out: "output", doc: "document", inside: "inside", can: "you_can", proof: "done for" },
     stages: [
-      { name: "กำหนดโจทย์", out: { doc: "แผนที่โปรดักต์", inside: ["เป้าหมายและตัวชี้วัด", "สมมติฐานตามลำดับ", "ขอบเขตเวอร์ชันแรก"], can: "อธิบายโปรดักต์ได้ใน 5 นาที" }, proof: "TAIKA · MOO" },
-      { name: "ตรวจสอบ", out: { doc: "ผลตรวจสอบและแผนที่ปัญหา", inside: ["อะไรได้ผลและอะไรไม่", "เทียบกับคู่แข่ง", "ตรวจ SEO"], can: "ตัดสินใจว่าจะแก้อะไรก่อน" }, proof: "Paradise" },
-      { name: "ออกแบบ", out: { doc: "สถาปัตยกรรมโปรดักต์", inside: ["เส้นทางลูกค้าและโครงหน้าจอ", "ต้นแบบที่คลิกได้", "ดีไซน์ซิสเต็ม"], can: "ส่งให้ทีมไหนก็ทำต่อได้" }, proof: "TAIKA · EON" },
-      { name: "สร้าง", out: { doc: "โปรดักต์และเอกสารการเชื่อมต่อ", inside: ["โค้ดและ API", "แผนผังการเชื่อมต่อ", "สิทธิ์เข้าถึงทั้งหมด"], can: "พัฒนาต่อได้เองโดยไม่ต้องมีผม" }, proof: "MOO · Paradise" },
-      { name: "ทดสอบ", out: { doc: "รายงานการทดสอบ", inside: ["บันทึกการทดสอบกับผู้ใช้", "ข้อผิดพลาดที่พบ", "รายการแก้ไข"], can: "เห็นว่าอะไรทดสอบกับคนจริงแล้ว" }, proof: "MOO — ทดสอบกับลูกค้า" },
-      { name: "ฝึกอบรม", out: { doc: "คู่มือและการอบรม", inside: ["เอกสาร", "วิดีโอแนะนำ", "เซสชันกับทีมของคุณ"], can: "ทีมทำงานได้เองอย่างอิสระ" }, proof: "" },
-      { name: "เปิดตัว", out: { doc: "แผนเปิดตัวและการเติบโต", inside: ["เช็กลิสต์รีลีสและ SEO", "แดชบอร์ดอนาลิติกส์", "roadmap การเติบโต"], can: "เห็นผลลัพธ์เป็นตัวเลข" }, proof: "Paradise · EON — ออนไลน์" },
+      { name: "กำหนดโจทย์", out: { doc: "แผนที่โปรดักต์", inside: ["เป้าหมายและตัวชี้วัด", "สมมติฐานตามลำดับ", "ขอบเขตเวอร์ชันแรก"], can: "อธิบายโปรดักต์ได้ใน 5 นาที" }, proof: "TAIKA · MOO", how: ["ฟังคุณและทีมของคุณ", "สรุปเป้าหมายในหนึ่งหน้า", "ตกลงร่วมกันก่อนเริ่มงาน"] },
+      { name: "ตรวจสอบ", out: { doc: "ผลตรวจสอบและแผนที่ปัญหา", inside: ["อะไรได้ผลและอะไรไม่", "เทียบกับคู่แข่ง", "ตรวจ SEO"], can: "ตัดสินใจว่าจะแก้อะไรก่อน" }, proof: "Paradise", how: ["ดูข้อมูล โปรดักต์ และคู่แข่ง", "หาว่าเงินรั่วไหลตรงไหน", "ส่งแผนที่ปัญหาตามลำดับความสำคัญ"] },
+      { name: "ออกแบบ", out: { doc: "สถาปัตยกรรมโปรดักต์", inside: ["เส้นทางลูกค้าและโครงหน้าจอ", "ต้นแบบที่คลิกได้", "ดีไซน์ซิสเต็ม"], can: "ส่งให้ทีมไหนก็ทำต่อได้" }, proof: "TAIKA · EON", how: ["วาดเส้นทางลูกค้าเป็นแผนผัง", "สร้างต้นแบบแบบไม่มีดีไซน์", "ตรวจตรรกะก่อนทำภาพ"] },
+      { name: "สร้าง", out: { doc: "โปรดักต์และเอกสารการเชื่อมต่อ", inside: ["โค้ดและ API", "แผนผังการเชื่อมต่อ", "สิทธิ์เข้าถึงทั้งหมด"], can: "พัฒนาต่อได้เองโดยไม่ต้องมีผม" }, proof: "MOO · Paradise", how: ["พัฒนาเป็นช่วงสั้นๆ", "แสดงเวอร์ชันที่ใช้งานได้สม่ำเสมอ", "คุณเห็นความคืบหน้า ไม่ใช่รายงาน"] },
+      { name: "ทดสอบ", out: { doc: "รายงานการทดสอบ", inside: ["บันทึกการทดสอบกับผู้ใช้", "ข้อผิดพลาดที่พบ", "รายการแก้ไข"], can: "เห็นว่าอะไรทดสอบกับคนจริงแล้ว" }, proof: "MOO — ทดสอบกับลูกค้า", how: ["ให้ผู้ใช้จริงลองต้นแบบ", "เก็บว่าพวกเขาติดตรงไหน", "แก้ก่อนรีลีส ไม่ใช่หลัง"] },
+      { name: "ฝึกอบรม", out: { doc: "คู่มือและการอบรม", inside: ["เอกสาร", "วิดีโอแนะนำ", "เซสชันกับทีมของคุณ"], can: "ทีมทำงานได้เองอย่างอิสระ" }, proof: "", how: ["บันทึกคู่มือและวิดีโอ", "จัดเซสชันกับทีมของคุณ", "เอกสารอยู่กับคุณ"] },
+      { name: "เปิดตัว", out: { doc: "แผนเปิดตัวและการเติบโต", inside: ["เช็กลิสต์รีลีสและ SEO", "แดชบอร์ดอนาลิติกส์", "roadmap การเติบโต"], can: "เห็นผลลัพธ์เป็นตัวเลข" }, proof: "Paradise · EON — ออนไลน์", how: ["ปล่อยขึ้น production", "เปิดอนาลิติกส์และการมอนิเตอร์", "ตกลงแผนการเติบโต"] },
     ],
     biz: [
       { name: "อสังหาฯ", hint: "รายการทรัพย์ คำขอ ลีดจากเว็บไซต์", p: [
