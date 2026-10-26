@@ -16,6 +16,7 @@ export type SceneCopy = {
     exhibit: string; challenge: string; role: string; open: string; similar: string; prev: string; next: string;
   };
   shipLabel: string;
+  seo: { title: string; description: string };
   stages: Stage[];
 };
 
@@ -48,6 +49,7 @@ export const sceneContent: Record<Language, SceneCopy> = {
       open: "Открыть проект", similar: "Обсудить похожий проект", prev: "Предыдущий проект", next: "Следующий проект",
     },
     shipLabel: "Чертёж многоуровневого космического корабля — продукта",
+    seo: { title: "Сабайшев онлайн — продакт под ключ", description: "Продакт, UX/UI и AI в одних руках: разберу задачу, соберу MVP и доведу до запуска. Продукты, которыми хочется пользоваться." },
     stages: [
       { num: "01", name: "Проблема", label: "Проблема", lead: "Нахожу, что на самом деле болит, и формулирую задачу так, чтобы её можно было решить.", items: ["Problem Statement", "Гипотезы", "Критерии успеха"] },
       { num: "02", name: "Исследование", label: "Исследование", lead: "Разговариваю с людьми и разбираю рынок, чтобы не строить наугад.", items: ["Интервью и конкуренты", "Портрет пользователя", "Карта болей"] },
@@ -85,6 +87,7 @@ export const sceneContent: Record<Language, SceneCopy> = {
       open: "Open project", similar: "Discuss a similar project", prev: "Previous project", next: "Next project",
     },
     shipLabel: "Blueprint of a multi-deck spaceship — the product",
+    seo: { title: "Sabaishev Online — end-to-end product", description: "Product, UX/UI and AI in one pair of hands: I unpack the problem, build the MVP and take it to launch. Products people actually want to use." },
     stages: [
       { num: "01", name: "Problem", label: "Problem", lead: "I find what actually hurts and frame the task so it can be solved.", items: ["Problem Statement", "Hypotheses", "Success criteria"] },
       { num: "02", name: "Research", label: "Research", lead: "I talk to people and study the market so nothing is built on guesswork.", items: ["Interviews & competitors", "User persona", "Pain map"] },
@@ -122,6 +125,7 @@ export const sceneContent: Record<Language, SceneCopy> = {
       open: "เปิดโปรเจกต์", similar: "คุยเรื่องโปรเจกต์ที่คล้ายกัน", prev: "โปรเจกต์ก่อนหน้า", next: "โปรเจกต์ถัดไป",
     },
     shipLabel: "พิมพ์เขียวยานอวกาศหลายชั้น — ตัวโปรดักต์",
+    seo: { title: "Sabaishev Online — โปรดักต์ครบวงจร", description: "โปรดักต์ UX/UI และ AI ในคนเดียว วิเคราะห์โจทย์ สร้าง MVP และพาไปจนถึงการเปิดตัว" },
     stages: [
       { num: "01", name: "ปัญหา", label: "ปัญหา", lead: "ค้นหาสิ่งที่เป็นปัญหาจริง และตั้งโจทย์ให้แก้ได้", items: ["Problem Statement", "สมมติฐาน", "เกณฑ์ความสำเร็จ"] },
       { num: "02", name: "วิจัย", label: "วิจัย", lead: "คุยกับผู้ใช้และศึกษาตลาด เพื่อไม่สร้างแบบเดาสุ่ม", items: ["สัมภาษณ์และคู่แข่ง", "ภาพผู้ใช้", "แผนที่ปัญหา"] },

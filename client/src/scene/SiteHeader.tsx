@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/lib/content";
@@ -12,6 +13,13 @@ export default function SiteHeader({ active, onServices, onBrand }: { active?: S
   const { language, setLanguage } = useLanguage();
   const { openBrief } = useBrief();
   const t = sceneContent[language];
+  // Tab title and description follow the section and the language; the page language too.
+  useEffect(() => {
+    const section = active && active !== "services" ? t.nav[active] : "";
+    document.title = section ? `${section} — ${t.seo.title.split(" — ")[0]}` : t.seo.title;
+    document.querySelector('meta[name="description"]')?.setAttribute("content", t.seo.description);
+    document.documentElement.lang = language;
+  }, [active, language, t]);
   const activeStyle = (s: Section): React.CSSProperties | undefined =>
     active === s ? { opacity: 1, borderBottom: "1px solid var(--sx-accent-ink)" } : undefined;
   return (
