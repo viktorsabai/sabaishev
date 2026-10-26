@@ -80,9 +80,29 @@
 .sx .gmv { animation: gmv 1.4s linear infinite; }
 .sx .sk { animation: st 5s linear infinite; }
 
+/* --- Deck cutaway --- */
+@keyframes sin { from { opacity: 0 } to { opacity: 1 } }
+@keyframes cut { 0% { transform: translateY(0); opacity: 0 } 10% { opacity: 1 } 90% { opacity: 1 } 100% { transform: translateY(520px); opacity: 0 } }
+@keyframes pw { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-1.6px) } }
+@keyframes sc { 0% { transform: translateY(0); opacity: 0 } 15%, 85% { opacity: 1 } 100% { transform: translateY(-62px); opacity: 0 } }
+@keyframes orb { to { stroke-dashoffset: -40 } }
+@keyframes bn { 0%, 100% { opacity: .5; transform: scale(1) } 50% { opacity: 1; transform: scale(1.12) } }
+@keyframes dash { to { stroke-dashoffset: -18 } }
+
+.sx .sceneIn { animation: sin .45s ease both; }
+.sx .cut { animation: cut 1.3s ease-in-out both; }
+.sx .pw { animation: pw .5s ease-in-out infinite; }
+.sx .scan { animation: sc 2.2s ease-in-out infinite; transform: translateY(0); }
+.sx .orb { fill: none; stroke: url(#lgc); stroke-width: 1.2; stroke-dasharray: 4 6; animation: orb 2.4s linear infinite; }
+.sx .orb.o2 { animation-duration: 3.6s; stroke-opacity: .6; }
+.sx .burn { transform-box: fill-box; transform-origin: center; animation: bn .5s ease-in-out infinite; }
+.sx .dsh { stroke-dasharray: 3 6; animation: dash 2s linear infinite; }
+.sx .dsh2 { fill: none; stroke: var(--sx-accent-ink); stroke-width: 1.3; stroke-dasharray: 3 6; animation: dash 1.6s linear infinite; }
+.sx .sl { font-family: var(--font-mono); fill: var(--sx-ink); fill-opacity: .85; letter-spacing: .8px; paint-order: stroke; stroke: var(--sx-bg); stroke-width: 2.5px; }
+
 @media (prefers-reduced-motion: reduce) {
-  .sx .sk { display: none; }
-  .sx .shipg, .sx .gmv, .sx .hl, .sx .pd::after { animation: none; }
+  .sx .sk, .sx .cut { display: none; }
+  .sx .shipg, .sx .gmv, .sx .hl, .sx .pd::after, .sx .sceneIn, .sx .pw, .sx .scan, .sx .orb, .sx .burn, .sx .dsh, .sx .dsh2 { animation: none; }
   .sx .dr { animation: none; stroke-dashoffset: 0; }
   .sx .fi { animation: none; opacity: 1; }
   .sx .scene-move { transition: none !important; }

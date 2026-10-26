@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/lib/content";
 import { sceneContent, TELEGRAM_URL } from "./sceneContent";
-import { DEFS, GRID, LEADS, SHIP, STARS } from "./shipMarkup";
+import { DEFS, GRID, LEADS, SCENES, SHIP, STARS } from "./shipMarkup";
 import "./scene.css";
 
 // The scene is authored on a fixed 1440×900 canvas (same as the Claude Design mockups)
@@ -23,6 +23,43 @@ const LABELS: [number, number, "end" | "start" | "middle"][] = [
 ];
 // Where the ship parks (scaled down) while a deck is open.
 const PARK = { x: 235, y: 305, k: 0.4 };
+// Cutaway placement: drawn around (830,470), enlarged and shifted into the centre.
+const CUT = { k: 1.25, tx: -150, ty: 30, cornerX: 636, cornerY: 484 };
+const cutX = (x: number) => 830 + (x - 830) * CUT.k + CUT.tx;
+const cutY = (y: number) => 470 + (y - 470) * CUT.k + CUT.ty;
+const parkedX = (x: number) => 880 + (x - 880) * PARK.k + (PARK.x - 880);
+const parkedY = (y: number) => 455 + (y - 455) * PARK.k + (PARK.y - 455);
+
+// Dashed connector from the parked deck ring to the cutaway corner — right angles only (H–V–H).
+function connectorPath(stage: number) {
+  const [x, y] = DOTS[stage - 1];
+  return `M${parkedX(x).toFixed(1)} ${parkedY(y).toFixed(1)}H400V${cutY(CUT.cornerY).toFixed(1)}H${cutX(CUT.cornerX).toFixed(1)}`;
+}
+
+// Deck cutaway for one stage. Remounted per stage so lines redraw and the slice beam runs once.
+function Cutaway({ stage, label }: { stage: number; label: string }) {
+  const ref = useRef<SVGSVGElement>(null);
+  useEffect(() => {
+    // Astronauts walk via SMIL, which CSS can't stop — freeze them for reduced motion.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) ref.current?.pauseAnimations();
+  }, [stage]);
+  return (
+    <div className="sceneIn pointer-events-none absolute inset-0 z-[3]">
+      <svg
+        ref={ref}
+        role="img"
+        aria-label={label}
+        width={W}
+        height={H}
+        viewBox={`0 0 ${W} ${H}`}
+        className="absolute inset-0 overflow-visible"
+        style={{ transformOrigin: "830px 470px", transform: `translate(${CUT.tx}px,${CUT.ty}px) scale(${CUT.k})` }}
+        fill="none"
+        dangerouslySetInnerHTML={{ __html: SCENES[stage - 1] }}
+      />
+    </div>
+  );
+}
 
 function useStageScale() {
   const [scale, setScale] = useState(1);
@@ -105,6 +142,25 @@ export default function ShipScene() {
             ))}
             <g style={{ opacity: open ? 0 : 1, transition: "opacity .5s ease" }} dangerouslySetInnerHTML={{ __html: LEADS }} />
           </g>
+        </svg>
+
+        {/* Open deck: cutaway + connector */}
+        {open && <Cutaway key={sel} stage={sel} label={`${t.stage.cut}: ${cur.name}`} />}
+        <svg
+          aria-hidden="true"
+          width={W}
+          height={H}
+          viewBox={`0 0 ${W} ${H}`}
+          className="pointer-events-none absolute inset-0 z-[2]"
+          style={{ opacity: open ? 1 : 0, transition: open ? "opacity .6s ease .5s" : "opacity .3s" }}
+          fill="none"
+        >
+          {open && (
+            <>
+              <path d={connectorPath(sel)} stroke="url(#lgc)" strokeWidth="1.4" strokeDasharray="4 6" className="dsh" />
+              <circle cx={cutX(CUT.cornerX)} cy={cutY(CUT.cornerY)} r="4" fill="var(--sx-accent-ink)" />
+            </>
+          )}
         </svg>
 
         {/* Stage labels — real buttons around the ship */}
