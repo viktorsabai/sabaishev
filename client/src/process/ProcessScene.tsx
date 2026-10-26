@@ -3,7 +3,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { PROCESS_BIZ_IDS, useBrief } from "@/brief/BriefContext";
 import SiteHeader from "@/scene/SiteHeader";
 import WarpBackground from "@/scene/WarpBackground";
-import { H, W, useStageScale } from "@/scene/ShipScene";
+import { H, W, useStageScale } from "@/scene/stage";
 import { processContent, STAGE_DOCS, STAGE_WEEKS, type ProcessCopy, type StageDoc } from "./content";
 import "@/scene/scene.css";
 import "./process.css";

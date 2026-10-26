@@ -4,7 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { content } from "@/lib/content";
 import { processContent } from "@/process/content";
 import SiteHeader from "@/scene/SiteHeader";
-import { H, W, useStageScale } from "@/scene/ShipScene";
+import { H, W, useStageScale } from "@/scene/stage";
 import WarpBackground from "@/scene/WarpBackground";
 import { ROOM_TRANSFORM } from "@/scene/v2/markup";
 import { roomLayers } from "@/scene/v2/roomLayers";

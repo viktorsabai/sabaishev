@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import SiteHeader from "@/scene/SiteHeader";
-import { H, W, useStageScale } from "@/scene/ShipScene";
+import { H, W, useStageScale } from "@/scene/stage";
 import WarpBackground from "@/scene/WarpBackground";
 import { CASE_MEDIA, casesContent } from "./content";
 import "@/scene/scene.css";

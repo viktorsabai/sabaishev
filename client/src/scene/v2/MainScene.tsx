@@ -4,7 +4,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useBrief } from "@/brief/BriefContext";
 import { sceneContent } from "../sceneContent";
 import SiteHeader from "../SiteHeader";
-import { DOTS, H, W, useStageScale } from "../ShipScene";
+import { DOTS, H, W, useStageScale } from "../stage";
 import { sceneV2Content, type Deliverable, type Slogan, type StageV2 } from "./content";
 import { DEFS, GRID, ROOM_TRANSFORM, ROOMS, STARS } from "./markup";
 import { SHIP_EXTRAS, SHIP_LAYERS } from "./shipLayers";

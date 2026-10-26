@@ -12,7 +12,7 @@ export const STAGE_WEEKS: { s: number; d: number }[] = [
 // /artifacts/process are captioned with their real names; `light` ones are inverted to sit on
 // the dark background. Stages without a real artifact show the handoff's wireframe placeholder.
 export type StageDoc = { name: string; img?: string; light?: boolean };
-const art = (id: string) => `/artifacts/process/process-${id}.png`;
+const art = (id: string) => `/artifacts/process/process-${id}.webp`;
 export const STAGE_DOCS: StageDoc[][] = [
   [{ name: "Problem Statement · TAIKA", img: art("0-0") }, { name: "Opportunity Tree", img: art("2-1") }, { name: "Success Metrics · TAIKA", img: art("0-4") }],
   [{ name: "Market Insights · MOO", img: art("1-4") }, { name: "User Interviews · MOO", img: art("1-0") }, { name: "SEO-Audit.pdf" }],

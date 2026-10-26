@@ -204,7 +204,10 @@ function vitePluginStorageProxy(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy(), vitePluginArtifactExport(PROJECT_ROOT)];
+// The Manus editor helpers (JSX source locations, the injected runtime) only matter in the
+// dev server; keeping them out of production builds saves ~360 KB of inline HTML per page.
+const devOnly = (plugin: Plugin | Plugin[]): Plugin[] => (Array.isArray(plugin) ? plugin : [plugin]).map((p) => ({ ...p, apply: "serve" as const }));
+const plugins = [react(), tailwindcss(), ...devOnly(jsxLocPlugin()), ...devOnly(vitePluginManusRuntime()), vitePluginManusDebugCollector(), vitePluginStorageProxy(), vitePluginArtifactExport(PROJECT_ROOT)];
 
 export default defineConfig({
   plugins,
