@@ -1,0 +1,65 @@
+/* Cases page (CHANGES-2): browser + phone mockups over the flight background. Builds on scene/scene.css. */
+
+/* A slide per project; its parts come in one after another (--sd), leaving ones slide out (--dir) */
+.sx .cs { position: absolute; inset: 0; pointer-events: none; }
+.sx .cs.on { pointer-events: auto; }
+.sx .cs .st { opacity: 0; transform: translateX(calc(var(--dir, 1) * 46px)); transition: opacity .4s ease, transform .7s cubic-bezier(.2, .8, .2, 1); }
+.sx .cs.on .st { opacity: 1; transform: none; transition: opacity .6s ease var(--sd, 0s), transform .9s cubic-bezier(.2, .8, .2, 1) var(--sd, 0s); }
+.sx .cs .glow { opacity: 0; transition: opacity .8s ease; }
+.sx .cs.on .glow { opacity: 1; }
+
+/* Screens scroll through the page with stops on key sections, instead of a constant crawl */
+@keyframes shotStops {
+  0%, 10% { transform: translateY(0) }
+  28%, 40% { transform: translateY(calc((var(--vh) - 100%) * .34)) }
+  58%, 70% { transform: translateY(calc((var(--vh) - 100%) * .68)) }
+  88%, 100% { transform: translateY(calc(var(--vh) - 100%)) }
+}
+.sx .shot { position: absolute; left: 0; right: 0; top: 0; animation: shotStops 18s ease-in-out infinite alternate; }
+.sx .shot.phone { animation-duration: 13s; }
+.sx .shot.still { animation: none; height: 100%; }
+.sx .shot img { display: block; width: 100%; }
+.sx .shot.still img { height: 100%; object-fit: cover; object-position: top; }
+.sx.paused .shot { animation-play-state: paused; }
+
+/* Interference only on the screens: a rare idle glitch, and a burst as the transition between projects */
+@keyframes gsA { 0%, 90%, 94%, 100% { transform: none; filter: none } 91% { transform: translateX(-6px); filter: url(#glf1) } 92% { transform: translateX(5px) skewX(-1deg); filter: url(#glf2) } 93% { transform: translateX(-2px); filter: url(#glf1) } }
+@keyframes gsT { 0% { transform: translateX(-9px); filter: url(#glf1) } 18% { transform: translateX(7px) skewX(-2deg); filter: url(#glf2) } 36% { transform: translateX(-4px); filter: url(#glf1) } 54% { transform: translateX(2px); filter: url(#glf2) } 72%, 100% { transform: none; filter: none } }
+.sx .gs { animation: gsA 6.7s steps(1) infinite; }
+.sx .gs.b { animation-duration: 9.1s; animation-delay: 2.4s; }
+.sx .cs.on .gs.gx { animation: gsT .45s steps(1) both; }
+.sx .cs.on .gs.b.gx { animation: gsT .45s steps(1) .15s both; }
+
+/* Controls */
+@keyframes prog { from { width: 0 } to { width: 100% } }
+@keyframes rec { 0%, 100% { opacity: 1 } 50% { opacity: .25 } }
+.sx .rec { animation: rec 1.4s ease-in-out infinite; }
+.sx .tk { position: relative; height: 34px; padding: 0 14px; border: 1px solid rgba(255, 255, 255, .16); border-radius: 999px; background: rgba(10, 12, 20, .55); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: rgba(241, 238, 232, .7); font: 500 10px var(--font-mono); letter-spacing: .12em; cursor: pointer; overflow: hidden; display: flex; align-items: center; white-space: nowrap; transition: border-color .3s, color .3s, box-shadow .3s; }
+.sx .tk:hover { color: var(--sx-ink); border-color: rgba(255, 255, 255, .4); }
+.sx .tk[aria-current="true"] { color: var(--sx-ink); border-color: transparent; box-shadow: 0 0 0 1.5px #A855F7, 0 0 28px -6px #A855F7; }
+.sx .tk b { position: relative; font-weight: 500; }
+.sx .tk .kb { position: absolute; left: 0; bottom: 0; height: 3px; width: 0; background: var(--sx-grad); }
+/* The active capsule's progress bar drives autoplay: when it fills, the next project comes up */
+.sx .tk[aria-current="true"] .kb { animation: prog 7s linear forwards; }
+.sx.paused .tk[aria-current="true"] .kb { animation-play-state: paused; }
+.sx .eg { position: absolute; bottom: 34px; height: 38px; z-index: 8; border: 0; background: none; cursor: pointer; display: flex; align-items: center; color: rgba(241, 238, 232, .32); transition: color .4s; }
+.sx .egl { left: 56px; padding: 0 14px 0 0; }
+.sx .egr { right: 56px; padding: 0 0 0 14px; }
+.sx .eg:hover { color: var(--sx-ink); }
+.sx .eg span { display: flex; align-items: center; gap: 10px; font: 400 9.5px var(--font-mono); letter-spacing: .2em; text-transform: uppercase; transition: transform .4s cubic-bezier(.3, 1.4, .5, 1); }
+.sx .eg i { display: block; width: 26px; height: 1px; background: currentColor; position: relative; transition: width .4s; }
+.sx .eg i::after { content: ""; position: absolute; top: -3px; width: 6px; height: 6px; border-top: 1px solid currentColor; border-right: 1px solid currentColor; }
+.sx .egl i::after { left: 0; transform: rotate(-135deg); }
+.sx .egr i::after { right: 0; transform: rotate(45deg); }
+.sx .egl:hover i, .sx .egr:hover i { width: 44px; }
+.sx .egl:hover span { transform: translateX(-4px); }
+.sx .egr:hover span { transform: translateX(4px); }
+.sx .opn { display: inline-flex; align-items: center; justify-content: center; gap: 12px; color: #fff; border-radius: 16px; padding: 0 22px; height: 58px; font: 600 14px var(--font-tight); background: var(--sx-grad-btn); box-shadow: 0 14px 44px -14px #A855F7; transition: transform .35s, box-shadow .35s; white-space: nowrap; }
+.sx .opn:hover { transform: translateY(-3px); box-shadow: 0 22px 54px -12px #A855F7; }
+.sx .opn svg { transition: transform .35s; }
+.sx .opn:hover svg { transform: translate(3px, -3px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sx .gs, .sx .cs.on .gs.gx, .sx .cs.on .gs.b.gx, .sx .shot, .sx .rec { animation: none !important; }
+  .sx .cs .st, .sx .cs.on .st { transition: none; }
+}

@@ -1,10 +1,5 @@
 /* Process page (CHANGES-2): business carousel → Gantt by layers. Builds on scene/scene.css (.sx). */
 
-/* Flight background: streaks fly out from the centre, far dots twinkle */
-@keyframes wpf { 0% { transform: rotate(var(--a)) translateX(var(--r0)) scaleX(.15); opacity: 0 } 15% { opacity: 1 } 100% { transform: rotate(var(--a)) translateX(var(--r1)) scaleX(1); opacity: 0 } }
-@keyframes tw { 0%, 100% { opacity: .2 } 50% { opacity: .8 } }
-.sx .wp { position: absolute; left: 0; top: 0; transform-origin: 0 50%; opacity: 0; animation: wpf linear infinite; }
-
 @keyframes fdu { from { transform: translateY(14px); opacity: 0 } to { transform: none; opacity: 1 } }
 @keyframes pnIn { from { transform: translateX(-34px); opacity: 0; filter: blur(6px) } to { transform: none; opacity: 1; filter: none } }
 @keyframes scn { 0% { left: 0; opacity: 0 } 15% { opacity: .9 } 85% { opacity: .9 } 100% { left: 100%; opacity: 0 } }
@@ -65,7 +60,7 @@
 .sx .scanlines { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 3px); }
 
 @media (prefers-reduced-motion: reduce) {
-  .sx .wp, .sx .doc img, .sx .doc.enter, .sx .doc .scanline, .sx .ship-go, .sx .flame { animation: none !important; }
+  .sx .doc img, .sx .doc.enter, .sx .doc .scanline, .sx .ship-go, .sx .flame { animation: none !important; }
   .sx .doc .scanline { display: none; }
   .sx .tl { animation: none !important; width: auto !important; border-right-color: transparent; }
   .sx .picking .pc, .sx .picking .pick-copy { animation: none !important; }

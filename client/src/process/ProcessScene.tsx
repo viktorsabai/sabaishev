@@ -1,7 +1,8 @@
-import { memo, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { TELEGRAM_URL } from "@/scene/sceneContent";
 import SiteHeader from "@/scene/SiteHeader";
+import WarpBackground from "@/scene/WarpBackground";
 import { H, W, useStageScale } from "@/scene/ShipScene";
 import { processContent, STAGE_DOCS, STAGE_WEEKS, type ProcessCopy, type StageDoc } from "./content";
 import "@/scene/scene.css";
@@ -25,47 +26,6 @@ const GX = 150; // gantt timeline x (after row labels)
 const CODE_START = 1.0; // s after a layer change: playhead, row and panel go first
 const DOC_CYCLE = 3800;
 const AUTOPLAY = 5200;
-
-// ---------- Flight background ----------
-function seeded(seed: number) {
-  let s = seed;
-  return () => ((s = (s * 16807) % 2147483647) - 1) / 2147483646;
-}
-const WarpBackground = memo(function WarpBackground() {
-  const { streaks, dots } = useMemo(() => {
-    const r = seeded(33);
-    const colors = ["241,238,232", "241,238,232", "241,238,232", "241,238,232", "241,238,232", "241,238,232", "236,72,153", "168,85,247", "96,150,255"];
-    const streaks = Array.from({ length: 60 }, () => {
-      const r0 = 330 + r() * 230;
-      return { a: r() * 360, r0, r1: r0 + 520 + r() * 240, w: 50 + r() * 100, h: r() < 0.75 ? 1 : 1.5, c: colors[Math.floor(r() * colors.length)], o: 0.3 + r() * 0.4, dur: 2.8 + r() * 3.6, del: -r() * 6 };
-    });
-    const dots = Array.from({ length: 30 }, () => ({ x: 1 + r() * 98, y: 2 + r() * 96, dur: 3 + r() * 5, del: r() * 5 }));
-    return { streaks, dots };
-  }, []);
-  return (
-    <div aria-hidden="true" className="absolute inset-0">
-      <div className="absolute inset-0" style={{ background: "radial-gradient(70% 70% at 50% 50%,#090B12 30%,#06080C 100%)" }} />
-      <div className="absolute inset-0" style={{ background: "radial-gradient(40% 40% at 0% 0%,rgba(168,85,247,.16),transparent 70%),radial-gradient(40% 40% at 100% 0%,rgba(59,130,246,.14),transparent 70%),radial-gradient(45% 45% at 0% 100%,rgba(236,72,153,.14),transparent 70%),radial-gradient(40% 40% at 100% 100%,rgba(168,85,247,.14),transparent 70%)" }} />
-      {dots.map((d, i) => (
-        <i key={i} className="absolute rounded-full" style={{ left: `${d.x}%`, top: `${d.y}%`, width: 1, height: 1, background: "#F1EEE8", opacity: 0.4, animation: `tw ${d.dur.toFixed(1)}s ease-in-out ${d.del.toFixed(1)}s infinite` }} />
-      ))}
-      <div className="absolute" style={{ left: 720, top: 450, width: 0, height: 0 }}>
-        {streaks.map((s, i) => (
-          <i
-            key={i}
-            className="wp"
-            style={{
-              ["--a" as string]: `${s.a.toFixed(0)}deg`, ["--r0" as string]: `${s.r0.toFixed(0)}px`, ["--r1" as string]: `${s.r1.toFixed(0)}px`,
-              width: s.w, height: s.h, background: `linear-gradient(90deg,transparent,rgba(${s.c},${s.o.toFixed(2)}))`,
-              animationDuration: `${s.dur.toFixed(1)}s`, animationDelay: `${s.del.toFixed(1)}s`,
-            }}
-          />
-        ))}
-      </div>
-      <div className="absolute inset-0" style={{ background: "radial-gradient(55% 55% at 50% 50%,rgba(6,8,12,.5) 0%,rgba(6,8,12,0) 70%)" }} />
-    </div>
-  );
-});
 
 // ---------- Output code ----------
 type Part = { t: string; k?: "k1" | "k2" | "k3" };

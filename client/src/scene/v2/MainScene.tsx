@@ -446,7 +446,7 @@ export default function MainScene() {
               {t.cta.task}
               <Arrow />
             </a>
-            <Link href="/legacy" className="mono uppercase" tabIndex={open ? -1 : 0} style={{ fontSize: 11, letterSpacing: ".14em", borderBottom: "1px solid rgba(241,238,232,.5)", padding: "8px 0", color: "rgba(241,238,232,.88)" }}>
+            <Link href="/cases" className="mono uppercase" tabIndex={open ? -1 : 0} style={{ fontSize: 11, letterSpacing: ".14em", borderBottom: "1px solid rgba(241,238,232,.5)", padding: "8px 0", color: "rgba(241,238,232,.88)" }}>
               {t.cta.cases}
             </Link>
           </div>

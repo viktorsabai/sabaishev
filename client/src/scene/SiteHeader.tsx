@@ -29,7 +29,7 @@ export default function SiteHeader({ active, onServices, onBrand }: { active?: S
         ) : (
           <Link href="/?stage=1" className="nv" style={activeStyle("services")}>{t.nav.services}</Link>
         )}
-        <Link href="/legacy" className="nv" style={activeStyle("cases")}>{t.nav.cases}</Link>
+        <Link href="/cases" className="nv" style={activeStyle("cases")}>{t.nav.cases}</Link>
         <Link href="/process" className="nv" style={activeStyle("process")}>{t.nav.process}</Link>
         <Link href="/legacy" className="nv" style={activeStyle("experience")}>{t.nav.experience}</Link>
       </nav>
