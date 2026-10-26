@@ -8,6 +8,7 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 import Home from "./pages/Home";
 import HomeLegacy from "./pages/HomeLegacy";
 import ShipScene from "./scene/ShipScene";
+import ProcessScene from "./process/ProcessScene";
 import Workspace from "./pages/Workspace";
 import AnimatedBackground from "./components/AnimatedBackground";
 
@@ -17,6 +18,7 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/legacy"} component={HomeLegacy} />
       <Route path={"/v1"} component={ShipScene} />
+      <Route path={"/process"} component={ProcessScene} />
       <Route path={"/workspace/material/:slug"} component={Workspace} />
       <Route path={"/workspace/route/:slug"} component={Workspace} />
       <Route path={"/workspace"} component={Workspace} />

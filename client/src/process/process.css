@@ -1,0 +1,72 @@
+/* Process page (CHANGES-2): business carousel → Gantt by layers. Builds on scene/scene.css (.sx). */
+
+/* Flight background: streaks fly out from the centre, far dots twinkle */
+@keyframes wpf { 0% { transform: rotate(var(--a)) translateX(var(--r0)) scaleX(.15); opacity: 0 } 15% { opacity: 1 } 100% { transform: rotate(var(--a)) translateX(var(--r1)) scaleX(1); opacity: 0 } }
+@keyframes tw { 0%, 100% { opacity: .2 } 50% { opacity: .8 } }
+.sx .wp { position: absolute; left: 0; top: 0; transform-origin: 0 50%; opacity: 0; animation: wpf linear infinite; }
+
+@keyframes fdu { from { transform: translateY(14px); opacity: 0 } to { transform: none; opacity: 1 } }
+@keyframes pnIn { from { transform: translateX(-34px); opacity: 0; filter: blur(6px) } to { transform: none; opacity: 1; filter: none } }
+@keyframes scn { 0% { left: 0; opacity: 0 } 15% { opacity: .9 } 85% { opacity: .9 } 100% { left: 100%; opacity: 0 } }
+@keyframes bz { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-3px) } }
+/* The ship on the playhead leans into the move and fires its engine */
+@keyframes shipgo { 0% { transform: rotate(0) } 30% { transform: rotate(-7deg) translateX(3px) } 100% { transform: rotate(0) } }
+@keyframes flame { 0% { opacity: 0; transform: scaleX(.3) } 25% { opacity: 1; transform: scaleX(1) } 100% { opacity: 0; transform: scaleX(.4) } }
+
+/* Business carousel */
+.sx .pc { position: absolute; left: 570px; top: 20px; width: 300px; height: 450px; padding: 0; text-align: left; cursor: pointer; color: var(--sx-ink); border-radius: 22px; border: 1px solid rgba(255, 255, 255, .16); background: rgba(10, 12, 20, .7); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); overflow: hidden; transition: transform .9s cubic-bezier(.2, .9, .25, 1), opacity .7s, filter .7s, border-color .4s, box-shadow .5s; }
+.sx .pc.on { border-color: rgba(168, 85, 247, .85); box-shadow: 0 40px 100px -28px rgba(168, 85, 247, .75), 0 0 0 1px rgba(168, 85, 247, .25) inset; }
+.sx .pc .go { position: absolute; left: 26px; right: 26px; bottom: 26px; display: flex; align-items: center; justify-content: center; gap: 10px; height: 42px; border-radius: 12px; background: var(--sx-grad-btn); font: 600 12.5px var(--font-tight); color: #fff; box-shadow: 0 10px 30px -10px #A855F7; transition: opacity .5s; }
+.sx .rb { width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .22); background: rgba(10, 12, 20, .55); color: var(--sx-ink); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: border-color .3s, background .3s, transform .3s; }
+.sx .rb:hover { border-color: rgba(168, 85, 247, .9); background: rgba(168, 85, 247, .14); }
+.sx .rb:active { transform: scale(.92); }
+/* Picking a business: the chosen card shrinks towards the business chips, the rest fall back */
+@keyframes pickOut { to { transform: translate(380px, -260px) scale(.18); opacity: 0 } }
+@keyframes fallBack { to { opacity: 0; filter: blur(8px) } }
+.sx .picking .pc.on { animation: pickOut .7s cubic-bezier(.6, 0, .3, 1) forwards; }
+.sx .picking .pc:not(.on), .sx .picking .pick-copy { animation: fallBack .45s ease forwards; }
+
+/* Gantt */
+.sx .bc { height: 32px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .16); background: rgba(10, 12, 20, .55); color: rgba(241, 238, 232, .7); font: 500 10.5px var(--font-mono); letter-spacing: .08em; cursor: pointer; white-space: nowrap; transition: border-color .3s, color .3s, background .3s; }
+.sx .bc:hover { color: var(--sx-ink); border-color: rgba(255, 255, 255, .4); }
+.sx .bc[aria-pressed="true"] { border-color: transparent; color: #fff; background: var(--sx-grad-btn); }
+.sx .rw { position: absolute; left: 0; right: 0; height: 40px; padding: 0; border: 0; background: none; color: inherit; text-align: left; transition: opacity .6s ease, transform .7s cubic-bezier(.2, .9, .3, 1); }
+.sx .rw:disabled { cursor: default; }
+.sx .cta2 { display: inline-flex; align-items: center; gap: 12px; height: 46px; padding: 0 24px; border-radius: 16px; border: 0; color: #fff; font: 600 14px var(--font-tight); cursor: pointer; background: var(--sx-grad-btn); box-shadow: 0 12px 36px -12px #A855F7; transition: transform .35s, box-shadow .35s; }
+.sx .cta2:hover { transform: translateY(-3px); box-shadow: 0 22px 54px -12px #A855F7; }
+.sx .cta2.ghost { background: transparent; border: 1px solid rgba(255, 255, 255, .3); box-shadow: none; }
+.sx .nx { height: 44px; padding: 0 20px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .22); background: rgba(10, 12, 20, .55); color: var(--sx-ink); font: 500 11px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; cursor: pointer; display: inline-flex; align-items: center; gap: 12px; transition: border-color .3s, background .3s; }
+.sx .nx:hover { border-color: rgba(168, 85, 247, .9); background: rgba(168, 85, 247, .14); }
+
+/* Output code, typed character by character, line after line */
+@keyframes typL { from { width: 0 } to { width: calc(var(--n) * 1ch); border-right-color: transparent } }
+.sx .tl { display: block; width: 0; overflow: hidden; white-space: pre; border-right: 1px solid #EC4899; border-radius: 3px; font: 400 12px/20px var(--font-mono); color: rgba(241, 238, 232, .86); transition: background .4s; }
+/* The output item whose document is on screen is highlighted */
+.sx .tl.lit { background: rgba(168, 85, 247, .16); }
+
+/* Stage documents behind the Gantt */
+.sx .showcase { position: absolute; left: 520px; top: 176px; width: 850px; height: 520px; z-index: 4; pointer-events: none; border-radius: 16px; overflow: hidden; border: 1px solid rgba(255, 255, 255, .14); -webkit-mask-image: linear-gradient(90deg, transparent 0, transparent 8%, #000 30%); mask-image: linear-gradient(90deg, transparent 0, transparent 8%, #000 30%); }
+.sx .doc { position: absolute; inset: 0; opacity: .32; }
+.sx .doc .ph { position: absolute; inset: 0; opacity: .5; }
+/* New document is scanned in from the top; the old one fades underneath */
+@keyframes docScan { from { clip-path: inset(0 0 100% 0) } to { clip-path: inset(0 0 0 0) } }
+@keyframes docLine { from { top: 0; opacity: 1 } 90% { opacity: 1 } to { top: 100%; opacity: 0 } }
+@keyframes docFade { to { opacity: 0 } }
+.sx .doc.enter { animation: docScan .9s cubic-bezier(.4, 0, .2, 1) both; }
+.sx .doc.leave { animation: docFade .9s ease .3s forwards; }
+.sx .doc .scanline { position: absolute; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, #C48BFA, transparent); box-shadow: 0 0 18px #A855F7; animation: docLine .9s cubic-bezier(.4, 0, .2, 1) both; }
+/* Slow pan across the document, as if reading it */
+@keyframes docPan { from { transform: scale(1.14) translate(-2.5%, -3%) } to { transform: scale(1.14) translate(2.5%, 3%) } }
+.sx .doc img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top left; display: block; animation: docPan 14s ease-in-out infinite alternate; filter: grayscale(.85) brightness(.7) contrast(1.05); }
+/* Light documents are inverted so they don't flash on the dark scene */
+.sx .doc img.light { filter: invert(.92) hue-rotate(180deg) grayscale(.85) brightness(.7) contrast(1.05); }
+/* Brand tint over every document so they read as one series */
+.sx .doc .tint { position: absolute; inset: 0; background: linear-gradient(110deg, #EC4899, #A855F7 52%, #3B82F6); mix-blend-mode: color; opacity: .55; }
+.sx .scanlines { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 3px); }
+
+@media (prefers-reduced-motion: reduce) {
+  .sx .wp, .sx .doc img, .sx .doc.enter, .sx .doc .scanline, .sx .ship-go, .sx .flame { animation: none !important; }
+  .sx .doc .scanline { display: none; }
+  .sx .tl { animation: none !important; width: auto !important; border-right-color: transparent; }
+  .sx .picking .pc, .sx .picking .pick-copy { animation: none !important; }
+}

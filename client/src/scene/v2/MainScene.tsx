@@ -1,8 +1,8 @@
 import { memo, useEffect, useState } from "react";
 import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
-import type { Language } from "@/lib/content";
 import { sceneContent, TELEGRAM_URL } from "../sceneContent";
+import SiteHeader from "../SiteHeader";
 import { DOTS, H, W, useStageScale } from "../ShipScene";
 import { sceneV2Content, type Deliverable, type Slogan, type StageV2 } from "./content";
 import { DEFS, GRID, ROOM_TRANSFORM, ROOMS, STARS } from "./markup";
@@ -202,7 +202,7 @@ function CodeCard({ d, num, top, delay }: { d: Deliverable; num: number; top: nu
 }
 
 export default function MainScene() {
-  const { language, setLanguage } = useLanguage();
+  const { language } = useLanguage();
   const t = sceneContent[language];
   const v = sceneV2Content[language];
   const scale = useStageScale();
@@ -416,31 +416,7 @@ export default function MainScene() {
           </>
         )}
 
-        {/* Header */}
-        <header className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-14 py-[26px]">
-          <a href="#top" onClick={() => open && go(0)} className="flex items-baseline gap-1.5" aria-label="SABAISHEV.ONLINE">
-            <span style={{ fontWeight: 300, fontSize: 21, letterSpacing: ".42em" }}>SABAISHEV</span>
-            <span className="mono gt" style={{ fontSize: 11, letterSpacing: ".14em" }}>.ONLINE</span>
-          </a>
-          <nav className="flex items-center gap-[38px]">
-            <button type="button" className="nv" onClick={() => go(1)}>{t.nav.services}</button>
-            <Link href="/legacy" className="nv">{t.nav.cases}</Link>
-            <Link href="/legacy" className="nv">{t.nav.process}</Link>
-            <Link href="/legacy" className="nv">{t.nav.experience}</Link>
-          </nav>
-          <div className="flex items-center gap-[22px]">
-            <div className="flex" role="group" aria-label="Language">
-              {(["ru", "en", "th"] as Language[]).map((l) => (
-                <button key={l} type="button" className="lg" aria-pressed={language === l} onClick={() => setLanguage(l)} style={language === l ? { background: "rgba(255,255,255,.12)" } : { opacity: 0.55 }}>
-                  {l.toUpperCase()}
-                </button>
-              ))}
-            </div>
-            <a href={TELEGRAM_URL} target="_blank" rel="noreferrer" className="pill" style={{ padding: "13px 22px", font: "600 12px var(--font-tight)", letterSpacing: ".02em" }}>
-              {t.cta.project}
-            </a>
-          </div>
-        </header>
+        <SiteHeader active={open ? "services" : undefined} onServices={() => go(1)} onBrand={() => open && go(0)} />
 
         {/* Hero copy, level with the ship: slogans type themselves one after another */}
         <div
