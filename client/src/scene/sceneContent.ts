@@ -9,6 +9,8 @@ export type SceneCopy = {
   hero: { eyebrow: string; title: string[]; accent: string; subtitle: string };
   hint: string;
   stage: { cut: string; of: string; output: string; prev: string; next: string; close: string };
+  process: { eyebrow: string; title: string; accent: string; lead: string };
+  experience: { eyebrow: string; label: string; did: string; skills: string; prev: string; next: string };
   cases: {
     eyebrow: string; title: string; accent: string; lead: string; label: string;
     exhibit: string; challenge: string; role: string; open: string; similar: string; prev: string; next: string;
@@ -31,6 +33,14 @@ export const sceneContent: Record<Language, SceneCopy> = {
     },
     hint: "Нажмите на этап — разверну в разрезе",
     stage: { cut: "Разрез палубы", of: "из", output: "На выходе", prev: "Предыдущий этап", next: "Следующий этап", close: "Корабль" },
+    process: {
+      eyebrow: "Как собираю", title: "От идеи до", accent: "работающей версии.",
+      lead: "Код не первый шаг. Сначала понимаем, для кого это и что должно измениться после запуска.",
+    },
+    experience: {
+      eyebrow: "Опыт · 17+ лет", label: "Командный мостик: карьерный путь", did: "Что делал", skills: "Опыт в",
+      prev: "Предыдущее место", next: "Следующее место",
+    },
     cases: {
       eyebrow: "Кейсы · галерея на борту", title: "Собрано", accent: "под ключ.",
       lead: "Шесть продуктов: от AI-учителя тайского до управления сетью ресторанов. Выберите экспонат.",
@@ -60,6 +70,14 @@ export const sceneContent: Record<Language, SceneCopy> = {
     },
     hint: "Tap a stage — I'll open the cutaway",
     stage: { cut: "Deck cutaway", of: "of", output: "Deliverables", prev: "Previous stage", next: "Next stage", close: "Ship" },
+    process: {
+      eyebrow: "How I build", title: "From idea to", accent: "a working version.",
+      lead: "Code isn't the first step. First we work out who it's for and what should change after launch.",
+    },
+    experience: {
+      eyebrow: "Experience · 17+ years", label: "Bridge: career path", did: "What I did", skills: "Experience in",
+      prev: "Previous role", next: "Next role",
+    },
     cases: {
       eyebrow: "Cases · onboard gallery", title: "Built", accent: "end to end.",
       lead: "Six products, from an AI Thai tutor to running a restaurant group. Pick an exhibit.",
@@ -89,6 +107,14 @@ export const sceneContent: Record<Language, SceneCopy> = {
     },
     hint: "แตะขั้นตอน — เพื่อเปิดภาพตัดขวาง",
     stage: { cut: "ภาพตัดขวางชั้น", of: "จาก", output: "สิ่งที่ได้", prev: "ขั้นตอนก่อนหน้า", next: "ขั้นตอนถัดไป", close: "ยาน" },
+    process: {
+      eyebrow: "วิธีที่ผมสร้าง", title: "จากไอเดีย", accent: "สู่เวอร์ชันที่ใช้งานได้",
+      lead: "โค้ดไม่ใช่ขั้นแรก ก่อนอื่นต้องเข้าใจว่าทำให้ใคร และอะไรควรเปลี่ยนหลังเปิดตัว",
+    },
+    experience: {
+      eyebrow: "ประสบการณ์ · 17+ ปี", label: "สะพานบัญชาการ: เส้นทางอาชีพ", did: "สิ่งที่ทำ", skills: "ประสบการณ์ด้าน",
+      prev: "ที่ทำงานก่อนหน้า", next: "ที่ทำงานถัดไป",
+    },
     cases: {
       eyebrow: "ผลงาน · แกลเลอรีบนยาน", title: "สร้าง", accent: "ครบวงจร",
       lead: "หกโปรดักต์ ตั้งแต่ครูสอนภาษาไทยด้วย AI ไปจนถึงระบบบริหารเครือร้านอาหาร เลือกชิ้นงานที่สนใจ",

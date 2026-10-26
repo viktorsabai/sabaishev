@@ -3,6 +3,7 @@ import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { content, type Language } from "@/lib/content";
 import { sceneContent, TELEGRAM_URL } from "./sceneContent";
+import { EXPERIENCE } from "./roomsMarkup";
 import { DEFS, GALLERY, GRID, LEADS, SCENES, SHIP, STARS } from "./shipMarkup";
 import "./scene.css";
 
@@ -13,16 +14,19 @@ const H = 900;
 const EASE = "cubic-bezier(.65,0,.2,1)";
 
 // Deck anchor dots on the ship (hero coordinates) and label placement around it.
+// 0–7 are the stage decks; 8 is the bridge orb on top (experience room).
 const DOTS: [number, number][] = [
   [816.1, 539.7], [841, 476.1], [872.9, 408.4], [904.9, 340.8],
   [929.8, 281.3], [965.3, 414.6], [912, 691.4], [652.7, 707.9],
+  [965.3, 305.9],
 ];
 const LABELS: [number, number, "end" | "start" | "middle"][] = [
   [695.5, 478.2, "end"], [720.4, 414.6, "end"], [752.4, 346.9, "end"], [784.3, 279.3, "end"],
   [809.2, 219.8, "end"], [1146.5, 318.1, "start"], [912, 790.4, "middle"], [624.7, 768.9, "middle"],
 ];
-// The case gallery lives on the lowest deck.
+// The case gallery lives on the lowest deck, the career deck on the bridge.
 const GALLERY_DOT = 0;
+const BRIDGE_DOT = 8;
 // Where the ship parks (scaled down) while a room is open.
 const PARK = { x: 235, y: 305, k: 0.4 };
 // Room placement: drawn around (830,470), enlarged and shifted into the centre.
@@ -38,16 +42,23 @@ function connectorPath(dot: number) {
   return `M${parkedX(x).toFixed(1)} ${parkedY(y).toFixed(1)}H400V${cutY(CUT.cornerY).toFixed(1)}H${cutX(CUT.cornerX).toFixed(1)}`;
 }
 
-// Gallery panels: base colour per exhibit; the selected one gets a stronger fill and a frame.
-const PANEL_COLORS = ["#EC4899", "#A855F7", "#3B82F6", "#EC4899", "#A855F7", "#3B82F6"];
-function galleryMarkup(selected: number) {
-  return GALLERY.replace(/\{\{(fc|fo|so)([1-6])\}\}/g, (_, kind: string, n: string) => {
+// Rooms with selectable items (gallery panels, career pillars): base colour per item;
+// the selected one gets a stronger fill and a frame.
+const ITEM_COLORS = ["#EC4899", "#A855F7", "#3B82F6"];
+function selectableMarkup(template: string, selected: number) {
+  return template.replace(/\{\{(fc|fo|so)(\d)\}\}/g, (_, kind: string, n: string) => {
     const i = Number(n);
-    if (kind === "fc") return PANEL_COLORS[i - 1];
+    if (kind === "fc") return ITEM_COLORS[(i - 1) % 3];
     if (kind === "fo") return selected === i ? "0.7" : "0.16";
     return selected === i ? "1" : "0";
   });
 }
+
+type Company = {
+  id: string; title: string; role: string; period: string; blurb: string; relevantSkills: string[];
+  positions: Record<string, { details?: string; highlights?: string[] }>;
+};
+type SkillItem = { id: string; title: string };
 
 type Product = {
   id: string; number: string; name: string; type: string; status: string; progress: number;
@@ -106,6 +117,24 @@ function reveal(shown: boolean, delay = 0.25): React.CSSProperties {
   };
 }
 
+// Section caption in the bottom-left corner of a room.
+function Caption(props: { shown: boolean; num: string; eyebrow: string; title: string; accent?: string; lead: string; size?: number }) {
+  return (
+    <div className="absolute z-[5] max-w-[320px]" style={{ left: 56, bottom: 64, ...reveal(props.shown, 0.4) }} aria-hidden={!props.shown}>
+      <div className="flex items-center gap-4">
+        <span className="mono gt" style={{ fontSize: 11, letterSpacing: ".14em" }}>{props.num}</span>
+        <span className="block h-px w-16" style={{ background: "var(--sx-grad)" }} />
+        <span className="mono uppercase" style={{ fontSize: 11, letterSpacing: ".14em", color: "rgba(241,238,232,.7)" }}>{props.eyebrow}</span>
+      </div>
+      <h2 style={{ margin: "20px 0 0", fontSize: props.size ?? 48, lineHeight: 0.98, fontWeight: 500, letterSpacing: "-.05em" }}>
+        <span className="block">{props.title}</span>
+        {props.accent && <span className="gt">{props.accent}</span>}
+      </h2>
+      <p style={{ margin: "18px 0 0", maxWidth: 300, fontSize: 15, lineHeight: 1.5, color: "rgba(241,238,232,.8)" }}>{props.lead}</p>
+    </div>
+  );
+}
+
 // Glass pager at the bottom: arrows, segments, current label, close.
 function Pager(props: {
   shown: boolean; label: string; count: number; current: number; itemLabels: string[];
@@ -154,17 +183,18 @@ function Pager(props: {
   );
 }
 
-type Mode = "hero" | "stage" | "cases";
+type Mode = "hero" | "stage" | "cases" | "experience";
 type View = { mode: Mode; i: number };
-const COUNT: Record<Mode, number> = { hero: 0, stage: 8, cases: 6 };
+const COUNT: Record<Mode, number> = { hero: 0, stage: 8, cases: 6, experience: 4 };
+const QUERY: [string, Mode][] = [["stage", "stage"], ["case", "cases"], ["experience", "experience"]];
 
-// ?stage=N / ?case=N deep-link straight into a room.
+// ?stage=N / ?case=N / ?experience=N deep-link straight into a room.
 function initialView(): View {
   const q = new URLSearchParams(window.location.search);
-  const stage = Number(q.get("stage"));
-  if (Number.isInteger(stage) && stage >= 1 && stage <= 8) return { mode: "stage", i: stage };
-  const c = Number(q.get("case"));
-  if (Number.isInteger(c) && c >= 1 && c <= 6) return { mode: "cases", i: c };
+  for (const [key, mode] of QUERY) {
+    const n = Number(q.get(key));
+    if (Number.isInteger(n) && n >= 1 && n <= COUNT[mode]) return { mode, i: n };
+  }
   return { mode: "hero", i: 0 };
 }
 
@@ -172,17 +202,27 @@ export default function ShipScene() {
   const { language, setLanguage } = useLanguage();
   const t = sceneContent[language];
   const products: Product[] = content[language].productModules.products;
+  const exp = content[language].experience;
+  const companies: Company[] = exp.companies;
+  const skillTitle = (id: string) => (exp.items as SkillItem[]).find((s) => s.id === id)?.title ?? id;
   const scale = useStageScale();
   const [view, setView] = useState<View>(initialView);
   const { mode, i } = view;
   const open = mode !== "hero";
   const isStage = mode === "stage";
   const isCases = mode === "cases";
+  const isExp = mode === "experience";
 
   const stage = t.stages[(isStage ? i : 1) - 1];
   const product = products[(isCases ? i : 1) - 1];
-  const ringDot = isStage ? i - 1 : isCases ? GALLERY_DOT : -1;
-  const roomHtml = useMemo(() => (isStage ? SCENES[i - 1] : isCases ? galleryMarkup(i) : ""), [isStage, isCases, i]);
+  const company = companies[(isExp ? i : 1) - 1];
+  const companyMain = company.positions[company.relevantSkills[0]] ?? {};
+  const ringDot = isStage ? i - 1 : isCases ? GALLERY_DOT : isExp ? BRIDGE_DOT : -1;
+  const roomHtml = useMemo(
+    () => (isStage ? SCENES[i - 1] : isCases ? selectableMarkup(GALLERY, i) : isExp ? selectableMarkup(EXPERIENCE, i) : ""),
+    [isStage, isCases, isExp, i],
+  );
+  const roomLabel = isStage ? `${t.stage.cut}: ${stage.name}` : isCases ? t.cases.label : t.experience.label;
 
   const show = (m: Mode, n = 1) => setView({ mode: m, i: n });
   const close = () => setView({ mode: "hero", i: 0 });
@@ -241,7 +281,7 @@ export default function ShipScene() {
         </svg>
 
         {/* Open room + connector */}
-        {open && <Room key={`${mode}-${i}`} html={roomHtml} label={isStage ? `${t.stage.cut}: ${stage.name}` : t.cases.label} />}
+        {open && <Room key={`${mode}-${i}`} html={roomHtml} label={roomLabel} />}
         <svg
           aria-hidden="true"
           width={W}
@@ -291,7 +331,7 @@ export default function ShipScene() {
             <Link href="/legacy" className="nv">{t.nav.services}</Link>
             <button type="button" className="nv" style={navActive("cases")} onClick={() => show("cases")}>{t.nav.cases}</button>
             <button type="button" className="nv" style={navActive("stage")} onClick={() => show("stage")}>{t.nav.process}</button>
-            <Link href="/legacy" className="nv">{t.nav.experience}</Link>
+            <button type="button" className="nv" style={navActive("experience")} onClick={() => show("experience")}>{t.nav.experience}</button>
           </nav>
           <div className="flex items-center gap-[22px]">
             <div className="flex" role="group" aria-label="Language">
@@ -377,19 +417,47 @@ export default function ShipScene() {
           </a>
         </section>
 
-        {/* Case gallery: caption bottom-left */}
-        <div className="absolute z-[5] max-w-[380px]" style={{ left: 56, bottom: 64, ...reveal(isCases, 0.4) }} aria-hidden={!isCases}>
+        {/* Stage rooms: process caption bottom-left */}
+        <Caption shown={isStage} num="03" eyebrow={t.process.eyebrow} title={t.process.title} accent={t.process.accent} lead={t.process.lead} />
+
+        {/* Career deck: caption bottom-left + role card */}
+        <Caption shown={isExp} num="04" eyebrow={t.experience.eyebrow} title={exp.title} lead={exp.intro} size={36} />
+        <section aria-live="polite" aria-hidden={!isExp} className="absolute z-[6] w-[330px]" style={{ left: 1060, top: 170, ...reveal(isExp) }}>
           <div className="flex items-center gap-4">
-            <span className="mono gt" style={{ fontSize: 11, letterSpacing: ".14em" }}>02</span>
-            <span className="block h-px w-16" style={{ background: "var(--sx-grad)" }} />
-            <span className="mono uppercase" style={{ fontSize: 11, letterSpacing: ".14em", color: "rgba(241,238,232,.7)" }}>{t.cases.eyebrow}</span>
+            <span className="mono gt flex-none uppercase" style={{ fontSize: 11, letterSpacing: ".14em" }}>{company.period}</span>
+            <span className="block h-px w-12 flex-none" style={{ background: "var(--sx-grad)" }} />
+            <span className="mono uppercase" style={{ fontSize: 11, letterSpacing: ".14em", color: "rgba(241,238,232,.7)" }}>{i || 1} {t.stage.of} 0{companies.length}</span>
           </div>
-          <h2 style={{ margin: "20px 0 0", fontSize: 56, lineHeight: 0.98, fontWeight: 500, letterSpacing: "-.05em" }}>
-            <span className="block">{t.cases.title}</span>
-            <span className="gt">{t.cases.accent}</span>
-          </h2>
-          <p style={{ margin: "18px 0 0", maxWidth: 340, fontSize: 16, lineHeight: 1.5, color: "rgba(241,238,232,.8)" }}>{t.cases.lead}</p>
-        </div>
+          <h2 style={{ margin: "18px 0 0", fontSize: 46, lineHeight: 1, fontWeight: 500, letterSpacing: "-.05em" }}>{company.title}</h2>
+          <div style={{ marginTop: 8, fontSize: 14, color: "rgba(241,238,232,.68)" }}>{company.role}</div>
+          <p style={{ margin: "14px 0 0", fontSize: 15, lineHeight: 1.5, color: "rgba(241,238,232,.86)" }}>{company.blurb}</p>
+          <div className="mono uppercase" style={{ marginTop: 18, fontSize: 10, letterSpacing: ".16em", color: "rgba(241,238,232,.55)" }}>{t.experience.did}</div>
+          {companyMain.highlights?.length ? (
+            <ul className="mt-2.5 flex flex-col gap-2">
+              {companyMain.highlights.map((h) => (
+                <li key={h} className="flex items-start gap-3" style={{ fontSize: 14, lineHeight: 1.4 }}>
+                  <i className="mt-[7px] block h-1.5 w-1.5 flex-none rounded-full" style={{ background: "var(--sx-grad)" }} />
+                  {h}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p style={{ margin: "6px 0 0", fontSize: 14, lineHeight: 1.45, color: "rgba(241,238,232,.82)" }}>{companyMain.details}</p>
+          )}
+          <div className="mono uppercase" style={{ marginTop: 16, fontSize: 10, letterSpacing: ".16em", color: "rgba(241,238,232,.55)" }}>{t.experience.skills}</div>
+          <ul className="mt-2 flex flex-wrap gap-1.5">
+            {company.relevantSkills.map((id) => (
+              <li key={id} className="mono" style={{ padding: "5px 9px", border: "1px solid rgba(255,255,255,.2)", borderRadius: 999, fontSize: 9.5, letterSpacing: ".08em", color: "rgba(241,238,232,.78)" }}>{skillTitle(id)}</li>
+            ))}
+          </ul>
+          <a href={TELEGRAM_URL} target="_blank" rel="noreferrer" className="pill mt-[22px]" tabIndex={isExp ? 0 : -1} style={{ padding: "15px 24px", font: "600 14px var(--font-tight)" }}>
+            {t.cta.project}
+            <Arrow />
+          </a>
+        </section>
+
+        {/* Case gallery: caption bottom-left */}
+        <Caption shown={isCases} num="02" eyebrow={t.cases.eyebrow} title={t.cases.title} accent={t.cases.accent} lead={t.cases.lead} size={56} />
 
         {/* Case gallery: project card */}
         <section aria-live="polite" aria-hidden={!isCases} className="absolute z-[6] w-[330px]" style={{ left: 1060, top: 150, ...reveal(isCases) }}>
@@ -441,6 +509,20 @@ export default function ShipScene() {
           nextLabel={t.stage.next}
           closeLabel={t.stage.close}
           onGo={(n) => show("stage", n)}
+          onClose={close}
+        />
+        <Pager
+          shown={isExp}
+          label={t.nav.experience}
+          count={companies.length}
+          current={isExp ? i : 0}
+          itemLabels={companies.map((c) => `${c.period} ${c.title}`)}
+          caption={`${company.period} · ${company.title}`}
+          captionWidth={190}
+          prevLabel={t.experience.prev}
+          nextLabel={t.experience.next}
+          closeLabel={t.stage.close}
+          onGo={(n) => show("experience", n)}
           onClose={close}
         />
         <Pager
