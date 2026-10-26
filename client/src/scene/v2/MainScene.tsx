@@ -4,9 +4,10 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/lib/content";
 import { sceneContent, TELEGRAM_URL } from "../sceneContent";
 import { DOTS, H, W, useStageScale } from "../ShipScene";
-import { sceneV2Content, type Deliverable, type Slogan } from "./content";
+import { sceneV2Content, type Deliverable, type Slogan, type StageV2 } from "./content";
 import { DEFS, GRID, ROOM_TRANSFORM, ROOMS, STARS } from "./markup";
 import { SHIP_EXTRAS, SHIP_LAYERS } from "./shipLayers";
+import { roomLayers } from "./roomLayers";
 import "../scene.css";
 import "./v2.css";
 
@@ -20,9 +21,11 @@ const CHIPS: [number, number][] = [[-90, 34], [64, 4], [-110, -6], [70, -16], [-
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // Agent-style hero: types a slogan, holds it, erases it, moves to the next one.
-function useTypewriter(slogans: Slogan[]) {
+// Paused while a room is open, so nothing on the page updates behind the room.
+function useTypewriter(slogans: Slogan[], paused: boolean) {
   const [state, setState] = useState({ idx: 0, len: 0, done: false });
   useEffect(() => {
+    if (paused) return;
     if (reducedMotion()) {
       setState({ idx: 0, len: Infinity, done: true });
       const id = window.setInterval(() => setState((s) => ({ ...s, idx: (s.idx + 1) % slogans.length })), 7000);
@@ -44,7 +47,7 @@ function useTypewriter(slogans: Slogan[]) {
     setState({ idx: 0, len: 0, done: false });
     timer = window.setTimeout(type, 700);
     return () => window.clearTimeout(timer);
-  }, [slogans]);
+  }, [slogans, paused]);
   return state;
 }
 
@@ -85,6 +88,60 @@ const ShipBody = memo(function ShipBody() {
     </g>
   );
 });
+
+// A room: ghost rooms around it plus the room itself, assembling in layers. Memoised and
+// keyed per visit, so it builds once and nothing else on the page can redraw it.
+const Room = memo(function Room({ stage, num, label, deckAnim, ghostAnim, base }: {
+  stage: number; num: string; label: string; deckAnim: string; ghostAnim: string; base: number;
+}) {
+  const { ghosts, room } = ROOMS[stage - 1];
+  const { layers, beam } = roomLayers(room, `<text class="wn" transform="matrix(.866 .5 0 1 943.6 352.8)" font-size="74">${num}</text>`);
+  const html =
+    `<g class="room-anim" style="animation:${ghostAnim};transform-origin:830px 470px">${ghosts}</g>` +
+    `<g class="room-anim" style="animation:${deckAnim};transform-origin:830px 470px"><g class="roomg">` +
+    layers.map((l, i) => `<g class="rlay" style="--ld:${(base + i * 0.32).toFixed(2)}s">${l}</g>`).join("") +
+    beam +
+    `</g></g>`;
+  return (
+    <svg
+      role="img"
+      aria-label={label}
+      width={W}
+      height={H}
+      viewBox={`0 0 ${W} ${H}`}
+      className="pointer-events-none absolute inset-0 z-[3] overflow-visible"
+      style={{ transformOrigin: "830px 470px", transform: ROOM_TRANSFORM }}
+      fill="none"
+      dangerouslySetInnerHTML={{ __html: html }}
+    />
+  );
+});
+
+const Leaders = memo(function Leaders({ stage, base }: { stage: number; base: number }) {
+  return (
+    <svg aria-hidden="true" width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="pointer-events-none absolute inset-0 z-[4] overflow-visible" fill="none" dangerouslySetInnerHTML={{ __html: staggerLeaders(ROOMS[stage - 1].leaders, base) }} />
+  );
+});
+
+// Wraps text into code-comment lines of at most `max` characters.
+function wrapLines(text: string, max: number, limit: number) {
+  const lines: string[] = [];
+  for (const word of text.split(" ")) {
+    const last = lines[lines.length - 1];
+    if (last !== undefined && (last + " " + word).length <= max) lines[lines.length - 1] = last + " " + word;
+    else lines.push(word);
+  }
+  if (lines.length > limit) lines.splice(limit - 1, lines.length, lines.slice(limit - 1).join(" ").slice(0, max - 1) + "…");
+  return lines;
+}
+const clip = (text: string, max: number) => (text.length > max ? text.slice(0, max - 1) + "…" : text);
+
+// Hover plate on the ship: the stage's promise as comments, its deliverables as the return value.
+function plateLines(stage: StageV2) {
+  const comments = wrapLines(stage.solution, 34, 3).map((line) => ({ n: line.length + 4, body: <span className="k3">// {line}</span> }));
+  const ret = clip(stage.items.map((it) => it.title).join(", "), 26);
+  return [...comments, { n: ret.length + 10, body: <><span className="k1">return</span> <span className="k2">"{ret}"</span></> }];
+}
 
 type Nav = { sel: number; last: number; tn: number; dir: number; fromHero: boolean };
 
@@ -147,7 +204,7 @@ export default function MainScene() {
     return { sel, last: sel || 1, tn: 0, dir: 0, fromHero: true };
   });
   const { sel, last, tn, dir, fromHero } = nav;
-  const typer = useTypewriter(v.slogans);
+  const typer = useTypewriter(v.slogans, sel > 0);
   const slogan = v.slogans[typer.idx];
   const typed = (slogan.lead + slogan.accent).slice(0, typer.len);
   const [hoverDeck, setHoverDeck] = useState(-1);
@@ -177,10 +234,8 @@ export default function MainScene() {
     ? "deckIn 1.1s cubic-bezier(.2,.8,.2,1) .5s both"
     : `${DECK_ANIMS[(tn + (dir > 0 ? 0 : 3)) % 6]} 1.15s cubic-bezier(.2,.9,.25,1.05) both`;
   const ghostAnim = `${tn % 2 ? "ghA" : "ghB"} 1.5s ease both`;
-  const roomHtml = open
-    ? `<g class="room-anim" style="animation:${ghostAnim};transform-origin:830px 470px">${room.ghosts}</g>` +
-      `<g class="room-anim" style="animation:${deckAnim};transform-origin:830px 470px"><g class="roomg">${room.room}<text class="wn" transform="matrix(.866 .5 0 1 943.6 352.8)" font-size="74">${stage.num}</text></g></g>`
-    : "";
+  // Room layers start after the dive (from the ship) or right away (between decks); leaders draw after the room.
+  const roomBase = fromHero ? 0.6 : 0.15;
   const [lx, ly] = DECKS[last - 1];
   const key = `${sel}-${tn}`;
 
@@ -218,20 +273,7 @@ export default function MainScene() {
         </svg>
 
         {/* Room of the open deck with ghost rooms around it */}
-        {open && (
-          <svg
-            key={`room-${key}`}
-            role="img"
-            aria-label={`${v.cut}: ${stage.name}`}
-            width={W}
-            height={H}
-            viewBox={`0 0 ${W} ${H}`}
-            className="pointer-events-none absolute inset-0 z-[3] overflow-visible"
-            style={{ transformOrigin: "830px 470px", transform: ROOM_TRANSFORM }}
-            fill="none"
-            dangerouslySetInnerHTML={{ __html: roomHtml }}
-          />
-        )}
+        {open && <Room key={`room-${key}`} stage={sel} num={stage.num} label={`${v.cut}: ${stage.name}`} deckAnim={deckAnim} ghostAnim={ghostAnim} base={roomBase} />}
 
         {/* Deck marks: a pulsing dot on each deck and a scattered chip; hover lifts the chip and shows the stage */}
         <div className="marks absolute inset-0 z-[4]" style={{ opacity: open ? 0 : 1, pointerEvents: open ? "none" : "auto", transition: "opacity .4s" }} aria-hidden={open}>
@@ -257,7 +299,11 @@ export default function MainScene() {
                   <span className="chip" style={{ ["--fd" as string]: `${5 + (d % 3) * 1.3}s`, ["--fdel" as string]: `${-d * 0.9}s` }}>
                     <span className="gt">{s0.num}</span> {s0.label}
                   </span>
-                  <span className="dd">{s0.lead}</span>
+                  <span className="dd">
+                    {plateLines(v.stages[d]).map((l, i) => (
+                      <span key={i} className="cl" style={{ ["--n" as string]: l.n, ["--d" as string]: `${i * 0.35}s` }}>{l.body}</span>
+                    ))}
+                  </span>
                 </span>
               </button>
             );
@@ -281,7 +327,7 @@ export default function MainScene() {
             </div>
 
             {/* Leader lines from room objects to the cards */}
-            <svg key={`lead-${key}`} aria-hidden="true" width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="pointer-events-none absolute inset-0 z-[4] overflow-visible" fill="none" dangerouslySetInnerHTML={{ __html: staggerLeaders(room.leaders, fromHero ? 1.7 : 1.3) }} />
+            <Leaders key={`lead-${key}`} stage={sel} base={roomBase + 2.0} />
 
             {/* What you get: code cards */}
             <div key={`cards-${key}`} className="cw pointer-events-none absolute inset-0 z-[7]">
