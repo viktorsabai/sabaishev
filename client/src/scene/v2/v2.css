@@ -28,6 +28,11 @@
 @keyframes deckD { from { transform: translate(-50px, 50px) scale(1.7); opacity: 0; filter: blur(10px) } to { transform: none; opacity: 1; filter: blur(0) } }
 @keyframes deckE { from { transform: translate(280px, 210px); opacity: 0; filter: blur(6px) } to { transform: none; opacity: 1; filter: blur(0) } }
 @keyframes deckF { from { transform: translate(-280px, -210px); opacity: 0; filter: blur(6px) } to { transform: none; opacity: 1; filter: blur(0) } }
+@keyframes deckDive { from { transform: scale(.32); opacity: 0; filter: blur(6px) } 45% { opacity: 1 } to { transform: none; opacity: 1; filter: blur(0) } }
+@keyframes ghDive { from { transform: scale(.45); opacity: 0 } to { transform: none; opacity: 1 } }
+/* Closing: the room shrinks back into its deck while the ship zooms out around it */
+@keyframes roomOut { to { transform: scale(.3); opacity: 0; filter: blur(6px) } }
+.sx .room-exit { animation: roomOut .7s cubic-bezier(.4, 0, .6, 1) forwards; }
 @keyframes ghA { from { transform: translate(-110px, 70px) scale(.9); opacity: 0 } to { transform: none; opacity: 1 } }
 @keyframes ghB { from { transform: translate(110px, -70px) scale(1.1); opacity: 0 } to { transform: none; opacity: 1 } }
 @keyframes sweep { from { transform: translateX(-110%); opacity: 0 } 30% { opacity: 1 } to { transform: translateX(110%); opacity: 0 } }
@@ -109,6 +114,7 @@
   .sx .chip, .sx .tcaret, .sx .lyr, .sx .dk { animation: none; }
   .sx .lyr .dr, .sx .lyr .dr.b, .sx .rlay .dr, .sx .rlay .dr.b { animation: none; stroke-dashoffset: 0; }
   .sx .rlay { animation: none; }
+  .sx .room-exit { animation: none; opacity: 0; }
   .sx .dk:hover .dd .cl, .sx .dk:focus-visible .dd .cl { animation: none; width: auto; }
   .sx .ldr { animation: none; stroke-dashoffset: 0; }
   .sx .cdr { animation: none; opacity: 1; }

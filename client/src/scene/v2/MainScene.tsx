@@ -59,6 +59,12 @@ function staggerLeaders(html: string, base: number) {
     .replace(/<circle class="cd"/g, () => `<circle class="cd cdr" style="animation-delay:${(base + 0.15 * ++dot + 0.45).toFixed(2)}s"`);
 }
 const DECK_ANIMS = ["deckA", "deckB", "deckC", "deckD", "deckE", "deckF"];
+// Where a room's floor centre (871.5, 508 in room coordinates) lands on screen. The dive
+// pulls the chosen deck exactly here, so the room grows out of the deck instead of
+// appearing somewhere else.
+const ROOM_FOCUS = { x: 639.6, y: 479.6 };
+const ROOM_CENTER = "871.5px 508px";
+const ROOM_SWAP = "830px 470px";
 
 // Static scene art. Memoised so state updates (typing hero, hovers) never touch it —
 // re-rendering these restarted the ship's line drawing.
@@ -91,14 +97,14 @@ const ShipBody = memo(function ShipBody() {
 
 // A room: ghost rooms around it plus the room itself, assembling in layers. Memoised and
 // keyed per visit, so it builds once and nothing else on the page can redraw it.
-const Room = memo(function Room({ stage, num, label, deckAnim, ghostAnim, base }: {
-  stage: number; num: string; label: string; deckAnim: string; ghostAnim: string; base: number;
+const Room = memo(function Room({ stage, num, label, deckAnim, ghostAnim, origin, base }: {
+  stage: number; num: string; label: string; deckAnim: string; ghostAnim: string; origin: string; base: number;
 }) {
   const { ghosts, room } = ROOMS[stage - 1];
   const { layers, beam } = roomLayers(room, `<text class="wn" transform="matrix(.866 .5 0 1 943.6 352.8)" font-size="74">${num}</text>`);
   const html =
-    `<g class="room-anim" style="animation:${ghostAnim};transform-origin:830px 470px">${ghosts}</g>` +
-    `<g class="room-anim" style="animation:${deckAnim};transform-origin:830px 470px"><g class="roomg">` +
+    `<g class="room-anim" style="animation:${ghostAnim};transform-origin:${origin}">${ghosts}</g>` +
+    `<g class="room-anim" style="animation:${deckAnim};transform-origin:${origin}"><g class="roomg">` +
     layers.map((l, i) => `<g class="rlay" style="--ld:${(base + i * 0.32).toFixed(2)}s">${l}</g>`).join("") +
     beam +
     `</g></g>`;
@@ -143,7 +149,9 @@ function plateLines(stage: StageV2) {
   return [...comments, { n: ret.length + 10, body: <><span className="k1">return</span> <span className="k2">"{ret}"</span></> }];
 }
 
-type Nav = { sel: number; last: number; tn: number; dir: number; fromHero: boolean };
+// sel: open deck (0 = ship). room/rk: the room on screen and its key — kept while the room
+// shrinks back into the ship after closing (exiting).
+type Nav = { sel: number; last: number; room: number; rk: string; tn: number; dir: number; fromHero: boolean; exiting: boolean };
 
 function Arrow() {
   return (
@@ -201,9 +209,9 @@ export default function MainScene() {
   const [nav, setNav] = useState<Nav>(() => {
     const n = Number(new URLSearchParams(window.location.search).get("stage"));
     const sel = Number.isInteger(n) && n >= 1 && n <= 8 ? n : 0;
-    return { sel, last: sel || 1, tn: 0, dir: 0, fromHero: true };
+    return { sel, last: sel || 1, room: sel || 1, rk: `${sel}-0`, tn: 0, dir: 0, fromHero: true, exiting: false };
   });
-  const { sel, last, tn, dir, fromHero } = nav;
+  const { sel, last, tn, dir, fromHero, exiting } = nav;
   const typer = useTypewriter(v.slogans, sel > 0);
   const slogan = v.slogans[typer.idx];
   const typed = (slogan.lead + slogan.accent).slice(0, typer.len);
@@ -213,7 +221,18 @@ export default function MainScene() {
   const room = ROOMS[(sel || 1) - 1];
 
   const go = (i: number) =>
-    setNav((s) => ({ sel: i, last: i || s.last, tn: s.tn + 1, dir: i > s.sel ? 1 : -1, fromHero: s.sel === 0 }));
+    setNav((s) =>
+      i === 0
+        ? { ...s, sel: 0, tn: s.tn + 1, exiting: s.sel > 0 }
+        : { sel: i, last: i, room: i, rk: `${i}-${s.tn + 1}`, tn: s.tn + 1, dir: i > s.sel ? 1 : -1, fromHero: s.sel === 0, exiting: false },
+    );
+
+  // The room shrinks back into its deck for a moment after closing, then unmounts.
+  useEffect(() => {
+    if (!exiting) return;
+    const id = window.setTimeout(() => setNav((s) => ({ ...s, exiting: false })), 800);
+    return () => window.clearTimeout(id);
+  }, [exiting]);
   const up = () => go(sel >= 8 ? 1 : sel + 1);
   const down = () => go(sel <= 1 ? 8 : sel - 1);
 
@@ -231,13 +250,13 @@ export default function MainScene() {
   // Entering from the ship: the room grows in after the dive. Between decks: one of six
   // directions (by transition count and direction), ghosts drift the other way.
   const deckAnim = fromHero
-    ? "deckIn 1.1s cubic-bezier(.2,.8,.2,1) .5s both"
+    ? "deckDive 1.15s cubic-bezier(.3,0,.2,1) .35s both"
     : `${DECK_ANIMS[(tn + (dir > 0 ? 0 : 3)) % 6]} 1.15s cubic-bezier(.2,.9,.25,1.05) both`;
-  const ghostAnim = `${tn % 2 ? "ghA" : "ghB"} 1.5s ease both`;
+  const ghostAnim = fromHero ? "ghDive 1.3s ease .5s both" : `${tn % 2 ? "ghA" : "ghB"} 1.5s ease both`;
   // Room layers start after the dive (from the ship) or right away (between decks); leaders draw after the room.
   const roomBase = fromHero ? 0.6 : 0.15;
   const [lx, ly] = DECKS[last - 1];
-  const key = `${sel}-${tn}`;
+  const key = nav.rk;
 
   return (
     <div id="top" className="sx relative h-[100svh] min-h-[560px] w-full overflow-hidden">
@@ -261,8 +280,11 @@ export default function MainScene() {
             style={{
               opacity: open ? 0 : 1,
               transformOrigin: `${lx}px ${ly}px`,
-              transform: open ? "translate(0px,-48px) scale(5)" : "translate(0px,-48px)",
-              transition: "transform 1.2s cubic-bezier(.7,0,.25,1), opacity .7s ease .55s",
+              // Dive: zoom ×5 around the deck and pull it to where the room will grow.
+              transform: open ? `translate(${ROOM_FOCUS.x - lx}px,${ROOM_FOCUS.y - ly}px) scale(5)` : "translate(0px,-48px)",
+              transition: open
+                ? "transform 1.2s cubic-bezier(.7,0,.25,1), opacity .6s ease .5s"
+                : "transform 1.1s cubic-bezier(.3,0,.2,1), opacity .5s ease .15s",
             }}
           >
             <ShipBody />
@@ -273,10 +295,23 @@ export default function MainScene() {
         </svg>
 
         {/* Room of the open deck with ghost rooms around it */}
-        {open && <Room key={`room-${key}`} stage={sel} num={stage.num} label={`${v.cut}: ${stage.name}`} deckAnim={deckAnim} ghostAnim={ghostAnim} base={roomBase} />}
+        {(open || exiting) && (
+          <div className={`absolute inset-0 z-[3]${exiting ? " room-exit" : ""}`} style={{ transformOrigin: `${ROOM_FOCUS.x}px ${ROOM_FOCUS.y}px` }}>
+            <Room
+              key={`room-${key}`}
+              stage={nav.room}
+              num={v.stages[nav.room - 1].num}
+              label={`${v.cut}: ${v.stages[nav.room - 1].name}`}
+              deckAnim={deckAnim}
+              ghostAnim={ghostAnim}
+              origin={fromHero ? ROOM_CENTER : ROOM_SWAP}
+              base={roomBase}
+            />
+          </div>
+        )}
 
         {/* Deck marks: a pulsing dot on each deck and a scattered chip; hover lifts the chip and shows the stage */}
-        <div className="marks absolute inset-0 z-[4]" style={{ opacity: open ? 0 : 1, pointerEvents: open ? "none" : "auto", transition: "opacity .4s" }} aria-hidden={open}>
+        <div className="marks absolute inset-0 z-[4]" style={{ opacity: open ? 0 : 1, pointerEvents: open ? "none" : "auto", transition: open ? "opacity .25s" : "opacity .6s ease 1.1s" }} aria-hidden={open}>
           {DECKS.map(([x, y], d) => {
             const [dx, dy] = CHIPS[d];
             const s0 = t.stages[d];
@@ -388,9 +423,9 @@ export default function MainScene() {
             <span className="mono gt" style={{ fontSize: 11, letterSpacing: ".14em" }}>.ONLINE</span>
           </a>
           <nav className="flex items-center gap-[38px]">
-            <Link href="/legacy" className="nv">{t.nav.services}</Link>
+            <button type="button" className="nv" onClick={() => go(1)}>{t.nav.services}</button>
             <Link href="/legacy" className="nv">{t.nav.cases}</Link>
-            <button type="button" className="nv" onClick={() => go(1)}>{t.nav.process}</button>
+            <Link href="/legacy" className="nv">{t.nav.process}</Link>
             <Link href="/legacy" className="nv">{t.nav.experience}</Link>
           </nav>
           <div className="flex items-center gap-[22px]">
@@ -411,7 +446,7 @@ export default function MainScene() {
         <div
           className="absolute z-[5] w-[580px]"
           aria-hidden={open}
-          style={{ left: 56, top: 186, transition: "opacity .5s ease, transform .6s ease", opacity: open ? 0 : 1, transform: open ? "translateX(40px)" : "none", pointerEvents: open ? "none" : "auto" }}
+          style={{ left: 56, top: 186, transition: open ? "opacity .4s ease, transform .5s ease" : "opacity .6s ease .8s, transform .7s ease .8s", opacity: open ? 0 : 1, transform: open ? "translateX(40px)" : "none", pointerEvents: open ? "none" : "auto" }}
         >
           <div className="flex items-center gap-4">
             <span className="mono gt" style={{ fontSize: 11, letterSpacing: ".14em" }}>0{typer.idx + 1}</span>
@@ -442,7 +477,7 @@ export default function MainScene() {
         </div>
 
         {!open && (
-          <div className="mono pointer-events-none absolute z-[5] flex items-center gap-3 uppercase" style={{ right: 56, bottom: 56, fontSize: 10.5, letterSpacing: ".16em", color: "rgba(241,238,232,.72)" }}>
+          <div className="mono pointer-events-none absolute z-[5] flex items-center gap-3 uppercase" style={{ right: 56, bottom: 56, animation: "v2in .6s ease 1.4s both", fontSize: 10.5, letterSpacing: ".16em", color: "rgba(241,238,232,.72)" }}>
             <span className="pd" />
             {t.hint}
           </div>
