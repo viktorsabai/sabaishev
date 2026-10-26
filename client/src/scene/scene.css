@@ -1,0 +1,89 @@
+/* Single-scene site (SABAISHEV.ONLINE). Ported from reference/Main.dc.html. */
+
+.sx {
+  font-family: var(--font-tight);
+  color: var(--sx-ink);
+  background: var(--sx-bg);
+}
+.sx button { font-family: inherit; color: inherit; }
+.sx a { color: inherit; text-decoration: none; }
+.sx .mono { font-family: var(--font-mono); }
+.sx .gt {
+  background: var(--sx-grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+.sx button:focus-visible, .sx a:focus-visible { outline: 1px solid rgba(255, 255, 255, .7); outline-offset: 4px; }
+
+/* Header */
+.sx .nv { background: none; border: 0; padding: 0 0 6px; cursor: pointer; font: 400 13px var(--font-tight); letter-spacing: .06em; color: var(--sx-ink); opacity: .72; transition: opacity .25s; }
+.sx .nv:hover { opacity: 1; }
+.sx .lg { background: none; border: 0; cursor: pointer; font: 500 11px var(--font-mono); letter-spacing: .16em; padding: 8px 6px; border-radius: 999px; transition: opacity .25s, background .25s; }
+
+/* Gradient pill button */
+.sx .pill { display: inline-flex; align-items: center; gap: 14px; cursor: pointer; border: 0; border-radius: 999px; color: #fff; background: var(--sx-grad-btn); transition: transform .35s ease, box-shadow .35s ease; }
+.sx .pill:hover { transform: translateY(-3px); }
+.sx .pill svg { transition: transform .35s ease; }
+.sx .pill:hover svg { transform: translateX(5px); }
+
+.sx .glass { background: var(--sx-glass-bg); border: 1px solid var(--sx-glass-border); backdrop-filter: blur(var(--sx-glass-blur)); -webkit-backdrop-filter: blur(var(--sx-glass-blur)); }
+
+/* Stage labels around the ship */
+.sx .hit { position: absolute; background: none; border: 0; padding: 4px 2px; cursor: pointer; font: 500 11px var(--font-mono); letter-spacing: .13em; white-space: nowrap; text-transform: uppercase; text-shadow: 0 0 8px var(--sx-bg), 0 0 3px var(--sx-bg); border-bottom: 1px solid transparent; transition: opacity .4s, color .25s, border-color .25s; }
+.sx .hit:hover { border-bottom-color: rgba(241, 238, 232, .8); }
+
+/* Stage navigation */
+.sx .nb { position: relative; width: 46px; height: 46px; border-radius: 50%; background: none; border: 1px solid rgba(255, 255, 255, .28); color: var(--sx-ink); cursor: pointer; display: flex; align-items: center; justify-content: center; overflow: hidden; transition: border-color .3s, background .3s, transform .3s; }
+.sx .nb::before { content: ''; position: absolute; inset: 0; background: var(--sx-grad-btn); opacity: 0; transform: scale(.4); border-radius: 50%; transition: opacity .35s, transform .35s; }
+.sx .nb:hover::before { opacity: 1; transform: scale(1); }
+.sx .nb:hover { border-color: transparent; }
+.sx .nb svg { position: relative; transition: transform .35s cubic-bezier(.3, 1.6, .5, 1); }
+.sx .nbn:hover svg { transform: translateX(5px); }
+.sx .nbp:hover svg { transform: translateX(-5px); }
+.sx .nb:active { transform: scale(.92); }
+.sx .sg { height: 4px; width: 22px; border: 0; padding: 0; border-radius: 2px; background: rgba(255, 255, 255, .22); cursor: pointer; transition: width .5s cubic-bezier(.6, 0, .2, 1), background .4s, box-shadow .4s; }
+.sx .sg:hover { background: rgba(255, 255, 255, .6); }
+.sx .sg[aria-current="step"] { width: 56px; background: var(--sx-grad); box-shadow: 0 0 14px var(--sx-c2); }
+.sx .sg.done { background: rgba(255, 255, 255, .5); }
+.sx .ib { background: none; border: 1px solid rgba(255, 255, 255, .22); border-radius: 999px; cursor: pointer; padding: 10px 14px; font: 500 10.5px var(--font-mono); letter-spacing: .12em; text-transform: uppercase; color: var(--sx-ink); transition: all .25s; }
+.sx .ib:hover { border-color: #fff; }
+
+/* Pulsing hint dot */
+.sx .pd { position: relative; display: block; width: 8px; height: 8px; border-radius: 50%; color: var(--sx-accent-ink); background: var(--sx-accent-ink); }
+.sx .pd::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 1px solid currentColor; animation: sx-ring 2.2s ease-out infinite; }
+@keyframes sx-ring { 0% { transform: scale(1); opacity: .8 } 100% { transform: scale(2.8); opacity: 0 } }
+
+/* --- Ship SVG --- */
+@keyframes dr { to { stroke-dashoffset: 0 } }
+@keyframes fi { to { opacity: 1 } }
+@keyframes fk { from { transform: scale(1) } to { transform: scale(1.07) } }
+@keyframes bob { 0%, 100% { transform: translate(0, 0) rotate(0deg) } 50% { transform: translate(-5px, -11px) rotate(-.6deg) } }
+@keyframes gmv { to { transform: translate(-35.5px, 20.5px) } }
+@keyframes st { 0% { transform: translate(0, 0); opacity: 0 } 12% { opacity: 1 } 88% { opacity: 1 } 100% { transform: translate(-330px, 190px); opacity: 0 } }
+@keyframes ring2 { 0% { transform: scale(.6) } 100% { transform: scale(1.5) } }
+
+.sx .dr { stroke-dasharray: 1; stroke-dashoffset: 1; animation: dr 1.7s ease forwards; fill: none; stroke: var(--sx-ink); stroke-width: 1.1; stroke-linejoin: round; stroke-linecap: round; }
+.sx .dr.b { fill: #080A10; stroke-opacity: .66; }
+.sx .dr.t { stroke-opacity: .3; }
+.sx .dr.a { stroke: url(#lgc); stroke-opacity: 1; stroke-width: 1.6; }
+.sx .dr.c { fill: url(#lgv); fill-opacity: .5; stroke: url(#lgc); stroke-opacity: .9; }
+.sx .dr.g { fill: url(#gl); stroke: url(#lgc); stroke-opacity: .95; }
+.sx .fi { opacity: 0; transform-box: fill-box; transform-origin: 100% 0; animation: fi 1.4s ease forwards, fk .2s ease-in-out 4s infinite alternate; }
+.sx .gr { fill: none; stroke: var(--sx-ink); stroke-opacity: .1; stroke-width: 1; }
+.sx .dm { fill: none; stroke: var(--sx-ink); stroke-opacity: .4; stroke-width: 1; }
+.sx .ld { fill: none; stroke: var(--sx-ink); stroke-opacity: .7; stroke-width: 1; }
+.sx .cd { fill: var(--sx-bg); stroke: var(--sx-ink); stroke-width: 1.3; }
+.sx .hl { fill: none; stroke: url(#lgc); stroke-width: 3; animation: ring2 1.8s ease-out infinite; transform-box: fill-box; transform-origin: center; transition: opacity .5s; }
+.sx .shipg { animation: bob 7s ease-in-out infinite; }
+.sx .gmv { animation: gmv 1.4s linear infinite; }
+.sx .sk { animation: st 5s linear infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sx .sk { display: none; }
+  .sx .shipg, .sx .gmv, .sx .hl, .sx .pd::after { animation: none; }
+  .sx .dr { animation: none; stroke-dashoffset: 0; }
+  .sx .fi { animation: none; opacity: 1; }
+  .sx .scene-move { transition: none !important; }
+}

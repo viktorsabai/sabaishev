@@ -6,6 +6,7 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import Home from "./pages/Home";
+import HomeLegacy from "./pages/HomeLegacy";
 import Workspace from "./pages/Workspace";
 import AnimatedBackground from "./components/AnimatedBackground";
 
@@ -13,6 +14,7 @@ function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/legacy"} component={HomeLegacy} />
       <Route path={"/workspace/material/:slug"} component={Workspace} />
       <Route path={"/workspace/route/:slug"} component={Workspace} />
       <Route path={"/workspace"} component={Workspace} />

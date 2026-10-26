@@ -16,7 +16,7 @@ import ScrollProgressBar from "@/components/ScrollProgressBar";
 import MobileBreadcrumb from "@/components/MobileBreadcrumb";
 import ConversionPrompt from "@/components/ConversionPrompt";
 
-export default function Home() {
+export default function HomeLegacy() {
   const [showBoot, setShowBoot] = useState(true);
   const contactRef = useRef<HTMLDivElement>(null);
   const productsRef = useRef<HTMLDivElement>(null);
