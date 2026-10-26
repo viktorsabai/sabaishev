@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/lib/content";
 import { sceneContent, TELEGRAM_URL } from "../sceneContent";
 import { DOTS, H, W, useStageScale } from "../ShipScene";
 import { sceneV2Content, type Deliverable, type Slogan } from "./content";
-import { DEFS, GRID, ROOM_TRANSFORM, ROOMS, SHIP, STARS } from "./markup";
+import { DEFS, GRID, ROOM_TRANSFORM, ROOMS, STARS } from "./markup";
+import { SHIP_EXTRAS, SHIP_LAYERS } from "./shipLayers";
 import "../scene.css";
 import "./v2.css";
 
@@ -55,6 +56,35 @@ function staggerLeaders(html: string, base: number) {
     .replace(/<circle class="cd"/g, () => `<circle class="cd cdr" style="animation-delay:${(base + 0.15 * ++dot + 0.45).toFixed(2)}s"`);
 }
 const DECK_ANIMS = ["deckA", "deckB", "deckC", "deckD", "deckE", "deckF"];
+
+// Static scene art. Memoised so state updates (typing hero, hovers) never touch it —
+// re-rendering these restarted the ship's line drawing.
+const StarStreaks = memo(function StarStreaks() {
+  return <svg aria-hidden="true" width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="pointer-events-none absolute inset-0" fill="none" dangerouslySetInnerHTML={{ __html: STARS }} />;
+});
+const ShipDefs = memo(function ShipDefs() {
+  return <defs dangerouslySetInnerHTML={{ __html: DEFS }} />;
+});
+const ShipGrid = memo(function ShipGrid() {
+  return (
+    <g transform="translate(0,-48)">
+      <g mask="url(#gm)">
+        <g className="gmv" dangerouslySetInnerHTML={{ __html: GRID }} />
+      </g>
+    </g>
+  );
+});
+// The ship assembles bottom-up in layers (see shipLayers.ts).
+const ShipBody = memo(function ShipBody() {
+  return (
+    <g className="shipg">
+      {SHIP_LAYERS.map((html, i) => (
+        <g key={i} className="lyr" style={{ ["--ld" as string]: `${0.2 + i * 0.3}s` }} dangerouslySetInnerHTML={{ __html: html }} />
+      ))}
+      <g dangerouslySetInnerHTML={{ __html: SHIP_EXTRAS }} />
+    </g>
+  );
+});
 
 type Nav = { sel: number; last: number; tn: number; dir: number; fromHero: boolean };
 
@@ -165,16 +195,12 @@ export default function MainScene() {
         }}
       />
       <div className="absolute left-1/2 top-1/2" style={{ width: W, height: H, transform: `translate(-50%,-50%) scale(${scale})` }}>
-        <svg aria-hidden="true" width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="pointer-events-none absolute inset-0" fill="none" dangerouslySetInnerHTML={{ __html: STARS }} />
+        <StarStreaks />
 
         {/* Ship: dives ×5 into the chosen deck and fades */}
         <svg role="img" aria-label={t.shipLabel} aria-hidden={open} width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="pointer-events-none absolute inset-0 overflow-visible" fill="none">
-          <defs dangerouslySetInnerHTML={{ __html: DEFS }} />
-          <g transform="translate(0,-48)">
-            <g mask="url(#gm)">
-              <g className="gmv" dangerouslySetInnerHTML={{ __html: GRID }} />
-            </g>
-          </g>
+          <ShipDefs />
+          <ShipGrid />
           <g
             className="dive"
             style={{
@@ -184,7 +210,7 @@ export default function MainScene() {
               transition: "transform 1.2s cubic-bezier(.7,0,.25,1), opacity .7s ease .55s",
             }}
           >
-            <g className="shipg" dangerouslySetInnerHTML={{ __html: SHIP }} />
+            <ShipBody />
             {DECKS.map(([cx, cy], d) => (
               <circle key={d} className="hl" cx={cx} cy={cy} r={22} style={{ opacity: !open && hoverDeck === d ? 1 : 0 }} />
             ))}
@@ -217,7 +243,7 @@ export default function MainScene() {
                 key={d}
                 type="button"
                 className="dk"
-                style={{ left: x, top: y - 48 }}
+                style={{ left: x, top: y - 48, ["--i" as string]: d }}
                 tabIndex={open ? -1 : 0}
                 aria-label={`${s0.num} ${s0.label}`}
                 onClick={() => go(d + 1)}

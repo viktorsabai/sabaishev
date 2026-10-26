@@ -64,6 +64,13 @@
 .sx .cw:hover .cc:focus:not(:hover) .ch { transform: none; }
 .sx .cw:hover .cc:focus:not(:hover) .cl { animation: none; width: 0; }
 
+/* Ship assembles in layers, bottom to top: each layer drops in, draws its lines, then fills */
+@keyframes layerIn { from { opacity: 0; transform: translateY(-34px) } to { opacity: 1; transform: none } }
+@keyframes fillin { to { fill-opacity: 1 } }
+.sx .lyr { animation: layerIn .9s cubic-bezier(.2, .8, .2, 1) var(--ld) both; }
+.sx .lyr .dr { animation: dr 1.1s ease calc(var(--ld) + .15s) forwards; }
+.sx .lyr .dr.b { fill-opacity: 0; animation: dr 1.1s ease calc(var(--ld) + .15s) forwards, fillin .7s ease calc(var(--ld) + .5s) forwards; }
+
 /* Hero typing caret */
 @keyframes tblink { 0%, 49% { opacity: 1 } 50%, 100% { opacity: 0 } }
 .sx .tcaret { display: inline-block; width: .07em; height: .82em; margin-left: .06em; vertical-align: -.06em; background: var(--sx-grad); animation: tblink 1s step-end infinite; }
@@ -71,6 +78,8 @@
 /* Deck marks on the ship */
 @keyframes chipf { 0%, 100% { translate: 0 0 } 50% { translate: 0 -4px } }
 .sx .dk { position: absolute; width: 0; height: 0; padding: 0; border: 0; background: none; cursor: pointer; }
+/* Marks appear one by one once the ship has assembled */
+.sx .dk { animation: v2in .6s ease calc(2.6s + var(--i) * .1s) both; }
 .sx .dk:focus-visible { outline: none; }
 .sx .dkdot { position: absolute; left: -4px; top: -4px; }
 .sx .dkwrap { position: absolute; display: block; }
@@ -88,7 +97,8 @@
 .sx .cdr { opacity: 0; animation: fi .3s ease forwards; }
 
 @media (prefers-reduced-motion: reduce) {
-  .sx .chip, .sx .tcaret { animation: none; }
+  .sx .chip, .sx .tcaret, .sx .lyr, .sx .dk { animation: none; }
+  .sx .lyr .dr, .sx .lyr .dr.b { animation: none; stroke-dashoffset: 0; fill-opacity: 1; }
   .sx .ldr { animation: none; stroke-dashoffset: 0; }
   .sx .cdr { animation: none; opacity: 1; }
   .sx .roomg, .sx .bobb, .sx .tp, .sx .v2in, .sx .room-anim { animation: none !important; }
