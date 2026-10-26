@@ -7,7 +7,11 @@ import type { Language } from "@/lib/content";
 export type Deliverable = { title: string; why: [string, string]; ret: string };
 export type StageV2 = { num: string; name: string; label: string; tag: string; pain: string; solution: string; items: Deliverable[] };
 
+// Hero slogans typed one after another: `lead` in ink, `accent` in the brand gradient.
+export type Slogan = { eyebrow: string; lead: string; accent: string; subtitle: string };
+
 export type SceneV2Copy = {
+  slogans: Slogan[];
   stageOf: string; pain: string; solution: string; get: string; hint: string;
   toShip: string; decks: string; up: string; down: string; discussStage: string; cut: string;
   stages: StageV2[];
@@ -19,6 +23,11 @@ const withTags = (stages: Omit<StageV2, "num" | "tag">[]): StageV2[] =>
 
 export const sceneV2Content: Record<Language, SceneV2Copy> = {
   ru: {
+    slogans: [
+      { eyebrow: "Продакт под ключ", lead: "Продукты, которыми хочется ", accent: "пользоваться.", subtitle: "Продакт, UX/UI и AI в одних руках. Разберу задачу, соберу MVP и доведу до запуска." },
+      { eyebrow: "Сайты и лендинги", lead: "Сайты, которые ", accent: "продают.", subtitle: "Каждый экран ведёт к заявке: структура, тексты, дизайн и аналитика — в одной системе." },
+      { eyebrow: "Операционка и workspace", lead: "Рутину — системе. Вам — ", accent: "развитие.", subtitle: "Соберу рабочее место для команды, автоматизирую ручные процессы или просто проведу аудит операционки." },
+    ],
     stageOf: "Этап", pain: "Знакомо?", solution: "Что делаю я", get: "получите", hint: "наведи или тапни",
     toShip: "← На корабль", decks: "Палубы", up: "Палуба выше", down: "Палуба ниже", discussStage: "Обсудить этот этап", cut: "Разрез палубы",
     stages: withTags([
@@ -66,6 +75,11 @@ export const sceneV2Content: Record<Language, SceneV2Copy> = {
     ]),
   },
   en: {
+    slogans: [
+      { eyebrow: "End-to-end product", lead: "Products people actually ", accent: "want to use.", subtitle: "Product, UX/UI and AI in one pair of hands. I'll unpack the problem, build the MVP and take it to launch." },
+      { eyebrow: "Websites & landing pages", lead: "Websites that ", accent: "actually sell.", subtitle: "Every screen leads to a request: structure, copy, design and analytics in one system." },
+      { eyebrow: "Operations & workspace", lead: "Routine to systems. ", accent: "Growth to you.", subtitle: "I'll build a workspace for your team, automate manual processes, or simply audit how operations run." },
+    ],
     stageOf: "Stage", pain: "Sound familiar?", solution: "What I do", get: "youGet", hint: "hover or tap",
     toShip: "← Back to ship", decks: "Decks", up: "Deck above", down: "Deck below", discussStage: "Discuss this stage", cut: "Deck cutaway",
     stages: withTags([
@@ -113,6 +127,11 @@ export const sceneV2Content: Record<Language, SceneV2Copy> = {
     ]),
   },
   th: {
+    slogans: [
+      { eyebrow: "โปรดักต์ครบวงจร", lead: "โปรดักต์ที่คนอยาก", accent: "ใช้งานจริง", subtitle: "โปรดักต์ UX/UI และ AI ในคนเดียว วิเคราะห์โจทย์ สร้าง MVP และพาไปจนถึงการเปิดตัว" },
+      { eyebrow: "เว็บไซต์และแลนดิ้งเพจ", lead: "เว็บไซต์ที่", accent: "ขายได้จริง", subtitle: "ทุกหน้าจอพาไปสู่การติดต่อ: โครงสร้าง ข้อความ ดีไซน์ และอนาลิติกส์ในระบบเดียว" },
+      { eyebrow: "งานปฏิบัติการและ workspace", lead: "งานรูทีนให้ระบบ ", accent: "การเติบโตให้คุณ", subtitle: "สร้าง workspace ให้ทีม ทำงานที่ทำมือให้เป็นอัตโนมัติ หรือแค่ตรวจสอบกระบวนการทำงาน" },
+    ],
     stageOf: "ขั้นตอน", pain: "คุ้นๆ ไหม?", solution: "สิ่งที่ผมทำ", get: "สิ่งที่ได้", hint: "ชี้หรือแตะ",
     toShip: "← กลับไปที่ยาน", decks: "ชั้น", up: "ชั้นบน", down: "ชั้นล่าง", discussStage: "คุยเรื่องขั้นตอนนี้", cut: "ภาพตัดขวางชั้น",
     stages: withTags([

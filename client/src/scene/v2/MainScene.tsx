@@ -3,9 +3,9 @@ import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/lib/content";
 import { sceneContent, TELEGRAM_URL } from "../sceneContent";
-import { DOTS, H, LABELS, W, useStageScale } from "../ShipScene";
-import { sceneV2Content, type Deliverable } from "./content";
-import { DEFS, GRID, LEADS, ROOM_TRANSFORM, ROOMS, SHIP, STARS } from "./markup";
+import { DOTS, H, W, useStageScale } from "../ShipScene";
+import { sceneV2Content, type Deliverable, type Slogan } from "./content";
+import { DEFS, GRID, ROOM_TRANSFORM, ROOMS, SHIP, STARS } from "./markup";
 import "../scene.css";
 import "./v2.css";
 
@@ -14,6 +14,46 @@ import "./v2.css";
 // between decks plays one of six entrance animations; deliverables are code cards.
 
 const DECKS = DOTS.slice(0, 8);
+// Deck chips sit next to their deck dot, scattered on both sides of the ship (dx, dy from the dot).
+const CHIPS: [number, number][] = [[-90, 34], [64, 4], [-110, -6], [70, -16], [-60, -40], [110, -40], [36, 54], [-40, 58]];
+const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Agent-style hero: types a slogan, holds it, erases it, moves to the next one.
+function useTypewriter(slogans: Slogan[]) {
+  const [state, setState] = useState({ idx: 0, len: 0, done: false });
+  useEffect(() => {
+    if (reducedMotion()) {
+      setState({ idx: 0, len: Infinity, done: true });
+      const id = window.setInterval(() => setState((s) => ({ ...s, idx: (s.idx + 1) % slogans.length })), 7000);
+      return () => window.clearInterval(id);
+    }
+    let idx = 0, len = 0, timer = 0;
+    const full = () => slogans[idx].lead + slogans[idx].accent;
+    const type = () => {
+      len += 1;
+      setState({ idx, len, done: len >= full().length });
+      timer = window.setTimeout(len >= full().length ? erase : type, len >= full().length ? 4200 : 42);
+    };
+    const erase = () => {
+      len = Math.max(0, len - 2);
+      setState({ idx, len, done: false });
+      if (len > 0) timer = window.setTimeout(erase, 16);
+      else { idx = (idx + 1) % slogans.length; timer = window.setTimeout(type, 380); }
+    };
+    setState({ idx: 0, len: 0, done: false });
+    timer = window.setTimeout(type, 700);
+    return () => window.clearTimeout(timer);
+  }, [slogans]);
+  return state;
+}
+
+// Leader lines from room objects to cards draw last, after the room and cards are in place.
+function staggerLeaders(html: string, base: number) {
+  let line = 0, dot = 0;
+  return html
+    .replace(/<path class="ld" d=/g, () => `<path class="ld ldr" pathLength="1" style="animation-delay:${(base + 0.15 * line++).toFixed(2)}s" d=`)
+    .replace(/<circle class="cd"/g, () => `<circle class="cd cdr" style="animation-delay:${(base + 0.15 * ++dot + 0.45).toFixed(2)}s"`);
+}
 const DECK_ANIMS = ["deckA", "deckB", "deckC", "deckD", "deckE", "deckF"];
 
 type Nav = { sel: number; last: number; tn: number; dir: number; fromHero: boolean };
@@ -77,6 +117,10 @@ export default function MainScene() {
     return { sel, last: sel || 1, tn: 0, dir: 0, fromHero: true };
   });
   const { sel, last, tn, dir, fromHero } = nav;
+  const typer = useTypewriter(v.slogans);
+  const slogan = v.slogans[typer.idx];
+  const typed = (slogan.lead + slogan.accent).slice(0, typer.len);
+  const [hoverDeck, setHoverDeck] = useState(-1);
   const open = sel > 0;
   const stage = v.stages[(sel || 1) - 1];
   const room = ROOMS[(sel || 1) - 1];
@@ -141,7 +185,9 @@ export default function MainScene() {
             }}
           >
             <g className="shipg" dangerouslySetInnerHTML={{ __html: SHIP }} />
-            <g style={{ opacity: open ? 0 : 1, transition: "opacity .5s ease" }} dangerouslySetInnerHTML={{ __html: LEADS }} />
+            {DECKS.map(([cx, cy], d) => (
+              <circle key={d} className="hl" cx={cx} cy={cy} r={22} style={{ opacity: !open && hoverDeck === d ? 1 : 0 }} />
+            ))}
           </g>
         </svg>
 
@@ -161,27 +207,36 @@ export default function MainScene() {
           />
         )}
 
-        {/* Stage labels around the ship */}
-        {LABELS.map(([x, y, anchor], d) => (
-          <button
-            key={d}
-            type="button"
-            className="hit"
-            onClick={() => go(d + 1)}
-            tabIndex={open ? -1 : 0}
-            style={{
-              left: x,
-              top: y - 17 - 48,
-              zIndex: 4,
-              color: d === 2 ? "var(--sx-accent-ink)" : "var(--sx-ink)",
-              opacity: open ? 0 : 1,
-              pointerEvents: open ? "none" : "auto",
-              transform: anchor === "end" ? "translateX(-100%)" : anchor === "middle" ? "translateX(-50%)" : "none",
-            }}
-          >
-            {t.stages[d].num} {t.stages[d].label}
-          </button>
-        ))}
+        {/* Deck marks: a pulsing dot on each deck and a scattered chip; hover lifts the chip and shows the stage */}
+        <div className="marks absolute inset-0 z-[4]" style={{ opacity: open ? 0 : 1, pointerEvents: open ? "none" : "auto", transition: "opacity .4s" }} aria-hidden={open}>
+          {DECKS.map(([x, y], d) => {
+            const [dx, dy] = CHIPS[d];
+            const s0 = t.stages[d];
+            return (
+              <button
+                key={d}
+                type="button"
+                className="dk"
+                style={{ left: x, top: y - 48 }}
+                tabIndex={open ? -1 : 0}
+                aria-label={`${s0.num} ${s0.label}`}
+                onClick={() => go(d + 1)}
+                onMouseEnter={() => setHoverDeck(d)}
+                onMouseLeave={() => setHoverDeck(-1)}
+                onFocus={() => setHoverDeck(d)}
+                onBlur={() => setHoverDeck(-1)}
+              >
+                <span className="pd dkdot" />
+                <span className={`dkwrap${dx < 0 ? " left" : ""}`} style={{ left: dx, top: dy }}>
+                  <span className="chip" style={{ ["--fd" as string]: `${5 + (d % 3) * 1.3}s`, ["--fdel" as string]: `${-d * 0.9}s` }}>
+                    <span className="gt">{s0.num}</span> {s0.label}
+                  </span>
+                  <span className="dd">{s0.lead}</span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
 
         {open && (
           <>
@@ -200,7 +255,7 @@ export default function MainScene() {
             </div>
 
             {/* Leader lines from room objects to the cards */}
-            <svg key={`lead-${key}`} aria-hidden="true" width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="sceneIn pointer-events-none absolute inset-0 z-[4] overflow-visible" fill="none" dangerouslySetInnerHTML={{ __html: room.leaders }} />
+            <svg key={`lead-${key}`} aria-hidden="true" width={W} height={H} viewBox={`0 0 ${W} ${H}`} className="pointer-events-none absolute inset-0 z-[4] overflow-visible" fill="none" dangerouslySetInnerHTML={{ __html: staggerLeaders(room.leaders, fromHero ? 1.7 : 1.3) }} />
 
             {/* What you get: code cards */}
             <div key={`cards-${key}`} className="cw pointer-events-none absolute inset-0 z-[7]">
@@ -280,23 +335,30 @@ export default function MainScene() {
           </div>
         </header>
 
-        {/* Hero copy */}
+        {/* Hero copy, level with the ship: slogans type themselves one after another */}
         <div
-          className="absolute z-[5] max-w-[560px]"
+          className="absolute z-[5] w-[580px]"
           aria-hidden={open}
-          style={{ left: 56, bottom: 64, transition: "opacity .5s ease, transform .6s ease", opacity: open ? 0 : 1, transform: open ? "translateX(40px)" : "none", pointerEvents: open ? "none" : "auto" }}
+          style={{ left: 56, top: 186, transition: "opacity .5s ease, transform .6s ease", opacity: open ? 0 : 1, transform: open ? "translateX(40px)" : "none", pointerEvents: open ? "none" : "auto" }}
         >
           <div className="flex items-center gap-4">
-            <span className="mono gt" style={{ fontSize: 11, letterSpacing: ".14em" }}>01</span>
+            <span className="mono gt" style={{ fontSize: 11, letterSpacing: ".14em" }}>0{typer.idx + 1}</span>
             <span className="block h-px w-16" style={{ background: "var(--sx-grad)" }} />
-            <span className="mono uppercase" style={{ fontSize: 11, letterSpacing: ".14em", color: "rgba(241,238,232,.7)" }}>{t.hero.eyebrow}</span>
+            <span key={typer.idx} className="mono uppercase" style={{ fontSize: 11, letterSpacing: ".14em", color: "rgba(241,238,232,.7)", animation: "v2in .5s ease both" }}>
+              {slogan.eyebrow}
+            </span>
           </div>
-          <h1 style={{ margin: "22px 0 0", fontSize: 76, lineHeight: 0.94, fontWeight: 500, letterSpacing: "-.055em" }}>
-            {t.hero.title.map((line) => <span key={line} className="block">{line}</span>)}
-            <span className="gt">{t.hero.accent}</span>
+          <h1 aria-label={slogan.lead + slogan.accent} style={{ margin: "22px 0 0", minHeight: 215, fontSize: 76, lineHeight: 0.94, fontWeight: 500, letterSpacing: "-.055em" }}>
+            <span aria-hidden="true">
+              {typed.slice(0, slogan.lead.length)}
+              <span className="gt">{typed.slice(slogan.lead.length)}</span>
+              <span className="tcaret" />
+            </span>
           </h1>
-          <p style={{ margin: "24px 0 0", maxWidth: 470, fontSize: 18, lineHeight: 1.5, letterSpacing: "-.01em", color: "rgba(241,238,232,.82)" }}>{t.hero.subtitle}</p>
-          <div className="mt-8 flex items-center gap-8">
+          <p style={{ margin: "20px 0 0", minHeight: 81, maxWidth: 480, fontSize: 18, lineHeight: 1.5, letterSpacing: "-.01em", color: "rgba(241,238,232,.82)", opacity: typer.done ? 1 : 0, transform: typer.done ? "none" : "translateY(6px)", transition: "opacity .5s ease, transform .5s ease" }}>
+            {slogan.subtitle}
+          </p>
+          <div className="mt-7 flex items-center gap-8">
             <a href={TELEGRAM_URL} target="_blank" rel="noreferrer" className="pill" tabIndex={open ? -1 : 0} style={{ padding: "19px 30px", font: "600 15px var(--font-tight)", boxShadow: "0 14px 44px -12px var(--sx-c2)" }}>
               {t.cta.task}
               <Arrow />
