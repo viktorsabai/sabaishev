@@ -1,0 +1,7 @@
+/* Experience page: dossier folders lift when their card is open; business chips. */
+.sx .fold { transition: transform .7s cubic-bezier(.2, .9, .3, 1); }
+.sx .fold.up { transform: translateY(-16px); }
+.sx .bcx { height: 30px; padding: 0 13px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .16); background: rgba(10, 12, 20, .55); color: rgba(241, 238, 232, .7); font: 500 10px var(--font-mono); letter-spacing: .06em; cursor: pointer; white-space: nowrap; transition: border-color .3s, color .3s, background .3s; }
+.sx .bcx:hover { color: var(--sx-ink); border-color: rgba(255, 255, 255, .4); }
+.sx .bcx[aria-pressed="true"] { border-color: transparent; color: #fff; background: var(--sx-grad-btn); }
+@media (prefers-reduced-motion: reduce) { .sx .fold { transition: none; } }
