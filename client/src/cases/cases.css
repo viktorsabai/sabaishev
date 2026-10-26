@@ -30,6 +30,32 @@
 .sx .cs.on .gs.gx { animation: gsT .45s steps(1) both; }
 .sx .cs.on .gs.b.gx { animation: gsT .45s steps(1) .15s both; }
 
+/* Service slot: a site assembles on the screens, outline first, then fill (SiteBuild.tsx) */
+.sx .sbw { position: absolute; inset: 0; background: #0B0D16 linear-gradient(rgba(255, 255, 255, .025) 1px, transparent 1px) 0 0 / 100% 24px; overflow: hidden; }
+.sx .sbp { position: absolute; left: 0; top: 0; height: 2px; width: 0; background: var(--sx-grad); box-shadow: 0 0 12px #A855F7; }
+.sx .cs.on .sbp { animation: sbProg 2.1s cubic-bezier(.4, 0, .2, 1) .1s forwards; }
+.sx .sb { position: absolute; border: 1px solid rgba(255, 255, 255, .14); border-radius: 7px; opacity: 0; }
+.sx .sb.fill { background: rgba(255, 255, 255, .035); }
+.sx .sb.bar { border: 0; border-radius: 4px; background: rgba(241, 238, 232, .2); }
+.sx .sb.img { background: rgba(168, 85, 247, .06); }
+.sx .sb.img line { stroke: rgba(168, 85, 247, .3); stroke-width: 1; }
+.sx .sb.btn { border: 0; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #fff; font-family: var(--font-tight); font-weight: 600; white-space: nowrap; background: var(--sx-grad-btn); }
+.sx .sb.txt { border: 0; border-radius: 0; line-height: 1; font-weight: 500; letter-spacing: -.045em; white-space: nowrap; color: var(--sx-ink); }
+.sx .sb.txt.mono { font-weight: 400; color: rgba(241, 238, 232, .55); }
+.sx .sbn { position: absolute; font-size: 9.5px; letter-spacing: .04em; color: #EC4899; white-space: nowrap; opacity: 0; clip-path: inset(0 100% 0 0); }
+.sx .cs.on .sb { animation: sbDraw .55s cubic-bezier(.2, .8, .2, 1) var(--d) both, sbSet .6s ease calc(var(--d) + .45s) both; }
+.sx .cs.on .sbn { animation: sbType .7s steps(18) var(--d) forwards; }
+@keyframes sbProg { to { width: 100% } }
+@keyframes sbDraw { from { opacity: 0; clip-path: inset(0 100% 0 0) } to { opacity: 1; clip-path: inset(0 0 0 0) } }
+@keyframes sbSet { from { border-color: rgba(236, 72, 153, .8); box-shadow: 0 0 16px -2px rgba(236, 72, 153, .45) } to { border-color: rgba(255, 255, 255, .14); box-shadow: none } }
+@keyframes sbType { from { opacity: .9; clip-path: inset(0 100% 0 0) } to { opacity: .9; clip-path: inset(0 0 0 0) } }
+
+/* task / role / result under the description */
+.sx .spec { margin-top: 18px; padding: 12px 14px; border: 1px solid rgba(255, 255, 255, .12); border-radius: 10px; background: rgba(10, 12, 20, .55); font-size: 11px; line-height: 1.5; color: rgba(241, 238, 232, .86); }
+.sx .spec div { display: grid; grid-template-columns: 62px 1fr; gap: 10px; }
+.sx .spec div + div { margin-top: 4px; }
+.sx .spec b { font-weight: 400; color: #C48BFA; }
+
 /* Controls */
 @keyframes prog { from { width: 0 } to { width: 100% } }
 @keyframes rec { 0%, 100% { opacity: 1 } 50% { opacity: .25 } }
@@ -54,7 +80,7 @@
 .sx .egl:hover i, .sx .egr:hover i { width: 44px; }
 .sx .egl:hover span { transform: translateX(-4px); }
 .sx .egr:hover span { transform: translateX(4px); }
-.sx .opn { display: inline-flex; align-items: center; justify-content: center; gap: 12px; color: #fff; border-radius: 16px; padding: 0 22px; height: 58px; font: 600 14px var(--font-tight); background: var(--sx-grad-btn); box-shadow: 0 14px 44px -14px #A855F7; transition: transform .35s, box-shadow .35s; white-space: nowrap; }
+.sx .opn { cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 12px; color: #fff; border-radius: 16px; padding: 0 22px; height: 58px; font: 600 14px var(--font-tight); background: var(--sx-grad-btn); box-shadow: 0 14px 44px -14px #A855F7; transition: transform .35s, box-shadow .35s; white-space: nowrap; }
 .sx .opn:hover { transform: translateY(-3px); box-shadow: 0 22px 54px -12px #A855F7; }
 .sx .opn svg { transition: transform .35s; }
 .sx .opn:hover svg { transform: translate(3px, -3px); }
@@ -62,4 +88,6 @@
 @media (prefers-reduced-motion: reduce) {
   .sx .gs, .sx .cs.on .gs.gx, .sx .cs.on .gs.b.gx, .sx .shot, .sx .rec { animation: none !important; }
   .sx .cs .st, .sx .cs.on .st { transition: none; }
+  .sx .cs.on .sb, .sx .cs.on .sbn { animation: none; opacity: 1; clip-path: none; }
+  .sx .cs.on .sbp { animation: none; width: 100%; }
 }

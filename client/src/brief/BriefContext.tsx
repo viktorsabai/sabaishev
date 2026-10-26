@@ -13,7 +13,7 @@ import "./brief.css";
 
 // prefill.biz: a business the page already knows (an id from the brief's business options) —
 // it is filled in and the brief starts from the next question.
-export type BriefPrefill = { biz?: string };
+export type BriefPrefill = { biz?: string; need?: string[] };
 // Businesses as ordered on /process and /experience, mapped to the brief's business ids.
 export const PROCESS_BIZ_IDS = ["realestate", "food", "sport", "beauty", "clinic"];
 type BriefApi = { openBrief: (context?: string, prefill?: BriefPrefill) => void };
@@ -71,7 +71,7 @@ function BriefConsole({ context, prefill, onClose }: { context?: string; prefill
   const knownBiz = q.biz.options.some((o) => o.id === prefill?.biz) ? prefill!.biz! : "";
   const [step, setStep] = useState(knownBiz ? 1 : 0);
   const [biz, setBiz] = useState(knownBiz);
-  const [need, setNeed] = useState<string[]>([]);
+  const [need, setNeed] = useState<string[]>(() => (prefill?.need ?? []).filter((id) => q.need.options.some((o) => o.id === id)));
   const [when, setWhen] = useState("");
   const [currency, setCurrency] = useState<Currency>(CURRENCY[language]);
   const [budget, setBudget] = useState("");

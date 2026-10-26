@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
+import { useBrief } from "@/brief/BriefContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import SiteHeader from "@/scene/SiteHeader";
 import { H, W, useStageScale } from "@/scene/stage";
 import WarpBackground from "@/scene/WarpBackground";
 import { CASE_MEDIA, casesContent } from "./content";
+import SiteBuild from "./SiteBuild";
 import "@/scene/scene.css";
 import "./cases.css";
 
-// Cases page per CHANGES-2: four live projects as a browser + phone over the flight
-// background, autoplaying every 7 s. Switching a project is a short "signal change":
+// Cases page per CHANGES-2: three live projects and the site-development slot as a browser +
+// phone over the flight background, autoplaying every 7 s. The first one assembles on arrival. Switching a project is a short "signal change":
 // the stars jump, the screens glitch, and the new project comes in part by part —
 // browser, phone, then the caption.
 
 const COUNT = CASE_MEDIA.length;
 // Entrance order of a slide's parts (seconds after the switch).
-const STAGE = { browser: 0, phone: 0.15, head: 0.22, name: 0.3, desc: 0.38, tags: 0.46, cta: 0.54 };
+const STAGE = { browser: 0, phone: 0.15, head: 0.22, name: 0.3, desc: 0.38, spec: 0.46, tags: 0.54, cta: 0.62 };
 
 function initialCase() {
   const n = Number(new URLSearchParams(window.location.search).get("case"));
@@ -23,6 +25,7 @@ function initialCase() {
 
 export default function CasesScene() {
   const { language } = useLanguage();
+  const { openBrief } = useBrief();
   const copy = casesContent[language];
   const scale = useStageScale();
   const [sel, setSel] = useState(initialCase);
@@ -31,6 +34,12 @@ export default function CasesScene() {
   const [hover, setHover] = useState(false);
   const [hidden, setHidden] = useState(false);
   const halted = paused || hover || hidden;
+  // Off for the first frames, so the first project comes in the same way a switch does.
+  const [arrived, setArrived] = useState(false);
+  useEffect(() => {
+    const t = window.setTimeout(() => setArrived(true), 420);
+    return () => window.clearTimeout(t);
+  }, []);
 
   const go = (n: number) => {
     if (n === sel) return;
@@ -62,12 +71,12 @@ export default function CasesScene() {
         <WarpBackground count={78} jump={switches} />
         <SiteHeader active="cases" />
 
-        <div className="mono absolute z-[7] flex items-center gap-3.5 uppercase" style={{ left: 70, top: 92, fontSize: 10.5, letterSpacing: ".18em", color: "rgba(241,238,232,.7)" }}>
+        <div className="mono absolute z-[7] flex items-center gap-3.5 uppercase" style={{ left: 70, top: 92, fontSize: 10.5, letterSpacing: ".18em", color: "rgba(241,238,232,.7)", animation: "sxIn .7s ease .3s both" }}>
           <span className="gt">02</span>
           <span className="block h-px w-11" style={{ background: "var(--sx-grad)" }} />
           {copy.eyebrow}
         </div>
-        <div className="mono absolute z-[7] flex items-center gap-3 uppercase" style={{ right: 70, top: 92, fontSize: 10.5, letterSpacing: ".18em", color: "rgba(241,238,232,.7)" }}>
+        <div className="mono absolute z-[7] flex items-center gap-3 uppercase" style={{ right: 70, top: 92, fontSize: 10.5, letterSpacing: ".18em", color: "rgba(241,238,232,.7)", animation: "sxIn .7s ease .3s both" }}>
           <span className="rec block h-[7px] w-[7px] rounded-full" style={{ background: "#EC4899", boxShadow: "0 0 10px #EC4899" }} />
           {copy.onAir} · 0{sel} / 0{COUNT}
         </div>
@@ -101,7 +110,7 @@ export default function CasesScene() {
 
         {CASE_MEDIA.map((m, i) => {
           const k = i + 1;
-          const on = k === sel;
+          const on = arrived && k === sel;
           const text = copy.cases[i];
           const stage = (sd: number): React.CSSProperties => ({ ["--sd" as string]: `${sd}s` });
           return (
@@ -122,7 +131,9 @@ export default function CasesScene() {
                   <div className="mono ml-3 flex items-center whitespace-nowrap rounded-[9px] px-3" style={{ height: 18, background: "rgba(255,255,255,.07)", fontSize: 9.5, letterSpacing: ".05em", color: "rgba(241,238,232,.75)" }}>{m.host}</div>
                 </div>
                 <div key={on ? `b${switches}` : "b"} className={`gs relative overflow-hidden${on && switches ? " gx" : ""}`} style={{ height: 510 }}>
-                  {m.desktop ? (
+                  {m.service ? (
+                    <SiteBuild mock={copy.mock} />
+                  ) : m.desktop ? (
                     <div className={`shot${m.still ? " still" : ""}`} style={{ ["--vh" as string]: "510px" }}>
                       <img src={m.desktop} alt={`${copy.screenshot} ${text.name}`} loading={i === 0 ? "eager" : "lazy"} decoding="async" />
                     </div>
@@ -143,6 +154,7 @@ export default function CasesScene() {
               >
                 <div className="absolute z-[3] rounded" style={{ left: "50%", top: 8, width: 54, height: 6, marginLeft: -27, background: "rgba(255,255,255,.18)" }} />
                 <div key={on ? `p${switches}` : "p"} className={`gs b absolute inset-0 overflow-hidden${on && switches ? " gx" : ""}`}>
+                  {m.service && <SiteBuild mock={copy.mock} phone />}
                   {m.mobile && (
                     <div className={`shot phone${m.still ? " still" : ""}`} style={{ ["--vh" as string]: "350px" }}>
                       <img src={m.mobile} alt="" loading={i === 0 ? "eager" : "lazy"} decoding="async" />
@@ -157,18 +169,28 @@ export default function CasesScene() {
                   <span className="mono gt" style={{ fontSize: 11, letterSpacing: ".14em" }}>0{k}</span>
                   <span className="mono uppercase" style={{ fontSize: 10.5, letterSpacing: ".14em", color: "rgba(241,238,232,.7)" }}>{text.type}</span>
                 </div>
-                <h2 className="st" style={{ ...stage(STAGE.name), margin: "14px 0 0", fontSize: 76, lineHeight: 0.92, fontWeight: 500, letterSpacing: "-.06em" }}>{text.name}</h2>
-                <p className="st" style={{ ...stage(STAGE.desc), margin: "20px 0 0", fontSize: 16, lineHeight: 1.5, color: "rgba(241,238,232,.84)" }}>{text.desc}</p>
+                <h2 className="st" style={{ ...stage(STAGE.name), margin: "14px 0 0", fontSize: 68, lineHeight: 0.92, fontWeight: 500, letterSpacing: "-.06em" }}>{text.name}</h2>
+                <p className="st" style={{ ...stage(STAGE.desc), margin: "18px 0 0", fontSize: 15, lineHeight: 1.5, color: "rgba(241,238,232,.84)" }}>{text.desc}</p>
+                <div className="st spec mono" style={stage(STAGE.spec)}>
+                  {copy.specKeys.map((key, j) => <div key={key}><b>{key}</b><span>{text.spec[j]}</span></div>)}
+                </div>
                 <ul className="st mt-[18px] flex flex-wrap gap-1.5" style={stage(STAGE.tags)}>
                   {text.tags.map((tag) => (
                     <li key={tag} className="mono" style={{ padding: "5px 10px", border: "1px solid rgba(255,255,255,.26)", borderRadius: 999, fontSize: 9.5, letterSpacing: ".08em", color: "rgba(241,238,232,.86)" }}>{tag}</li>
                   ))}
                 </ul>
                 <div className="st mt-[26px] flex items-center gap-4" style={stage(STAGE.cta)}>
-                  <a className="opn" href={m.url} target="_blank" rel="noopener noreferrer" tabIndex={on ? 0 : -1}>
-                    {copy.open}
-                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6" /></svg>
-                  </a>
+                  {m.service ? (
+                    <button type="button" className="opn border-0" onClick={() => openBrief(text.type, { need: ["site"] })} tabIndex={on ? 0 : -1}>
+                      {copy.discuss}
+                      <svg width="16" height="10" viewBox="0 0 22 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M1 6h19M15 1l5 5-5 5" /></svg>
+                    </button>
+                  ) : (
+                    <a className="opn" href={m.url} target="_blank" rel="noopener noreferrer" tabIndex={on ? 0 : -1}>
+                      {copy.open}
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M3 11L11 3M5 3h6v6" /></svg>
+                    </a>
+                  )}
                   <span className="mono uppercase" style={{ fontSize: 10, letterSpacing: ".14em", color: "rgba(241,238,232,.6)" }}>{text.status}</span>
                 </div>
               </div>
@@ -181,7 +203,7 @@ export default function CasesScene() {
         {/* Minimal controls */}
         <button type="button" className="eg egl" onClick={prev} aria-label={copy.prevAria}><span><i />{copy.prev}</span></button>
         <button type="button" className="eg egr" onClick={next} aria-label={copy.nextAria}><span>{copy.next}<i /></span></button>
-        <div className="absolute z-[8] flex items-center gap-3.5" style={{ left: "50%", bottom: 34, transform: "translateX(-50%)" }}>
+        <div className="absolute z-[8] flex items-center gap-3.5" style={{ left: "50%", bottom: 34, transform: "translateX(-50%)", animation: "sxUp .7s ease 1s both" }}>
           <button type="button" className="nb" onClick={() => setPaused((p) => !p)} aria-label={paused ? copy.play : copy.pause} aria-pressed={paused} style={{ width: 38, height: 38 }}>
             <svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d={paused ? "M3 1.5v11l9-5.5z" : "M3 1.5h3v11H3zM8 1.5h3v11H8z"} /></svg>
           </button>
