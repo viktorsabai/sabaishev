@@ -1,7 +1,8 @@
 import { memo, useEffect, useState } from "react";
 import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { sceneContent, TELEGRAM_URL } from "../sceneContent";
+import { useBrief } from "@/brief/BriefContext";
+import { sceneContent } from "../sceneContent";
 import SiteHeader from "../SiteHeader";
 import { DOTS, H, W, useStageScale } from "../ShipScene";
 import { sceneV2Content, type Deliverable, type Slogan, type StageV2 } from "./content";
@@ -203,6 +204,7 @@ function CodeCard({ d, num, top, delay }: { d: Deliverable; num: number; top: nu
 
 export default function MainScene() {
   const { language } = useLanguage();
+  const { openBrief } = useBrief();
   const t = sceneContent[language];
   const v = sceneV2Content[language];
   const scale = useStageScale();
@@ -403,16 +405,15 @@ export default function MainScene() {
               </div>
             </nav>
 
-            <a
-              href={TELEGRAM_URL}
-              target="_blank"
-              rel="noreferrer"
+            <button
+              type="button"
+              onClick={() => openBrief(`${v.stageOf} ${stage.num} · ${stage.name}`)}
               className="pill absolute z-[6]"
               style={{ right: 56, bottom: 48, padding: "15px 24px", font: "600 14px var(--font-tight)", animation: "v2in .6s ease 1.2s both" }}
             >
               {v.discussStage}
               <Arrow />
-            </a>
+            </button>
           </>
         )}
 
@@ -442,10 +443,10 @@ export default function MainScene() {
             {slogan.subtitle}
           </p>
           <div className="mt-7 flex items-center gap-8">
-            <a href={TELEGRAM_URL} target="_blank" rel="noreferrer" className="pill" tabIndex={open ? -1 : 0} style={{ padding: "19px 30px", font: "600 15px var(--font-tight)", boxShadow: "0 14px 44px -12px var(--sx-c2)" }}>
+            <button type="button" onClick={() => openBrief()} className="pill" tabIndex={open ? -1 : 0} style={{ padding: "19px 30px", font: "600 15px var(--font-tight)", boxShadow: "0 14px 44px -12px var(--sx-c2)" }}>
               {t.cta.task}
               <Arrow />
-            </a>
+            </button>
             <Link href="/cases" className="mono uppercase" tabIndex={open ? -1 : 0} style={{ fontSize: 11, letterSpacing: ".14em", borderBottom: "1px solid rgba(241,238,232,.5)", padding: "8px 0", color: "rgba(241,238,232,.88)" }}>
               {t.cta.cases}
             </Link>

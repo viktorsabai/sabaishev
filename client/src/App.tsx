@@ -5,11 +5,13 @@ import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { LanguageProvider } from "./contexts/LanguageContext";
+import { BriefProvider } from "./brief/BriefContext";
 import Home from "./pages/Home";
 import HomeLegacy from "./pages/HomeLegacy";
 import ShipScene from "./scene/ShipScene";
 import ProcessScene from "./process/ProcessScene";
 import CasesScene from "./cases/CasesScene";
+import ExperienceScene from "./experience/ExperienceScene";
 import Workspace from "./pages/Workspace";
 import AnimatedBackground from "./components/AnimatedBackground";
 
@@ -21,6 +23,7 @@ function Router() {
       <Route path={"/v1"} component={ShipScene} />
       <Route path={"/process"} component={ProcessScene} />
       <Route path={"/cases"} component={CasesScene} />
+      <Route path={"/experience"} component={ExperienceScene} />
       <Route path={"/workspace/material/:slug"} component={Workspace} />
       <Route path={"/workspace/route/:slug"} component={Workspace} />
       <Route path={"/workspace"} component={Workspace} />
@@ -42,7 +45,9 @@ function App() {
         <LanguageProvider>
           <TooltipProvider>
             <Toaster />
-            <Router />
+            <BriefProvider>
+              <Router />
+            </BriefProvider>
           </TooltipProvider>
         </LanguageProvider>
       </ThemeProvider>

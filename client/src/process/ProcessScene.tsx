@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { TELEGRAM_URL } from "@/scene/sceneContent";
+import { useBrief } from "@/brief/BriefContext";
 import SiteHeader from "@/scene/SiteHeader";
 import WarpBackground from "@/scene/WarpBackground";
 import { H, W, useStageScale } from "@/scene/ShipScene";
@@ -107,6 +107,7 @@ type DocState = { stage: number; idx: number; key: number; prev?: { stage: numbe
 export default function ProcessScene() {
   const { language } = useLanguage();
   const copy = processContent[language];
+  const { openBrief } = useBrief();
   const scale = useStageScale();
   const [bf, setBf] = useState(() => Math.max(0, fromQuery("biz", 5) - 1)); // carousel focus
   const [picking, setPicking] = useState(0); // business being picked (exit animation)
@@ -379,10 +380,10 @@ export default function ProcessScene() {
                 </button>
                 <span className="mono uppercase" style={{ fontSize: 10, letterSpacing: ".16em", color: "rgba(241,238,232,.5)" }}>{copy.layer} 0{sel} / 07 · {B.name}</span>
               </div>
-              <a href={TELEGRAM_URL} target="_blank" rel="noreferrer" className="cta2 ghost">
+              <button type="button" className="cta2 ghost" onClick={() => openBrief(`${B.name} · ${copy.stage} 0${sel} · ${st.name}`)}>
                 {copy.discuss}
                 <svg width="22" height="12" viewBox="0 0 22 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M1 6h19M15 1l5 5-5 5" /></svg>
-              </a>
+              </button>
             </div>
           </>
         )}

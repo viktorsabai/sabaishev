@@ -1,7 +1,8 @@
 import { Link } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/lib/content";
-import { sceneContent, TELEGRAM_URL } from "./sceneContent";
+import { useBrief } from "@/brief/BriefContext";
+import { sceneContent } from "./sceneContent";
 
 type Section = "services" | "cases" | "process" | "experience";
 
@@ -9,6 +10,7 @@ type Section = "services" | "cases" | "process" | "experience";
 // ship (onServices / onBrand); elsewhere they navigate to it.
 export default function SiteHeader({ active, onServices, onBrand }: { active?: Section; onServices?: () => void; onBrand?: () => void }) {
   const { language, setLanguage } = useLanguage();
+  const { openBrief } = useBrief();
   const t = sceneContent[language];
   const activeStyle = (s: Section): React.CSSProperties | undefined =>
     active === s ? { opacity: 1, borderBottom: "1px solid var(--sx-accent-ink)" } : undefined;
@@ -31,7 +33,7 @@ export default function SiteHeader({ active, onServices, onBrand }: { active?: S
         )}
         <Link href="/cases" className="nv" style={activeStyle("cases")}>{t.nav.cases}</Link>
         <Link href="/process" className="nv" style={activeStyle("process")}>{t.nav.process}</Link>
-        <Link href="/legacy" className="nv" style={activeStyle("experience")}>{t.nav.experience}</Link>
+        <Link href="/experience" className="nv" style={activeStyle("experience")}>{t.nav.experience}</Link>
       </nav>
       <div className="flex items-center gap-[22px]">
         <div className="flex" role="group" aria-label="Language">
@@ -41,9 +43,9 @@ export default function SiteHeader({ active, onServices, onBrand }: { active?: S
             </button>
           ))}
         </div>
-        <a href={TELEGRAM_URL} target="_blank" rel="noreferrer" className="pill" style={{ padding: "13px 22px", font: "600 12px var(--font-tight)", letterSpacing: ".02em" }}>
+        <button type="button" className="pill" onClick={() => openBrief()} style={{ padding: "13px 22px", font: "600 12px var(--font-tight)", letterSpacing: ".02em" }}>
           {t.cta.project}
-        </a>
+        </button>
       </div>
     </header>
   );
