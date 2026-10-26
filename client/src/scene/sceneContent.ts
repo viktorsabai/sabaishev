@@ -9,6 +9,10 @@ export type SceneCopy = {
   hero: { eyebrow: string; title: string[]; accent: string; subtitle: string };
   hint: string;
   stage: { cut: string; of: string; output: string; prev: string; next: string; close: string };
+  cases: {
+    eyebrow: string; title: string; accent: string; lead: string; label: string;
+    exhibit: string; challenge: string; role: string; open: string; similar: string; prev: string; next: string;
+  };
   shipLabel: string;
   stages: Stage[];
 };
@@ -27,6 +31,12 @@ export const sceneContent: Record<Language, SceneCopy> = {
     },
     hint: "Нажмите на этап — разверну в разрезе",
     stage: { cut: "Разрез палубы", of: "из", output: "На выходе", prev: "Предыдущий этап", next: "Следующий этап", close: "Корабль" },
+    cases: {
+      eyebrow: "Кейсы · галерея на борту", title: "Собрано", accent: "под ключ.",
+      lead: "Шесть продуктов: от AI-учителя тайского до управления сетью ресторанов. Выберите экспонат.",
+      label: "Галерея проектов внутри корабля", exhibit: "Экспонат", challenge: "Задача", role: "Моя роль",
+      open: "Открыть проект", similar: "Обсудить похожий проект", prev: "Предыдущий проект", next: "Следующий проект",
+    },
     shipLabel: "Чертёж многоуровневого космического корабля — продукта",
     stages: [
       { num: "01", name: "Проблема", label: "Проблема", lead: "Нахожу, что на самом деле болит, и формулирую задачу так, чтобы её можно было решить.", items: ["Problem Statement", "Гипотезы", "Критерии успеха"] },
@@ -50,6 +60,12 @@ export const sceneContent: Record<Language, SceneCopy> = {
     },
     hint: "Tap a stage — I'll open the cutaway",
     stage: { cut: "Deck cutaway", of: "of", output: "Deliverables", prev: "Previous stage", next: "Next stage", close: "Ship" },
+    cases: {
+      eyebrow: "Cases · onboard gallery", title: "Built", accent: "end to end.",
+      lead: "Six products, from an AI Thai tutor to running a restaurant group. Pick an exhibit.",
+      label: "Project gallery inside the ship", exhibit: "Exhibit", challenge: "Challenge", role: "My role",
+      open: "Open project", similar: "Discuss a similar project", prev: "Previous project", next: "Next project",
+    },
     shipLabel: "Blueprint of a multi-deck spaceship — the product",
     stages: [
       { num: "01", name: "Problem", label: "Problem", lead: "I find what actually hurts and frame the task so it can be solved.", items: ["Problem Statement", "Hypotheses", "Success criteria"] },
@@ -73,6 +89,12 @@ export const sceneContent: Record<Language, SceneCopy> = {
     },
     hint: "แตะขั้นตอน — เพื่อเปิดภาพตัดขวาง",
     stage: { cut: "ภาพตัดขวางชั้น", of: "จาก", output: "สิ่งที่ได้", prev: "ขั้นตอนก่อนหน้า", next: "ขั้นตอนถัดไป", close: "ยาน" },
+    cases: {
+      eyebrow: "ผลงาน · แกลเลอรีบนยาน", title: "สร้าง", accent: "ครบวงจร",
+      lead: "หกโปรดักต์ ตั้งแต่ครูสอนภาษาไทยด้วย AI ไปจนถึงระบบบริหารเครือร้านอาหาร เลือกชิ้นงานที่สนใจ",
+      label: "แกลเลอรีโปรเจกต์ภายในยาน", exhibit: "ชิ้นงาน", challenge: "โจทย์", role: "บทบาทของผม",
+      open: "เปิดโปรเจกต์", similar: "คุยเรื่องโปรเจกต์ที่คล้ายกัน", prev: "โปรเจกต์ก่อนหน้า", next: "โปรเจกต์ถัดไป",
+    },
     shipLabel: "พิมพ์เขียวยานอวกาศหลายชั้น — ตัวโปรดักต์",
     stages: [
       { num: "01", name: "ปัญหา", label: "ปัญหา", lead: "ค้นหาสิ่งที่เป็นปัญหาจริง และตั้งโจทย์ให้แก้ได้", items: ["Problem Statement", "สมมติฐาน", "เกณฑ์ความสำเร็จ"] },
