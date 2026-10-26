@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import { useBrief } from "@/brief/BriefContext";
+import { PROCESS_BIZ_IDS, useBrief } from "@/brief/BriefContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { content } from "@/lib/content";
 import { processContent } from "@/process/content";
@@ -168,7 +168,7 @@ export default function ExperienceScene() {
             top={TOPS[3]}
             delay={0.85}
             onLift={() => {}}
-            onClick={() => openBrief(copy.yours.name)}
+            onClick={() => openBrief(`${copy.yours.name} · ${biz[bz].name}`, { biz: PROCESS_BIZ_IDS[bz] })}
           />
         </div>
 
