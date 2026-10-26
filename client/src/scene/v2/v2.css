@@ -1,0 +1,72 @@
+/* v2 main scene (CHANGES-2). Ported from handoff2 reference/Main.dc.html; builds on ../scene.css. */
+
+/* Ghost rooms: static copies of the room shell (see scripts/extract-v2.py), styled like .dr */
+.sx .gs { fill: none; stroke: var(--sx-ink); stroke-width: 1.1; stroke-linejoin: round; stroke-linecap: round; }
+.sx .gs.b { fill: #080A10; stroke-opacity: .66; }
+.sx .gs.t { stroke-opacity: .3; }
+.sx .gs.a { stroke: url(#lgc); stroke-width: 1.6; }
+
+/* Room furniture */
+@keyframes bob2 { 0%, 100% { transform: translate(0, 0) } 50% { transform: translate(3px, -5px) } }
+@keyframes bobb { 0%, 100% { transform: translateY(0) } 50% { transform: translateY(-3px) } }
+@keyframes v2blink { 0%, 100% { opacity: .25 } 50% { opacity: 1 } }
+.sx .roomg { animation: bob2 9s ease-in-out 1.5s infinite; }
+.sx .bobb { animation: bobb 2s ease-in-out infinite; }
+.sx .tp { animation: v2blink 1.4s ease-in-out infinite; }
+.sx .wn { font-family: var(--font-tight); font-weight: 200; fill: url(#lgc); fill-opacity: .95; letter-spacing: -3px; }
+.sx .wt { font-family: var(--font-tight); font-weight: 500; letter-spacing: -.5px; fill: url(#lgc); }
+.sx .wm { font-family: var(--font-mono); fill: var(--sx-ink); fill-opacity: .6; letter-spacing: 1.6px; }
+.sx .wl { font-family: var(--font-mono); fill: var(--sx-ink); fill-opacity: .82; }
+.sx .lb3 { font-family: var(--font-tight); font-size: 15px; font-weight: 500; fill: var(--sx-ink); letter-spacing: -.2px; paint-order: stroke; stroke: var(--sx-bg); stroke-width: 3px; }
+.sx .q { font-family: var(--font-tight); font-weight: 500; fill: url(#lgc); }
+
+/* Entering a deck and moving between decks */
+@keyframes deckIn { from { transform: scale(.72); opacity: 0 } to { transform: none; opacity: 1 } }
+@keyframes deckA { from { transform: translate(120px, -90px) scale(.5); opacity: 0; filter: blur(9px) } to { transform: none; opacity: 1; filter: blur(0) } }
+@keyframes deckB { from { transform: translate(-320px, 180px); opacity: 0; filter: blur(6px) } to { transform: none; opacity: 1; filter: blur(0) } }
+@keyframes deckC { from { transform: translate(320px, -180px); opacity: 0; filter: blur(6px) } to { transform: none; opacity: 1; filter: blur(0) } }
+@keyframes deckD { from { transform: translate(-50px, 50px) scale(1.7); opacity: 0; filter: blur(10px) } to { transform: none; opacity: 1; filter: blur(0) } }
+@keyframes deckE { from { transform: translate(280px, 210px); opacity: 0; filter: blur(6px) } to { transform: none; opacity: 1; filter: blur(0) } }
+@keyframes deckF { from { transform: translate(-280px, -210px); opacity: 0; filter: blur(6px) } to { transform: none; opacity: 1; filter: blur(0) } }
+@keyframes ghA { from { transform: translate(-110px, 70px) scale(.9); opacity: 0 } to { transform: none; opacity: 1 } }
+@keyframes ghB { from { transform: translate(110px, -70px) scale(1.1); opacity: 0 } to { transform: none; opacity: 1 } }
+@keyframes sweep { from { transform: translateX(-110%); opacity: 0 } 30% { opacity: 1 } to { transform: translateX(110%); opacity: 0 } }
+@keyframes v2in { from { opacity: 0 } to { opacity: 1 } }
+.sx .v2in { animation: v2in .8s ease .5s both; }
+.sx .sweep { background: linear-gradient(105deg, transparent 38%, rgba(168, 85, 247, .2) 50%, transparent 62%); animation: sweep 1.2s ease .1s both; }
+
+/* Deck rail */
+.sx .rl { display: flex; align-items: center; gap: 10px; background: none; border: 0; cursor: pointer; padding: 5px 0; font: 500 10.5px var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: rgba(241, 238, 232, .5); transition: color .3s; }
+.sx .rl span { opacity: .7; min-width: 16px; }
+.sx .rl:hover, .sx .rl[aria-current="step"] { color: var(--sx-ink); }
+.sx .rl i { display: block; height: 2px; width: 10px; background: rgba(241, 238, 232, .4); transition: width .5s cubic-bezier(.6, 0, .2, 1), background .4s; }
+.sx .rl[aria-current="step"] i { width: 30px; background: var(--sx-grad); box-shadow: 0 0 12px var(--sx-c2); }
+
+/* Deliverable code cards: hover/focus opens one card on top, typing line by line */
+@keyframes typ { from { width: 0; border-right-color: #EC4899 } to { width: calc(var(--n) * 1ch); border-right-color: transparent } }
+@keyframes caret { 50% { opacity: .25 } }
+.sx .cc { position: absolute; left: 1072px; width: 312px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(10, 12, 20, .58); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); pointer-events: auto; cursor: pointer; outline: none; overflow: hidden; z-index: 7; text-align: left; padding: 0; color: inherit; transition: border-color .35s, box-shadow .45s, background .35s, transform .4s cubic-bezier(.2, .9, .3, 1); }
+.sx .cc::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, #EC4899, #A855F7, #3B82F6); opacity: .55; transition: opacity .3s, width .3s; }
+.sx .cc:hover, .sx .cc:focus { border-color: rgba(168, 85, 247, .7); background: rgba(14, 16, 28, .86); box-shadow: 0 0 36px -8px rgba(168, 85, 247, .55); transform: translateX(-8px); z-index: 9; }
+.sx .cc:focus-visible { outline: 1px solid rgba(255, 255, 255, .7); outline-offset: 3px; }
+.sx .cc:hover::before, .sx .cc:focus::before { opacity: 1; width: 3px; }
+.sx .cc .bd { max-height: 0; overflow: hidden; transition: max-height .5s cubic-bezier(.2, .9, .3, 1); }
+.sx .cc:hover .bd, .sx .cc:focus .bd { max-height: 112px; }
+.sx .cc .ch { display: inline-block; transition: transform .4s cubic-bezier(.3, 1.6, .5, 1); }
+.sx .cc:hover .ch, .sx .cc:focus .ch { transform: rotate(90deg); }
+.sx .cl { display: block; width: 0; overflow: hidden; white-space: nowrap; border-right: 1px solid transparent; font: 400 11px/17px var(--font-mono); color: rgba(241, 238, 232, .86); }
+.sx .cc:hover .cl, .sx .cc:focus .cl { animation: typ .7s steps(var(--n)) forwards; animation-delay: var(--d); }
+.sx .cc:hover .cl:last-child, .sx .cc:focus .cl:last-child { animation: typ .7s steps(var(--n)) forwards, caret 1s step-end infinite 2s; animation-delay: var(--d), var(--d); }
+.sx .k1 { color: #EC4899; } .sx .k2 { color: #C4A8FF; } .sx .k3 { color: rgba(241, 238, 232, .45); }
+/* Hovering another card collapses the one that only has focus */
+.sx .cw:hover .cc:focus:not(:hover) { border-color: rgba(255, 255, 255, .14); background: rgba(10, 12, 20, .58); box-shadow: none; transform: none; z-index: 7; }
+.sx .cw:hover .cc:focus:not(:hover) .bd { max-height: 0; }
+.sx .cw:hover .cc:focus:not(:hover) .ch { transform: none; }
+.sx .cw:hover .cc:focus:not(:hover) .cl { animation: none; width: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .sx .roomg, .sx .bobb, .sx .tp, .sx .v2in, .sx .room-anim { animation: none !important; }
+  .sx .sweep { display: none; }
+  .sx .dive { transition: none !important; }
+  .sx .cc:hover .cl, .sx .cc:focus .cl, .sx .cc:hover .cl:last-child, .sx .cc:focus .cl:last-child { animation: none; width: auto; }
+}

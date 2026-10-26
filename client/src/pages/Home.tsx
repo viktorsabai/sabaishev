@@ -1,7 +1,7 @@
-import ShipScene from "@/scene/ShipScene";
+import MainScene from "@/scene/v2/MainScene";
 
-// Redesign: the whole site is one scene. Further rooms (cases, process, brief) land here step by step;
-// the previous site stays at /legacy until the redesign covers it.
+// Redesign (CHANGES-2): the whole site is one scene inside the ship. Cases, experience and the
+// brief are still being redesigned; until then they link to the previous site at /legacy.
 export default function Home() {
-  return <ShipScene />;
+  return <MainScene />;
 }
