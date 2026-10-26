@@ -1,8 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* Import Inter font */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* Fonts (Inter, Inter Tight, JetBrains Mono) are loaded via <link> in index.html */
 
 @custom-variant dark (&:is(.dark *));
 
@@ -43,9 +42,31 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  /* SABAISHEV.ONLINE redesign tokens */
+  --font-tight: 'Inter Tight', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+  --color-sx-bg: var(--sx-bg);
+  --color-sx-ink: var(--sx-ink);
+  --color-sx-c1: var(--sx-c1);
+  --color-sx-c2: var(--sx-c2);
+  --color-sx-c3: var(--sx-c3);
 }
 
 :root {
+  /* SABAISHEV.ONLINE redesign */
+  --sx-bg: #07090B;
+  --sx-ink: #F1EEE8;
+  --sx-c1: #EC4899;
+  --sx-c2: #A855F7;
+  --sx-c3: #3B82F6;
+  --sx-accent-ink: #C48BFA; /* c2 mixed 32% toward white — highlights on dark */
+  --sx-grad: linear-gradient(110deg, var(--sx-c1) 0%, var(--sx-c2) 52%, var(--sx-c3) 100%);
+  /* gradient darkened 15% so white button text keeps contrast */
+  --sx-grad-btn: linear-gradient(110deg, #C93D82 0%, #8F48D2 52%, #326FD1 100%);
+  --sx-glass-bg: rgba(12, 14, 22, 0.62);
+  --sx-glass-border: rgba(255, 255, 255, 0.16);
+  --sx-glass-blur: 18px;
+
   /* VIKTOR.SYSTEM Dark Theme (Default) */
   --background: #0F0F12;
   --surface: #1A1A1E;
