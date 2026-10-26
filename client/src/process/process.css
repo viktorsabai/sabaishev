@@ -8,18 +8,20 @@
 @keyframes shipgo { 0% { transform: rotate(0) } 30% { transform: rotate(-7deg) translateX(3px) } 100% { transform: rotate(0) } }
 @keyframes flame { 0% { opacity: 0; transform: scaleX(.3) } 25% { opacity: 1; transform: scaleX(1) } 100% { opacity: 0; transform: scaleX(.4) } }
 
-/* Business carousel */
-.sx .pc { position: absolute; left: 570px; top: 20px; width: 300px; height: 450px; padding: 0; text-align: left; cursor: pointer; color: var(--sx-ink); border-radius: 22px; border: 1px solid rgba(255, 255, 255, .16); background: rgba(10, 12, 20, .7); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); overflow: hidden; transition: transform .9s cubic-bezier(.2, .9, .25, 1), opacity .7s, filter .7s, border-color .4s, box-shadow .5s; }
-.sx .pc.on { border-color: rgba(168, 85, 247, .85); box-shadow: 0 40px 100px -28px rgba(168, 85, 247, .75), 0 0 0 1px rgba(168, 85, 247, .25) inset; }
-.sx .pc .go { position: absolute; left: 26px; right: 26px; bottom: 26px; display: flex; align-items: center; justify-content: center; gap: 10px; height: 42px; border-radius: 12px; background: var(--sx-grad-btn); font: 600 12.5px var(--font-tight); color: #fff; box-shadow: 0 10px 30px -10px #A855F7; transition: opacity .5s; }
-.sx .rb { width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .22); background: rgba(10, 12, 20, .55); color: var(--sx-ink); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: border-color .3s, background .3s, transform .3s; }
-.sx .rb:hover { border-color: rgba(168, 85, 247, .9); background: rgba(168, 85, 247, .14); }
-.sx .rb:active { transform: scale(.92); }
-/* Picking a business: the chosen card shrinks towards the business chips, the rest fall back */
-@keyframes pickOut { to { transform: translate(380px, -260px) scale(.18); opacity: 0 } }
-@keyframes fallBack { to { opacity: 0; filter: blur(8px) } }
-.sx .picking .pc.on { animation: pickOut .7s cubic-bezier(.6, 0, .3, 1) forwards; }
-.sx .picking .pc:not(.on), .sx .picking .pick-copy { animation: fallBack .45s ease forwards; }
+/* The business question on the left: plain rows, no cards or icons */
+@keyframes rowIn { from { opacity: 0; transform: translateX(-14px) } to { opacity: 1; transform: none } }
+@keyframes askOut { to { opacity: 0; transform: translateX(-40px); filter: blur(6px) } }
+.sx .bzrow { display: flex; align-items: flex-start; gap: 16px; width: 100%; padding: 14px 4px 14px 0; border: 0; border-top: 1px solid rgba(255, 255, 255, .1); background: none; color: var(--sx-ink); text-align: left; cursor: pointer; position: relative; animation: rowIn .6s cubic-bezier(.2, .9, .3, 1) both; }
+.sx .bzrow:last-child { border-bottom: 1px solid rgba(255, 255, 255, .1); }
+.sx .bzrow > .mono { padding-top: 7px; }
+.sx .bzrow::before { content: ""; position: absolute; left: -16px; top: 12px; bottom: 12px; width: 2px; background: var(--sx-grad); transform: scaleY(0); transition: transform .35s cubic-bezier(.2, .9, .3, 1); }
+.sx .bzrow .pain { display: block; max-height: 0; overflow: hidden; opacity: 0; margin-top: 0; font-size: 14px; line-height: 1.35; color: rgba(241, 238, 232, .86); transition: max-height .4s ease, opacity .3s ease, margin-top .4s ease; }
+.sx .bzrow .arr { padding-top: 6px; font-size: 18px; color: rgba(241, 238, 232, .35); transition: transform .35s cubic-bezier(.3, 1.4, .5, 1), color .3s; }
+.sx .bzrow:hover::before, .sx .bzrow:focus-visible::before, .sx .bzrow.on::before { transform: scaleY(1); }
+.sx .bzrow:hover .pain, .sx .bzrow:focus-visible .pain { max-height: 60px; opacity: 1; margin-top: 8px; }
+.sx .bzrow:hover .arr, .sx .bzrow:focus-visible .arr, .sx .bzrow.on .arr { transform: translateX(6px); color: #C48BFA; }
+/* Picking: the question slides away, then the first layer takes its place */
+.sx .asking-out { animation: askOut .45s cubic-bezier(.6, 0, .3, 1) forwards !important; }
 
 /* Gantt */
 .sx .bc { height: 32px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .16); background: rgba(10, 12, 20, .55); color: rgba(241, 238, 232, .7); font: 500 10.5px var(--font-mono); letter-spacing: .08em; cursor: pointer; white-space: nowrap; transition: border-color .3s, color .3s, background .3s; }
@@ -63,5 +65,5 @@
   .sx .doc img, .sx .doc.enter, .sx .doc .scanline, .sx .ship-go, .sx .flame { animation: none !important; }
   .sx .doc .scanline { display: none; }
   .sx .tl { animation: none !important; width: auto !important; border-right-color: transparent; }
-  .sx .picking .pc, .sx .picking .pick-copy { animation: none !important; }
+  .sx .bzrow, .sx .asking-out { animation: none !important; }
 }

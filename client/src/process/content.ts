@@ -28,10 +28,10 @@ export type Business = { name: string; hint: string; p: [string, string][] };
 
 export type ProcessCopy = {
   eyebrow: string; title: string; accent: string; lead: string;
-  familiar: string; whatIDo: string; output: string; showPath: string; wheelHint: string;
+  familiar: string; whatIDo: string; output: string;
   business: string; stage: string; layer: string; next: string; restart: string;
   autoOn: string; autoOff: string; discuss: string; weeksNote: string; docOfStage: string;
-  prevBiz: string; nextBiz: string; prevLayer: string;
+  prevLayer: string;
   code: { out: string; doc: string; inside: string; can: string; proof: string };
   stages: ProcStage[];
   biz: Business[];
@@ -41,11 +41,11 @@ export const processContent: Record<Language, ProcessCopy> = {
   ru: {
     eyebrow: "Процесс", title: "Какой у вас ", accent: "бизнес?",
     lead: "Выберите — и я покажу ваш путь от боли до запуска: слой за слоем, с тем, что вы получите на каждом этапе.",
-    familiar: "Знакомо?", whatIDo: "Что делаю я", output: "На выходе этапа — вы получаете", showPath: "Показать мой путь", wheelHint: "Листайте колесом",
+    familiar: "Знакомо?", whatIDo: "Что делаю я", output: "На выходе этапа — вы получаете",
     business: "Бизнес", stage: "Этап", layer: "Слой", next: "Дальше", restart: "Сначала",
     autoOn: "Автоплей · вкл", autoOff: "Автоплей · выкл", discuss: "Обсудить мой путь",
     weeksNote: "Ориентир по неделям · сроки уточняются под задачу", docOfStage: "Документ этапа",
-    prevBiz: "Предыдущий бизнес", nextBiz: "Следующий бизнес", prevLayer: "Предыдущий слой",
+    prevLayer: "Предыдущий слой",
     code: { out: "выход", doc: "документ", inside: "внутри", can: "вы_сможете", proof: "так было в" },
     stages: [
       { name: "Формулируем", out: { doc: "Карта продукта", inside: ["цель и метрики успеха", "гипотезы по приоритету", "границы первой версии"], can: "объяснить продукт за 5 минут" }, proof: "TAIKA · MOO" },
@@ -107,11 +107,11 @@ export const processContent: Record<Language, ProcessCopy> = {
   en: {
     eyebrow: "Process", title: "What's your ", accent: "business?",
     lead: "Pick one and I'll show your path from pain to launch, layer by layer, with what you get at every stage.",
-    familiar: "Sound familiar?", whatIDo: "What I do", output: "Stage output — what you get", showPath: "Show my path", wheelHint: "Scroll to browse",
+    familiar: "Sound familiar?", whatIDo: "What I do", output: "Stage output — what you get",
     business: "Business", stage: "Stage", layer: "Layer", next: "Next", restart: "Start over",
     autoOn: "Autoplay · on", autoOff: "Autoplay · off", discuss: "Discuss my path",
     weeksNote: "Approximate weeks · timing is set per project", docOfStage: "Stage document",
-    prevBiz: "Previous business", nextBiz: "Next business", prevLayer: "Previous layer",
+    prevLayer: "Previous layer",
     code: { out: "output", doc: "document", inside: "inside", can: "you_can", proof: "done for" },
     stages: [
       { name: "Frame", out: { doc: "Product map", inside: ["goal and success metrics", "prioritised hypotheses", "scope of version one"], can: "explain the product in 5 minutes" }, proof: "TAIKA · MOO" },
@@ -173,11 +173,11 @@ export const processContent: Record<Language, ProcessCopy> = {
   th: {
     eyebrow: "กระบวนการ", title: "ธุรกิจของคุณ", accent: "คืออะไร?",
     lead: "เลือกแล้วผมจะแสดงเส้นทางจากปัญหาถึงการเปิดตัว ทีละชั้น พร้อมสิ่งที่คุณได้ในแต่ละขั้นตอน",
-    familiar: "คุ้นๆ ไหม?", whatIDo: "สิ่งที่ผมทำ", output: "ผลลัพธ์ของขั้นตอน — สิ่งที่คุณได้", showPath: "ดูเส้นทางของฉัน", wheelHint: "เลื่อนเพื่อดู",
+    familiar: "คุ้นๆ ไหม?", whatIDo: "สิ่งที่ผมทำ", output: "ผลลัพธ์ของขั้นตอน — สิ่งที่คุณได้",
     business: "ธุรกิจ", stage: "ขั้นตอน", layer: "ชั้น", next: "ถัดไป", restart: "เริ่มใหม่",
     autoOn: "เล่นอัตโนมัติ · เปิด", autoOff: "เล่นอัตโนมัติ · ปิด", discuss: "คุยเรื่องเส้นทางของฉัน",
     weeksNote: "สัปดาห์โดยประมาณ · ระยะเวลาปรับตามงาน", docOfStage: "เอกสารของขั้นตอน",
-    prevBiz: "ธุรกิจก่อนหน้า", nextBiz: "ธุรกิจถัดไป", prevLayer: "ชั้นก่อนหน้า",
+    prevLayer: "ชั้นก่อนหน้า",
     code: { out: "output", doc: "document", inside: "inside", can: "you_can", proof: "done for" },
     stages: [
       { name: "กำหนดโจทย์", out: { doc: "แผนที่โปรดักต์", inside: ["เป้าหมายและตัวชี้วัด", "สมมติฐานตามลำดับ", "ขอบเขตเวอร์ชันแรก"], can: "อธิบายโปรดักต์ได้ใน 5 นาที" }, proof: "TAIKA · MOO" },

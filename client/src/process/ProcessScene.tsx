@@ -8,19 +8,13 @@ import { processContent, STAGE_DOCS, STAGE_WEEKS, type ProcessCopy, type StageDo
 import "@/scene/scene.css";
 import "./process.css";
 
-// Process page per CHANGES-2: choose a business in a 3D ring carousel, then open the Gantt
-// layer by layer. Each layer plays in order — playhead and ship move, the row and its bar
+// Process page: one scene. The Gantt is laid out from the start as an outline of the path;
+// the left panel first asks which business you run, then gives way to the first layer and
+// the Gantt opens layer by layer. Each layer plays in order — playhead and ship move, the row and its bar
 // grow, the panel changes, the output code types — and the documents behind the Gantt follow
 // the code: each output item shows its own document as it is typed.
 
 const reduced = () => typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const ICONS = [
-  '<path d="M12 62V30L40 10l28 20v32z"/><path d="M30 62V42h20v20M12 30h56"/>',
-  '<circle cx="40" cy="38" r="22"/><circle cx="40" cy="38" r="12"/><path d="M8 14v20M14 14v20M8 24h6M72 14c-6 6-6 20 0 24v22"/>',
-  '<path d="M6 40h12M62 40h12M18 26v28M62 26v28M26 32v16M54 32v16M26 40h28"/>',
-  '<circle cx="26" cy="54" r="10"/><circle cx="54" cy="54" r="10"/><path d="M33 47L60 12M47 47L20 12"/>',
-  '<path d="M30 10h20v20h20v20H50v20H30V50H10V30h20z"/>',
-];
 const COL = 70; // px per week
 const GX = 150; // gantt timeline x (after row labels)
 const CODE_START = 1.0; // s after a layer change: playhead, row and panel go first
@@ -109,9 +103,8 @@ export default function ProcessScene() {
   const copy = processContent[language];
   const { openBrief } = useBrief();
   const scale = useStageScale();
-  const [bf, setBf] = useState(() => Math.max(0, fromQuery("biz", 5) - 1)); // carousel focus
-  const [picking, setPicking] = useState(0); // business being picked (exit animation)
-  const [biz, setBiz] = useState(() => fromQuery("biz", 5)); // 0 = carousel, 1..5 = chosen business
+  const [picking, setPicking] = useState(0); // business being picked: the question slides out
+  const [biz, setBiz] = useState(() => fromQuery("biz", 5)); // 0 = asking, 1..5 = chosen business
   const [sel, setSel] = useState(() => fromQuery("layer", 7) || 1); // current layer 1..7
   const [tn, setTn] = useState(0); // transition counter: restarts layer animations
   const [auto, setAuto] = useState(false);
@@ -123,7 +116,8 @@ export default function ProcessScene() {
   const B = copy.biz[(biz || 1) - 1];
   const st = copy.stages[sel - 1];
   const weeks = STAGE_WEEKS[sel - 1];
-  const endW = weeks.s + weeks.d;
+  // Before a business is chosen the playhead waits at the start of the timeline.
+  const endW = run ? weeks.s + weeks.d : 0;
   const code = useMemo(() => buildCode(copy, sel), [copy, sel]);
   const fast = reduced();
 
@@ -133,9 +127,9 @@ export default function ProcessScene() {
   const pick = (i: number) => {
     if (picking) return;
     setPicking(i);
-    window.setTimeout(() => { setBiz(i); setPicking(0); goLayer(1); }, fast ? 0 : 700);
+    window.setTimeout(() => { setBiz(i); setPicking(0); goLayer(1); }, fast ? 0 : 450);
   };
-  const chooseBiz = (i: number) => { setBiz(i); setBf(i - 1); goLayer(1); };
+  const chooseBiz = (i: number) => { setBiz(i); goLayer(1); };
 
   // Documents follow the code: each output item brings up its document as it types,
   // then the three documents keep cycling.
@@ -169,10 +163,8 @@ export default function ProcessScene() {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
-      const d = e.key === "ArrowRight" ? 1 : -1;
-      if (run) goLayer(Math.max(1, Math.min(7, sel + d)));
-      else setBf((b) => (b + d + 5) % 5);
+      if (!run || (e.key !== "ArrowRight" && e.key !== "ArrowLeft")) return;
+      goLayer(Math.max(1, Math.min(7, sel + (e.key === "ArrowRight" ? 1 : -1))));
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -180,11 +172,10 @@ export default function ProcessScene() {
 
   const onWheel = (e: React.WheelEvent) => {
     const now = Date.now();
-    if (now - wheelAt.current < (run ? 700 : 480)) return;
+    if (!run || now - wheelAt.current < 700) return;
     wheelAt.current = now;
-    const d = e.deltaY > 0 ? 1 : -1;
-    if (run) { const n = Math.max(1, Math.min(7, sel + d)); if (n !== sel) goLayer(n); }
-    else setBf((b) => (b + d + 5) % 5);
+    const n = Math.max(1, Math.min(7, sel + (e.deltaY > 0 ? 1 : -1)));
+    if (n !== sel) goLayer(n);
   };
 
   const docsOf = (stage: number) => STAGE_DOCS[stage - 1];
@@ -208,57 +199,99 @@ export default function ProcessScene() {
           </defs>
         </svg>
 
+        {/* First the question: which business — on the left, where the layer panel will be */}
         {!run && (
-          <div className={picking ? "picking" : undefined}>
-            <div className="pick-copy absolute inset-x-0 z-[6] text-center" style={{ top: 118, animation: "fdu .8s ease both" }}>
-              <h2 style={{ margin: 0, fontSize: 54, lineHeight: 1, fontWeight: 500, letterSpacing: "-.06em" }}>
-                {copy.title}<span className="gt">{copy.accent}</span>
-              </h2>
-              <p className="mx-auto" style={{ margin: "14px auto 0", maxWidth: 620, fontSize: 17, lineHeight: 1.5, color: "rgba(241,238,232,.74)" }}>{copy.lead}</p>
-            </div>
-            <div onWheel={onWheel} className="absolute z-[6]" style={{ left: 0, top: 250, width: 1440, height: 500 }}>
-              {copy.biz.map((b, i) => {
-                const dd = ((i - bf + 2 + 5) % 5) - 2;
-                const ad = Math.abs(dd);
-                const on = dd === 0;
-                return (
-                  <button
-                    key={i}
-                    type="button"
-                    className={`pc${on ? " on" : ""}`}
-                    aria-label={on ? `${copy.showPath}: ${b.name}` : b.name}
-                    onClick={() => (on ? pick(i + 1) : setBf(i))}
-                    style={{
-                      transform: `perspective(1400px) translateX(${dd * 292}px) rotateY(${-dd * 24}deg) scale(${(1 - 0.15 * ad).toFixed(2)})`,
-                      opacity: [1, 0.62, 0.32][ad], filter: `blur(${ad * 0.8}px)`, zIndex: 10 - ad,
-                    }}
-                  >
-                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none" stroke="url(#bzg)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="absolute" style={{ left: 26, top: 26 }} aria-hidden="true" dangerouslySetInnerHTML={{ __html: ICONS[i] }} />
-                    <span className="mono absolute" style={{ right: 26, top: 30, fontSize: 10, letterSpacing: ".16em", color: "rgba(241,238,232,.5)" }}>0{i + 1} / 05</span>
-                    <span className="absolute" style={{ left: 26, top: 128, fontSize: 34, fontWeight: 500, letterSpacing: "-.05em", lineHeight: 1 }}>{b.name}</span>
-                    <span className="absolute" style={{ left: 26, right: 26, top: 176, fontSize: 14.5, lineHeight: 1.4, color: "rgba(241,238,232,.7)" }}>{b.hint}</span>
-                    <span className="absolute" style={{ left: 26, right: 26, top: 244, height: 1, background: "rgba(255,255,255,.12)" }} />
-                    <span className="mono absolute uppercase" style={{ left: 26, top: 260, fontSize: 9.5, letterSpacing: ".16em", color: "rgba(241,238,232,.45)" }}>{copy.familiar}</span>
-                    <span className="absolute" style={{ left: 26, right: 26, top: 280, fontSize: 16, lineHeight: 1.3, letterSpacing: "-.01em" }}>«{b.p[0][0]}»</span>
-                    <span className="go" style={{ opacity: on ? 1 : 0 }}>
-                      {copy.showPath}
-                      <svg width="18" height="10" viewBox="0 0 22 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M1 6h19M15 1l5 5-5 5" /></svg>
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-            <div className="pick-copy absolute inset-x-0 z-[7] flex items-center justify-center gap-[18px]" style={{ bottom: 60 }}>
-              <button type="button" className="rb" onClick={() => setBf((b) => (b + 4) % 5)} aria-label={copy.prevBiz}>
-                <svg width="16" height="14" viewBox="0 0 22 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 6H2M7 1L2 6l5 5" /></svg>
-              </button>
-              <span className="mono uppercase" style={{ fontSize: 10, letterSpacing: ".16em", color: "rgba(241,238,232,.55)" }}>0{bf + 1} / 05 · {copy.wheelHint}</span>
-              <button type="button" className="rb" onClick={() => setBf((b) => (b + 1) % 5)} aria-label={copy.nextBiz}>
-                <svg width="16" height="14" viewBox="0 0 22 12" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M1 6h19M15 1l5 5-5 5" /></svg>
-              </button>
+          <div className={`absolute z-[7]${picking ? " asking-out" : ""}`} style={{ left: 70, top: 150, width: 410, animation: fast ? undefined : "pnIn .8s cubic-bezier(.2,.9,.25,1) .2s both" }}>
+            <h2 style={{ margin: 0, fontSize: 52, lineHeight: 0.98, fontWeight: 500, letterSpacing: "-.06em" }}>
+              {copy.title}<span className="gt">{copy.accent}</span>
+            </h2>
+            <p style={{ margin: "16px 0 0", fontSize: 16, lineHeight: 1.5, color: "rgba(241,238,232,.74)" }}>{copy.lead}</p>
+            <div className="mt-7 flex flex-col">
+              {copy.biz.map((b, i) => (
+                <button key={b.name} type="button" className={`bzrow${picking === i + 1 ? " on" : ""}`} onClick={() => pick(i + 1)} style={{ animationDelay: `${0.45 + i * 0.07}s` }}>
+                  <span className="mono gt" style={{ fontSize: 10.5, letterSpacing: ".14em" }}>0{i + 1}</span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block" style={{ fontSize: 21, fontWeight: 500, letterSpacing: "-.035em" }}>{b.name}</span>
+                    <span className="block" style={{ marginTop: 2, fontSize: 13, color: "rgba(241,238,232,.55)" }}>{b.hint}</span>
+                    <span className="pain">«{b.p[0][0]}»</span>
+                  </span>
+                  <span className="arr" aria-hidden="true">→</span>
+                </button>
+              ))}
             </div>
           </div>
         )}
+
+        {/* Stage documents behind the Gantt, following the code */}
+        <div aria-hidden="true" className="showcase">
+          {doc.prev && <DocLayer key={`d${doc.prev.key}`} doc={docsOf(doc.prev.stage)[doc.prev.idx]} mode="leave" />}
+          {curDoc && <DocLayer key={`d${doc.key}`} doc={curDoc} mode="enter" />}
+          <div className="scanlines" />
+          {curDoc && (
+            <div key={`cap${doc.key}`} className="mono absolute uppercase" style={{ right: 18, bottom: 14, fontSize: 9.5, letterSpacing: ".16em", color: "rgba(241,238,232,.75)", animation: "fdu .5s ease both" }}>
+              {copy.docOfStage} · {doc.idx + 1} / 3 · <span style={{ textTransform: "none" }}>{curDoc.name}</span>
+            </div>
+          )}
+        </div>
+
+        {/* Gantt */}
+        <div onWheel={onWheel} className="absolute z-[6]" style={{ left: 520, top: 150, width: 850, height: 560 }}>
+          <div className="mono absolute flex" style={{ left: GX, top: 0, right: 0, height: 26, fontSize: 9.5, letterSpacing: ".14em", color: "rgba(241,238,232,.5)" }}>
+            {Array.from({ length: 10 }, (_, i) => (
+              <span key={i} className="flex-none" style={{ width: COL, color: i >= weeks.s && i < endW ? "var(--sx-ink)" : undefined, transition: "color .5s" }}>W{i + 1}</span>
+            ))}
+          </div>
+          <div className="absolute" style={{ left: GX, top: 26, width: 700, height: 500, backgroundImage: "linear-gradient(90deg,rgba(241,238,232,.07) 1px,transparent 1px)", backgroundSize: `${COL}px 100%`, borderTop: "1px solid rgba(241,238,232,.2)" }} />
+          <div className="absolute" style={{ left: GX, top: 26, width: 700, height: 500, backgroundImage: "linear-gradient(rgba(241,238,232,.035) 1px,transparent 1px)", backgroundSize: "100% 66px" }} />
+          {/* Playhead and the ship riding it */}
+          <div className="absolute z-[5] w-px" style={{ top: 8, height: 518, left: GX + endW * COL, background: "linear-gradient(180deg,#A855F7,transparent)", transition: fast ? undefined : "left .9s cubic-bezier(.6,0,.2,1)" }} />
+          <div className="absolute z-[6]" style={{ top: -30, left: GX + endW * COL - 15, transition: fast ? undefined : "left .9s cubic-bezier(.6,0,.2,1)", animation: "bz 2.4s ease-in-out infinite" }}>
+            <svg key={`ship-${tn}`} className="ship-go" width="30" height="16" viewBox="0 0 30 16" fill="none" stroke="#F1EEE8" strokeWidth="1.2" strokeLinejoin="round" aria-hidden="true" style={{ overflow: "visible", filter: "drop-shadow(0 0 8px #A855F7)", animation: "shipgo .9s ease-out both", transformOrigin: "15px 8px" }}>
+              <path className="flame" d="M1 8L-9 5v6z" fill="url(#bzg)" stroke="none" style={{ transformOrigin: "1px 8px", animation: "flame .9s ease-out both" }} />
+              <path d="M1 8L11 2h16l2 6-2 6H11z" />
+              <path d="M11 2v12M5 8h6" />
+            </svg>
+          </div>
+          {copy.stages.map((s, i) => {
+            const k = i + 1;
+            // Before a business is chosen every row is an outline of the path ahead.
+            const ghost = !run;
+            const shown = ghost || k <= sel;
+            const act = run && k === sel;
+            const w = STAGE_WEEKS[i];
+            return (
+              <button
+                key={i}
+                type="button"
+                className="rw"
+                disabled={ghost || !shown || act}
+                onClick={() => goLayer(k)}
+                tabIndex={!ghost && shown && !act ? 0 : -1}
+                aria-label={`0${k} ${s.name}`}
+                style={{ top: 38 + i * 66, cursor: !ghost && shown && !act ? "pointer" : "default", opacity: ghost ? 0.55 : shown ? 1 : 0, transform: shown ? "none" : "translateX(-26px)", transitionDelay: ghost ? `${0.3 + i * 0.06}s` : shown ? ".35s" : "0s" }}
+              >
+                <span className="absolute flex flex-col items-end justify-center text-right" style={{ left: 0, top: 0, width: 140, height: 40 }}>
+                  <span className={`mono${act ? " gt" : ""}`} style={{ fontSize: 9.5, letterSpacing: ".14em", color: act ? undefined : "rgba(241,238,232,.5)" }}>0{k}</span>
+                  <span style={{ fontSize: 16, fontWeight: 500, letterSpacing: "-.03em", color: act ? "var(--sx-ink)" : "rgba(241,238,232,.62)" }}>{s.name}</span>
+                </span>
+                <span
+                  className="absolute block overflow-hidden"
+                  style={{
+                    left: GX + w.s * COL + 3, top: 6, height: 28, borderRadius: 8,
+                    width: shown ? w.d * COL - 6 : 0,
+                    transition: fast ? undefined : "width 1s cubic-bezier(.6,0,.2,1) .55s, background .5s, box-shadow .5s, outline-color .5s",
+                    background: ghost ? "transparent" : act ? "var(--sx-grad)" : "linear-gradient(110deg,#EC489966,#A855F755,#3B82F666)",
+                    boxShadow: ghost ? "none" : act ? "0 0 30px -4px #A855F7,0 0 0 1px rgba(255,255,255,.35) inset" : "0 0 0 1px rgba(255,255,255,.12) inset",
+                    outline: `1px dashed ${ghost ? "rgba(196,139,250,.45)" : "transparent"}`, outlineOffset: -1,
+                  }}
+                >
+                  {act && <i className="absolute inset-y-0 w-10" style={{ background: "linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent)", animation: "scn 2.4s linear infinite" }} />}
+                </span>
+              </button>
+            );
+          })}
+          <div className="mono absolute uppercase" style={{ left: GX, top: 556, fontSize: 9.5, letterSpacing: ".16em", color: "rgba(241,238,232,.45)" }}>{copy.weeksNote}</div>
+        </div>
 
         {run && (
           <>
@@ -294,74 +327,6 @@ export default function ProcessScene() {
                   </span>
                 ))}
               </div>
-            </div>
-
-            {/* Stage documents behind the Gantt, following the code */}
-            <div aria-hidden="true" className="showcase">
-              {doc.prev && <DocLayer key={`d${doc.prev.key}`} doc={docsOf(doc.prev.stage)[doc.prev.idx]} mode="leave" />}
-              {curDoc && <DocLayer key={`d${doc.key}`} doc={curDoc} mode="enter" />}
-              <div className="scanlines" />
-              {curDoc && (
-                <div key={`cap${doc.key}`} className="mono absolute uppercase" style={{ right: 18, bottom: 14, fontSize: 9.5, letterSpacing: ".16em", color: "rgba(241,238,232,.75)", animation: "fdu .5s ease both" }}>
-                  {copy.docOfStage} · {doc.idx + 1} / 3 · <span style={{ textTransform: "none" }}>{curDoc.name}</span>
-                </div>
-              )}
-            </div>
-
-            {/* Gantt */}
-            <div onWheel={onWheel} className="absolute z-[6]" style={{ left: 520, top: 150, width: 850, height: 560 }}>
-              <div className="mono absolute flex" style={{ left: GX, top: 0, right: 0, height: 26, fontSize: 9.5, letterSpacing: ".14em", color: "rgba(241,238,232,.5)" }}>
-                {Array.from({ length: 10 }, (_, i) => (
-                  <span key={i} className="flex-none" style={{ width: COL, color: i >= weeks.s && i < endW ? "var(--sx-ink)" : undefined, transition: "color .5s" }}>W{i + 1}</span>
-                ))}
-              </div>
-              <div className="absolute" style={{ left: GX, top: 26, width: 700, height: 500, backgroundImage: "linear-gradient(90deg,rgba(241,238,232,.07) 1px,transparent 1px)", backgroundSize: `${COL}px 100%`, borderTop: "1px solid rgba(241,238,232,.2)" }} />
-              <div className="absolute" style={{ left: GX, top: 26, width: 700, height: 500, backgroundImage: "linear-gradient(rgba(241,238,232,.035) 1px,transparent 1px)", backgroundSize: "100% 66px" }} />
-              {/* Playhead and the ship riding it */}
-              <div className="absolute z-[5] w-px" style={{ top: 8, height: 518, left: GX + endW * COL, background: "linear-gradient(180deg,#A855F7,transparent)", transition: fast ? undefined : "left .9s cubic-bezier(.6,0,.2,1)" }} />
-              <div className="absolute z-[6]" style={{ top: -30, left: GX + endW * COL - 15, transition: fast ? undefined : "left .9s cubic-bezier(.6,0,.2,1)", animation: "bz 2.4s ease-in-out infinite" }}>
-                <svg key={`ship-${tn}`} className="ship-go" width="30" height="16" viewBox="0 0 30 16" fill="none" stroke="#F1EEE8" strokeWidth="1.2" strokeLinejoin="round" aria-hidden="true" style={{ overflow: "visible", filter: "drop-shadow(0 0 8px #A855F7)", animation: "shipgo .9s ease-out both", transformOrigin: "15px 8px" }}>
-                  <path className="flame" d="M1 8L-9 5v6z" fill="url(#bzg)" stroke="none" style={{ transformOrigin: "1px 8px", animation: "flame .9s ease-out both" }} />
-                  <path d="M1 8L11 2h16l2 6-2 6H11z" />
-                  <path d="M11 2v12M5 8h6" />
-                </svg>
-              </div>
-              {copy.stages.map((s, i) => {
-                const k = i + 1;
-                const shown = k <= sel;
-                const act = k === sel;
-                const w = STAGE_WEEKS[i];
-                return (
-                  <button
-                    key={i}
-                    type="button"
-                    className="rw"
-                    disabled={!shown || act}
-                    onClick={() => goLayer(k)}
-                    tabIndex={shown && !act ? 0 : -1}
-                    aria-label={`0${k} ${s.name}`}
-                    style={{ top: 38 + i * 66, cursor: shown && !act ? "pointer" : "default", opacity: shown ? 1 : 0, transform: shown ? "none" : "translateX(-26px)", transitionDelay: shown ? ".35s" : "0s" }}
-                  >
-                    <span className="absolute flex flex-col items-end justify-center text-right" style={{ left: 0, top: 0, width: 140, height: 40 }}>
-                      <span className={`mono${act ? " gt" : ""}`} style={{ fontSize: 9.5, letterSpacing: ".14em", color: act ? undefined : "rgba(241,238,232,.5)" }}>0{k}</span>
-                      <span style={{ fontSize: 16, fontWeight: 500, letterSpacing: "-.03em", color: act ? "var(--sx-ink)" : "rgba(241,238,232,.62)" }}>{s.name}</span>
-                    </span>
-                    <span
-                      className="absolute block overflow-hidden"
-                      style={{
-                        left: GX + w.s * COL + 3, top: 6, height: 28, borderRadius: 8,
-                        width: shown ? w.d * COL - 6 : 0,
-                        transition: fast ? undefined : "width 1s cubic-bezier(.6,0,.2,1) .55s, background .5s, box-shadow .5s",
-                        background: act ? "var(--sx-grad)" : "linear-gradient(110deg,#EC489966,#A855F755,#3B82F666)",
-                        boxShadow: act ? "0 0 30px -4px #A855F7,0 0 0 1px rgba(255,255,255,.35) inset" : "0 0 0 1px rgba(255,255,255,.12) inset",
-                      }}
-                    >
-                      {act && <i className="absolute inset-y-0 w-10" style={{ background: "linear-gradient(90deg,transparent,rgba(255,255,255,.5),transparent)", animation: "scn 2.4s linear infinite" }} />}
-                    </span>
-                  </button>
-                );
-              })}
-              <div className="mono absolute uppercase" style={{ left: GX, top: 556, fontSize: 9.5, letterSpacing: ".16em", color: "rgba(241,238,232,.45)" }}>{copy.weeksNote}</div>
             </div>
 
             {/* Controls */}
