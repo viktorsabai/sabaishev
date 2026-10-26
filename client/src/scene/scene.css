@@ -107,3 +107,8 @@
   .sx .fi { animation: none; opacity: 1; }
   .sx .scene-move { transition: none !important; }
 }
+
+/* Page entry, shared by the scene pages: parts fade or rise in after the page transition */
+@keyframes sxIn { from { opacity: 0 } to { opacity: 1 } }
+@keyframes sxUp { from { transform: translateY(14px); opacity: 0 } to { transform: none; opacity: 1 } }
+@media (prefers-reduced-motion: reduce) { .sx [style*="sxIn"], .sx [style*="sxUp"] { animation: none !important; } }

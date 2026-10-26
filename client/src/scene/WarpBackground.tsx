@@ -3,7 +3,7 @@ import "./warp.css";
 
 // Flight background shared by Process and Cases: streaks fly out from the centre, far dots
 // twinkle, nebulae in the corners, a dark vignette keeps the centre calm for content.
-// Bump `jump` to make a short hyperspace jump: the streaks speed up and settle back.
+// It jumps on arrival, and again whenever `jump` is bumped: the streaks speed up and settle back.
 
 function seeded(seed: number) {
   let s = seed;
@@ -27,7 +27,7 @@ const WarpBackground = memo(function WarpBackground({ count = 60, jump = 0 }: { 
   }, [count]);
 
   useEffect(() => {
-    if (!jump || !field.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!field.current || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const anims = field.current.getAnimations({ subtree: true });
     const el = field.current;
     el.classList.add("jumping");

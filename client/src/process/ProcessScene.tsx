@@ -245,7 +245,7 @@ export default function ProcessScene() {
       <div className="absolute left-1/2 top-1/2" style={{ width: W, height: H, transform: `translate(-50%,-50%) scale(${scale})` }}>
         <WarpBackground />
         <SiteHeader active="process" />
-        <div className="mono absolute z-[7] flex items-center gap-3.5 uppercase" style={{ left: 70, top: 92, fontSize: 10.5, letterSpacing: ".18em", color: "rgba(241,238,232,.7)" }}>
+        <div className="mono absolute z-[7] flex items-center gap-3.5 uppercase" style={{ left: 70, top: 92, fontSize: 10.5, letterSpacing: ".18em", color: "rgba(241,238,232,.7)", animation: "sxIn .7s ease .25s both" }}>
           <span className="gt">03</span>
           <span className="block h-px w-11" style={{ background: "var(--sx-grad)" }} />
           {copy.eyebrow}
@@ -294,7 +294,7 @@ export default function ProcessScene() {
         </div>
 
         {/* Gantt */}
-        <div onWheel={onWheel} className="absolute z-[6]" style={{ left: 520, top: 150, width: 850, height: 560 }}>
+        <div onWheel={onWheel} className="gnt absolute z-[6]" style={{ left: 520, top: 150, width: 850, height: 560 }}>
           <div className="mono absolute flex" style={{ left: GX, top: 0, right: 0, height: 26, fontSize: 9.5, letterSpacing: ".14em", color: "rgba(241,238,232,.5)" }}>
             {Array.from({ length: 10 }, (_, i) => (
               <span key={i} className="flex-none" style={{ width: COL, color: i >= weeks.s && i < endW ? "var(--sx-ink)" : undefined, transition: "color .5s" }}>W{i + 1}</span>
@@ -327,7 +327,7 @@ export default function ProcessScene() {
                 onClick={() => goLayer(k)}
                 tabIndex={!ghost && shown && !act ? 0 : -1}
                 aria-label={`0${k} ${s.name}`}
-                style={{ top: 38 + i * 66, cursor: !ghost && shown && !act ? "pointer" : "default", opacity: ghost ? 0.55 : shown ? 1 : 0, transform: shown ? "none" : "translateX(-26px)", transitionDelay: ghost ? `${0.3 + i * 0.06}s` : shown ? ".35s" : "0s" }}
+                style={{ ["--i" as string]: i, top: 38 + i * 66, cursor: !ghost && shown && !act ? "pointer" : "default", opacity: ghost ? 0.55 : shown ? 1 : 0, transform: shown ? "none" : "translateX(-26px)", transitionDelay: ghost ? `${0.3 + i * 0.06}s` : shown ? ".35s" : "0s" }}
               >
                 <span className="absolute flex flex-col items-end justify-center text-right" style={{ left: 0, top: 0, width: 140, height: 40 }}>
                   <span className={`mono${act ? " gt" : ""}`} style={{ fontSize: 9.5, letterSpacing: ".14em", color: act ? undefined : "rgba(241,238,232,.5)" }}>0{k}</span>

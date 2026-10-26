@@ -84,3 +84,10 @@
   .sx .how li, .sx .how .tick, .sx .pn-out { animation: none !important; opacity: 1; transform: none; }
   .sx .bzrow, .sx .asking-out { animation: none !important; }
 }
+
+/* The Gantt assembles on arrival: the grid draws left to right, then the rows come in one by one */
+@keyframes gGrid { from { clip-path: inset(0 100% 0 0) } to { clip-path: inset(0 0 0 0) } }
+@keyframes rwIn { from { opacity: 0; transform: translateX(-26px) } }
+.sx .gnt > div:nth-child(-n+3) { animation: gGrid 1.1s cubic-bezier(.5, 0, .2, 1) .15s backwards; }
+.sx .gnt .rw { animation: rwIn .6s cubic-bezier(.2, .8, .2, 1) calc(.4s + var(--i, 0) * .07s) backwards; }
+@media (prefers-reduced-motion: reduce) { .sx .gnt > div, .sx .gnt .rw { animation: none; } }

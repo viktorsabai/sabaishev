@@ -1,0 +1,24 @@
+/* Page transition (PageTransition.tsx): the ship's blueprint covers the page top-down, then a scan
+   line sweeps down and uncovers the next one. */
+.pt { position: fixed; inset: 0; z-index: 80; pointer-events: none; }
+.pt.pt-out { pointer-events: auto; animation: ptLife .34s linear forwards; }
+.pt.pt-in { animation: ptLife 1.05s linear forwards; }
+@keyframes ptLife { from { opacity: 1 } to { opacity: 1 } }
+
+.pt-veil { position: absolute; inset: 0; background: radial-gradient(50% 50% at 50% 50%, rgba(168, 85, 247, .1), transparent 70%), linear-gradient(rgba(168, 85, 247, .07) 1px, transparent 1px) 0 0 / 40px 40px, linear-gradient(90deg, rgba(168, 85, 247, .07) 1px, transparent 1px) 0 0 / 40px 40px, #06080C; }
+.pt-out .pt-veil { animation: ptCover .34s cubic-bezier(.6, 0, .4, 1) both; }
+.pt-in .pt-veil { animation: ptUncover .85s cubic-bezier(.5, 0, .2, 1) .18s both; }
+@keyframes ptCover { from { clip-path: inset(0 0 100% 0) } to { clip-path: inset(0 0 0 0) } }
+@keyframes ptUncover { from { clip-path: inset(0 0 0 0) } to { clip-path: inset(100% 0 0 0) } }
+
+.pt-scan { position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, transparent, #EC4899 20%, #A855F7 50%, #3B82F6 80%, transparent); box-shadow: 0 0 18px 1px rgba(168, 85, 247, .7); }
+.pt-scan::before { content: ""; position: absolute; left: 0; right: 0; bottom: 1px; height: 90px; background: linear-gradient(to top, rgba(168, 85, 247, .12), transparent); }
+.pt-scan span { position: absolute; left: 56px; bottom: 10px; font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: rgba(241, 238, 232, .75); white-space: nowrap; }
+.pt-scan b { font-weight: 400; }
+.pt-out .pt-scan { animation: ptScanOut .34s cubic-bezier(.6, 0, .4, 1) both; }
+.pt-in .pt-scan { animation: ptScanIn .85s cubic-bezier(.5, 0, .2, 1) .18s both; }
+@keyframes ptScanOut { from { transform: translateY(0) } to { transform: translateY(100vh) } }
+@keyframes ptScanIn { 0% { transform: translateY(0); opacity: 1 } 90% { opacity: 1 } 100% { transform: translateY(100vh); opacity: 0 } }
+@media (max-width: 759px) { .pt-scan span { left: 20px; } }
+.pt-scan span { font-family: var(--font-mono); }
+.pt-scan .gt { background: var(--sx-grad); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }

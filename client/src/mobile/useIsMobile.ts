@@ -12,3 +12,5 @@ export function useIsMobile() {
   }, []);
   return mobile;
 }
+
+export const isMobileNow = () => window.matchMedia(QUERY).matches;
