@@ -1,8 +1,9 @@
 import type { Language } from "@/lib/content";
 
-// Brief: one question per screen, in the order a client thinks about it — who you are, what
-// you need, when, how much, where to reply. Options are few and explained. The answers go out
-// as a prefilled message (Telegram, email or Instagram), like the site's previous brief.
+// Brief: one compact screen in the order a client thinks about it — who you are, what you need,
+// when, how much — with the request written up live at the side, and where to reply. The answers
+// go out as a prefilled message (Telegram, email or Instagram), like the site's previous brief.
+// when / budget options are the stops of a slider; budget "b0" is the "not sure yet" switch.
 
 export type Option = { id: string; title: string; desc?: string };
 export type Currency = "RUB" | "THB" | "USD";
@@ -17,6 +18,7 @@ export type BriefCopy = {
     send: { title: string; hint: string; channels: Option[] };
   };
   summary: { context: string; biz: string; need: string; when: string; budget: string; channel: string };
+  window: { title: string; hint: string; log: string; unknown: string; required: string; replyHint: string };
   back: string; next: string; choose: string; send: string; close: string; edit: string;
   sentTitle: string; sentText: string; reopen: string; footer: string; message: string; subject: string;
 };
@@ -61,6 +63,7 @@ export const briefContent: Record<Language, BriefCopy> = {
       },
       send: { title: "Куда ответить?", hint: "Проверьте, всё ли я понял. Откроется чат с готовым текстом — останется нажать «Отправить».", channels: CHANNELS_RU },
     },
+    window: { title: "Обсудить проект", hint: "Пара отметок — и я пойму задачу. Отвечаю в течение дня.", log: "заявка", unknown: "Пока не знаю", required: "Отметьте бизнес и задачу", replyHint: "Откроется чат с готовым текстом" },
     summary: { context: "Контекст", biz: "Бизнес", need: "Задача", when: "Старт", budget: "Бюджет", channel: "Связь" },
     back: "Назад", next: "Дальше", choose: "Выберите хотя бы один вариант", send: "Отправить заявку", close: "Закрыть", edit: "изменить",
     sentTitle: "Заявка готова", sentText: "Чат открылся в новой вкладке с готовым текстом. Если не открылся — нажмите кнопку ниже.", reopen: "Открыть ещё раз",
@@ -106,6 +109,7 @@ export const briefContent: Record<Language, BriefCopy> = {
         channels: [{ id: "telegram", title: "Telegram", desc: "Fastest: I reply within a day" }, { id: "email", title: "Email", desc: "If you prefer writing" }, { id: "instagram", title: "Instagram", desc: "Send a DM" }],
       },
     },
+    window: { title: "Discuss a project", hint: "A few marks and I'll get the task. I reply within a day.", log: "request", unknown: "Not sure yet", required: "Pick a business and a task", replyHint: "A chat opens with the text ready" },
     summary: { context: "Context", biz: "Business", need: "Task", when: "Start", budget: "Budget", channel: "Reply via" },
     back: "Back", next: "Next", choose: "Pick at least one option", send: "Send request", close: "Close", edit: "change",
     sentTitle: "Request ready", sentText: "The chat opened in a new tab with the text filled in. If it didn't, use the button below.", reopen: "Open again",
@@ -151,6 +155,7 @@ export const briefContent: Record<Language, BriefCopy> = {
         channels: [{ id: "telegram", title: "Telegram", desc: "เร็วที่สุด: ตอบภายในหนึ่งวัน" }, { id: "email", title: "อีเมล", desc: "ถ้าสะดวกเขียนเป็นอีเมล" }, { id: "instagram", title: "Instagram", desc: "ส่ง DM" }],
       },
     },
+    window: { title: "คุยเรื่องโปรเจกต์", hint: "เลือกไม่กี่ข้อ ผมก็เข้าใจงานแล้ว ตอบกลับภายในวัน", log: "คำขอ", unknown: "ยังไม่แน่ใจ", required: "เลือกธุรกิจและงาน", replyHint: "แชตจะเปิดพร้อมข้อความ" },
     summary: { context: "บริบท", biz: "ธุรกิจ", need: "งาน", when: "เริ่ม", budget: "งบ", channel: "ติดต่อทาง" },
     back: "ย้อนกลับ", next: "ถัดไป", choose: "เลือกอย่างน้อยหนึ่งข้อ", send: "ส่งคำขอ", close: "ปิด", edit: "แก้ไข",
     sentTitle: "คำขอพร้อมแล้ว", sentText: "แชตเปิดในแท็บใหม่พร้อมข้อความแล้ว ถ้าไม่เปิด กดปุ่มด้านล่าง", reopen: "เปิดอีกครั้ง",
