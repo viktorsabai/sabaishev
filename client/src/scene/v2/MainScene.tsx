@@ -5,7 +5,8 @@ import { useBrief } from "@/brief/BriefContext";
 import { sceneContent } from "../sceneContent";
 import SiteHeader from "../SiteHeader";
 import { DOTS, H, W, useStageScale } from "../stage";
-import { sceneV2Content, type Deliverable, type Slogan, type StageV2 } from "./content";
+import { sceneV2Content, type Deliverable, type StageV2 } from "./content";
+import { useTypewriter } from "./typewriter";
 import { DEFS, GRID, ROOM_TRANSFORM, ROOMS, STARS } from "./markup";
 import { SHIP_EXTRAS, SHIP_LAYERS } from "./shipLayers";
 import { roomLayers } from "./roomLayers";
@@ -19,38 +20,7 @@ import "./v2.css";
 const DECKS = DOTS.slice(0, 8);
 // Deck chips sit next to their deck dot, scattered on both sides of the ship (dx, dy from the dot).
 const CHIPS: [number, number][] = [[-90, 34], [64, 4], [-110, -6], [70, -16], [-60, -40], [110, -40], [36, 54], [-40, 58]];
-const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// Agent-style hero: types a slogan, holds it, erases it, moves to the next one.
-// Paused while a room is open, so nothing on the page updates behind the room.
-function useTypewriter(slogans: Slogan[], paused: boolean) {
-  const [state, setState] = useState({ idx: 0, len: 0, done: false });
-  useEffect(() => {
-    if (paused) return;
-    if (reducedMotion()) {
-      setState({ idx: 0, len: Infinity, done: true });
-      const id = window.setInterval(() => setState((s) => ({ ...s, idx: (s.idx + 1) % slogans.length })), 7000);
-      return () => window.clearInterval(id);
-    }
-    let idx = 0, len = 0, timer = 0;
-    const full = () => slogans[idx].lead + slogans[idx].accent;
-    const type = () => {
-      len += 1;
-      setState({ idx, len, done: len >= full().length });
-      timer = window.setTimeout(len >= full().length ? erase : type, len >= full().length ? 4200 : 42);
-    };
-    const erase = () => {
-      len = Math.max(0, len - 2);
-      setState({ idx, len, done: false });
-      if (len > 0) timer = window.setTimeout(erase, 16);
-      else { idx = (idx + 1) % slogans.length; timer = window.setTimeout(type, 380); }
-    };
-    setState({ idx: 0, len: 0, done: false });
-    timer = window.setTimeout(type, 700);
-    return () => window.clearTimeout(timer);
-  }, [slogans, paused]);
-  return state;
-}
 
 // Leader lines from room objects to cards draw last, after the room and cards are in place.
 function staggerLeaders(html: string, base: number) {
