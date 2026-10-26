@@ -1,0 +1,21 @@
+/* Intro overlay (Intro.tsx). Not scaled with the scene stage, so sizes are fluid. */
+.sx-intro { position: fixed; inset: 0; z-index: 90; background: #07090B; color: var(--sx-ink); font-family: var(--font-tight); overflow: hidden; transition: opacity .3s ease; }
+.sx-intro.out { opacity: 0; pointer-events: none; }
+.sx-intro .mono { font-family: var(--font-mono); }
+.sx-intro .gt { background: var(--sx-grad); -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
+.sx-intro .glow { position: absolute; inset: 0; background: radial-gradient(34% 40% at 46% 50%, #EC48992A 0%, transparent 72%), radial-gradient(38% 44% at 56% 50%, #A855F733 0%, transparent 72%), radial-gradient(30% 36% at 62% 56%, #3B82F62A 0%, transparent 72%); }
+.sx-intro .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px); background-size: 96px 96px; -webkit-mask-image: radial-gradient(50% 50% at 50% 50%, #000 10%, transparent 100%); mask-image: radial-gradient(50% 50% at 50% 50%, #000 10%, transparent 100%); }
+.sx-intro .corner { position: absolute; top: clamp(20px, 5vh, 48px); font-size: 11px; letter-spacing: .2em; color: rgba(241, 238, 232, .58); }
+.sx-intro .corner.l { left: clamp(20px, 4vw, 56px); }
+.sx-intro .corner.r { right: clamp(20px, 4vw, 56px); }
+@keyframes ldIn { 0% { opacity: 0; letter-spacing: .9em; filter: blur(10px) } 100% { opacity: 1; letter-spacing: .5em; filter: blur(0) } }
+@keyframes ldUp { 0% { opacity: 0; transform: translateY(10px) } 100% { opacity: 1; transform: none } }
+.sx-intro .mid { position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 20px; }
+.sx-intro .wm { font-weight: 300; font-size: clamp(30px, 4.6vw, 64px); letter-spacing: .5em; padding-left: .5em; animation: ldIn .7s cubic-bezier(.2, .8, .2, 1) .05s both; }
+.sx-intro .dot { margin-top: 14px; font-size: 14px; letter-spacing: .7em; padding-left: .7em; animation: ldUp .45s ease .35s both; }
+.sx-intro .tg { margin-top: 30px; font-size: clamp(16px, 1.5vw, 20px); letter-spacing: -.01em; color: rgba(241, 238, 232, .82); animation: ldUp .45s ease .5s both; }
+.sx-intro .foot { position: absolute; left: clamp(20px, 4vw, 56px); right: clamp(20px, 4vw, 56px); bottom: clamp(24px, 6vh, 56px); display: flex; align-items: flex-end; justify-content: center; gap: 32px; }
+.sx-intro .bar { flex: 1; max-width: 520px; height: 1px; background: rgba(255, 255, 255, .16); position: relative; margin-bottom: 10px; }
+.sx-intro .bar i { position: absolute; left: 0; top: -1px; height: 3px; background: var(--sx-grad); box-shadow: 0 0 18px #A855F7; }
+.sx-intro .pct { width: 120px; text-align: right; font-size: clamp(36px, 4.4vw, 64px); line-height: .8; letter-spacing: -.06em; font-variant-numeric: tabular-nums; }
+.sx-intro .pct small { font-size: .4em; letter-spacing: 0; margin-left: .1em; vertical-align: top; color: #C48BFA; }

@@ -1,7 +1,16 @@
+import { useState } from "react";
+import Intro, { shouldShowIntro } from "@/scene/Intro";
 import MainScene from "@/scene/v2/MainScene";
 
-// Redesign (CHANGES-2): the whole site is one scene inside the ship. Cases, experience and the
-// brief are still being redesigned; until then they link to the previous site at /legacy.
+// Redesign: the whole site is one scene inside the ship. On a first visit a short intro plays
+// and the scene mounts as it fades, so the ship assembles in view rather than under the intro.
 export default function Home() {
-  return <MainScene />;
+  const [intro] = useState(shouldShowIntro);
+  const [ready, setReady] = useState(!intro);
+  return (
+    <>
+      {ready && <MainScene />}
+      {intro && <Intro onReveal={() => setReady(true)} />}
+    </>
+  );
 }
