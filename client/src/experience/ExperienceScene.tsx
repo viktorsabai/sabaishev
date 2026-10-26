@@ -19,7 +19,12 @@ import "./experience.css";
 // "your product". Cards on the right open like the main scene's code cards and lift their
 // folder; the business chips change what each experience gives that business.
 
-const TOPS = [152, 290, 428, 566];
+// Dossier cards spread around the room rather than stacked in one column:
+// Yandex Market top-left, Sber top-right, Samokat lower right, "your product" left.
+const CARD_W = 312;
+const SPOTS = [{ x: 56, y: 150 }, { x: 1072, y: 150 }, { x: 1072, y: 470 }, { x: 56, y: 340 }];
+// Where each leader turns vertically on its way from the folder to its card.
+const ELBOW_X = [420, 1040, 1050, 410];
 const CARD_X = 1072;
 const LAYER_GAP = 0.32;
 
@@ -36,7 +41,9 @@ const LEADERS = (() => {
   let html = `<path class="ld ldr" pathLength="1" style="animation-delay:2.2s" d="M${CARD_X} 128H1384"/>`;
   ANCHORS.forEach(([ax, ay], r) => {
     const d = (2.35 + r * 0.15).toFixed(2);
-    html += `<path class="ld ldr" pathLength="1" style="animation-delay:${d}s" d="M${ax} ${ay}H${1030 + r * 10}V${TOPS[r] + 22}H${CARD_X}"/>`;
+    const { x, y } = SPOTS[r];
+    const edge = x < W / 2 ? x + CARD_W : x;
+    html += `<path class="ld ldr" pathLength="1" style="animation-delay:${d}s" d="M${ax} ${ay}H${ELBOW_X[r]}V${y + 22}H${edge}"/>`;
     html += `<circle class="cd cdr" style="animation-delay:${(Number(d) + 0.45).toFixed(2)}s" cx="${ax}" cy="${ay}" r="3.5"/>`;
   });
   return html;
@@ -54,8 +61,8 @@ function wrap(text: string, max: number) {
 }
 
 type Line = { n: number; body: React.ReactNode };
-function DossierCard({ num, title, lines, top, delay, dashed, onLift, onClick }: {
-  num: string; title: string; lines: Line[]; top: number; delay: number; dashed?: boolean; onLift: (on: boolean) => void; onClick: () => void;
+function DossierCard({ num, title, lines, spot, delay, dashed, onLift, onClick }: {
+  num: string; title: string; lines: Line[]; spot: { x: number; y: number }; delay: number; dashed?: boolean; onLift: (on: boolean) => void; onClick: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const set = (v: boolean) => { setOpen(v); onLift(v); };
@@ -64,7 +71,7 @@ function DossierCard({ num, title, lines, top, delay, dashed, onLift, onClick }:
       type="button"
       className="cc"
       aria-expanded={open}
-      style={{ top, animation: `v2in .7s ease ${delay}s both`, borderStyle: dashed ? "dashed" : undefined }}
+      style={{ left: spot.x, top: spot.y, animation: `v2in .7s ease ${delay}s both`, borderStyle: dashed ? "dashed" : undefined }}
       onClick={(e) => { e.currentTarget.focus(); onClick(); }}
       onFocus={() => set(true)}
       onBlur={() => set(false)}
@@ -154,7 +161,7 @@ export default function ExperienceScene() {
               num={`0${i + 1}`}
               title={d.name}
               lines={dossierLines(i)}
-              top={TOPS[i]}
+              spot={SPOTS[i]}
               delay={0.55 + i * 0.1}
               onLift={(on) => setHover(on ? i : -1)}
               onClick={() => setPinned((p) => (p === i ? -1 : i))}
@@ -165,7 +172,7 @@ export default function ExperienceScene() {
             title={copy.yours.name}
             dashed
             lines={[comment(copy.yours.line), { n: copy.yours.cta.length + 4, body: <><span className="k1">→</span> <span className="k2">{copy.yours.cta}</span></> }]}
-            top={TOPS[3]}
+            spot={SPOTS[3]}
             delay={0.85}
             onLift={() => {}}
             onClick={() => openBrief(`${copy.yours.name} · ${biz[bz].name}`, { biz: PROCESS_BIZ_IDS[bz] })}
