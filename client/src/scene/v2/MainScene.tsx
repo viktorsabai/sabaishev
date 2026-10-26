@@ -7,6 +7,7 @@ import SiteHeader from "../SiteHeader";
 import { DOTS, H, W, useStageScale } from "../stage";
 import { sceneV2Content, type Deliverable, type StageV2 } from "./content";
 import { useTypewriter } from "./typewriter";
+import TypedText from "./TypedText";
 import { DEFS, GRID, ROOM_TRANSFORM, ROOMS, STARS } from "./markup";
 import { SHIP_EXTRAS, SHIP_LAYERS } from "./shipLayers";
 import { roomLayers } from "./roomLayers";
@@ -319,7 +320,7 @@ export default function MainScene() {
 
         {open && (
           <>
-            {/* Pain → solution, bottom-left */}
+            {/* The client's pain, bottom-left */}
             <div key={`pain-${key}`} className="v2in absolute z-[6] w-[430px]" style={{ left: 56, bottom: 56 }}>
               <div className="flex items-center gap-3.5">
                 <span className="mono gt uppercase" style={{ fontSize: 11, letterSpacing: ".14em" }}>{v.stageOf} {stage.num} / 08</span>
@@ -328,9 +329,15 @@ export default function MainScene() {
               </div>
               <h2 className="gt" style={{ margin: "14px 0 0", fontSize: stage.name.length < 9 ? 64 : 48, lineHeight: 0.95, fontWeight: 500, letterSpacing: "-.06em" }}>{stage.name}</h2>
               <div className="mono uppercase" style={{ marginTop: 20, fontSize: 10, letterSpacing: ".16em", color: "rgba(241,238,232,.5)" }}>{v.pain}</div>
-              <div style={{ marginTop: 6, fontSize: 19, lineHeight: 1.3, letterSpacing: "-.02em", color: "var(--sx-ink)" }}>«{stage.pain}»</div>
-              <div className="mono gt uppercase" style={{ marginTop: 16, fontSize: 10, letterSpacing: ".16em" }}>{v.solution}</div>
-              <div style={{ marginTop: 6, fontSize: 15, lineHeight: 1.45, color: "rgba(241,238,232,.8)" }}>{stage.solution}</div>
+              <div style={{ marginTop: 8, fontSize: 20, lineHeight: 1.32, letterSpacing: "-.02em", color: "var(--sx-ink)" }}>«{stage.pain}»</div>
+            </div>
+
+            {/* What I do — typed out on the right, under the deliverable cards */}
+            <div key={`fix-${key}`} className="v2in absolute z-[6]" style={{ left: 1072, width: 312, top: Math.max(...room.cards.map((c) => c.top)) + 44 + 34, animationDelay: "1.1s" }}>
+              <div className="mono gt uppercase" style={{ fontSize: 10, letterSpacing: ".16em" }}>{v.solution}</div>
+              <div style={{ marginTop: 8, fontSize: 14.5, lineHeight: 1.48, color: "rgba(241,238,232,.86)" }}>
+                <TypedText text={stage.solution} delay={fromHero ? 1.6 : 1.2} />
+              </div>
             </div>
 
             {/* Leader lines from room objects to the cards */}
