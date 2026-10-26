@@ -2,7 +2,8 @@
    with the scenes, but scrolls as a normal page. */
 
 .sx.mx { position: relative; min-height: 100svh; overflow-x: hidden; padding-bottom: 104px; }
-.mx-glow { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(60% 34% at 40% 18%, #EC48992A 0%, transparent 72%), radial-gradient(70% 40% at 58% 22%, #A855F733 0%, transparent 72%), radial-gradient(50% 30% at 85% 40%, #3B82F62A 0%, transparent 72%); }
+.mx-warp { position: fixed; inset: 0; overflow: hidden; pointer-events: none; }
+.mx-glow { position: fixed; inset: 0; pointer-events: none; opacity: .7; background: radial-gradient(60% 34% at 40% 18%, #EC48992A 0%, transparent 72%), radial-gradient(70% 40% at 58% 22%, #A855F733 0%, transparent 72%), radial-gradient(50% 30% at 85% 40%, #3B82F62A 0%, transparent 72%); }
 .mx-main { position: relative; }
 @keyframes mxIn { from { opacity: 0; transform: translateY(12px) } to { opacity: 1; transform: none } }
 
@@ -28,10 +29,7 @@
 .mx-cta button span { width: 48px; height: 48px; border-radius: 50%; background: #0B0D12; display: grid; place-items: center; }
 
 /* Hero */
-@keyframes mdr { to { stroke-dashoffset: 0 } }
 .mx-hero { position: relative; padding: 0 20px; }
-.mx-layers { display: block; width: 300px; max-width: 82%; height: auto; margin: 0 auto -40px; overflow: visible; }
-.mx-layers .mdr { stroke-dasharray: 1; stroke-dashoffset: 1; animation: mdr 1.2s ease forwards; }
 @keyframes mxDash { to { stroke-dashoffset: -18 } }
 .mx-dash { animation: mxDash 1.6s linear infinite; }
 .mx-hero-copy { position: relative; z-index: 2; }
@@ -44,6 +42,28 @@
 .mx-stats { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; margin-top: 10px; font-size: 13px; color: rgba(241, 238, 232, .72); }
 .mx-stats b { font-weight: 500; color: var(--sx-ink); font-size: 18px; letter-spacing: -.02em; }
 .mx-stats > i { display: block; width: 1px; height: 18px; background: rgba(255, 255, 255, .2); }
+
+/* The ship, with deck numbers that show up once it has assembled */
+.mx-shipwrap { position: relative; width: 100%; max-width: 380px; margin: 4px auto 0; aspect-ratio: 610 / 640; }
+.mx-ship { display: block; width: 100%; height: 100%; overflow: visible; }
+.mx-deck { position: absolute; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; border: 1px solid rgba(196, 139, 250, .7); background: rgba(10, 12, 20, .78); color: var(--sx-ink); font-size: 10px; letter-spacing: .02em; display: grid; place-items: center; box-shadow: 0 0 14px -2px #A855F7; animation: mxDeck .45s cubic-bezier(.3, 1.5, .5, 1) both; }
+.mx-deck::after { content: ""; position: absolute; inset: -7px; border-radius: 50%; border: 1px solid rgba(196, 139, 250, .35); animation: mxPing 2.4s ease-out infinite; }
+@keyframes mxDeck { from { opacity: 0; transform: scale(.3) } to { opacity: 1; transform: none } }
+@keyframes mxPing { 0% { transform: scale(.7); opacity: .9 } 100% { transform: scale(1.4); opacity: 0 } }
+
+/* A deck's room: the room assembles, the copy under it */
+.mx-decks .mx-chips button { font-family: var(--font-tight); font-size: 13px; letter-spacing: -.01em; }
+.mx-decks .mx-chips button .gt { font: 500 10px var(--font-mono); margin-right: 4px; }
+.mx-decks .mx-chips button[aria-pressed="true"] .gt { -webkit-text-fill-color: #fff; }
+.mx-deckroom { margin-top: 8px; touch-action: pan-y; }
+.mx-room { display: block; width: calc(100% + 24px); margin: 0 -12px; height: auto; aspect-ratio: 590 / 530; overflow: visible; }
+.mx-roomcopy { margin-top: -44px; position: relative; animation: mxIn .5s ease .5s both; }
+.mx-roomcopy .head { display: flex; justify-content: space-between; gap: 12px; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: rgba(241, 238, 232, .55); }
+.mx-roomcopy h3 { margin: 8px 0 0; font-size: 34px; line-height: 1; font-weight: 500; letter-spacing: -.05em; }
+.mx-roomcopy p { margin: 6px 0 0; font-size: 15px; line-height: 1.45; color: rgba(241, 238, 232, .84); }
+.mx-roomcopy p.pain { font-size: 17px; color: var(--sx-ink); }
+.mx-roomnav { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.rb2 { width: 48px; height: 48px; margin-top: 14px; border-radius: 50%; border: 1px solid rgba(255, 255, 255, .22); background: rgba(10, 12, 20, .55); color: var(--sx-ink); font-size: 16px; }
 
 /* Sections */
 .mx-section { position: relative; padding: 48px 20px 0; }
@@ -95,10 +115,22 @@
 .mx-chips button { flex: none; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid rgba(255, 255, 255, .16); background: rgba(10, 12, 20, .55); color: rgba(241, 238, 232, .75); font: 500 12px var(--font-mono); letter-spacing: .04em; }
 .mx-chips button[aria-pressed="true"] { border-color: transparent; background: var(--sx-grad-btn); color: #fff; }
 
+/* Process: the Gantt over the path */
+.mx-gantt { margin-top: 18px; padding: 12px 12px 8px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, .12); background: rgba(10, 12, 20, .6); }
+.mx-gantt .wk { display: grid; grid-template-columns: repeat(10, 1fr); margin-left: 96px; font-size: 7.5px; letter-spacing: .04em; color: rgba(241, 238, 232, .45); }
+.mx-gantt .row { display: flex; align-items: center; gap: 8px; min-height: 30px; }
+.mx-gantt .nm { flex: none; width: 88px; font-size: 12.5px; color: rgba(241, 238, 232, .8); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mx-gantt .track { position: relative; flex: 1; height: 16px; background: linear-gradient(90deg, rgba(241, 238, 232, .08) 1px, transparent 1px) 0 0 / 10% 100%; }
+.mx-gantt .track i { position: absolute; top: 2px; bottom: 2px; border-radius: 5px; background: var(--sx-grad-btn); box-shadow: 0 0 12px -4px #A855F7; transform-origin: left; animation: mxBar .6s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes mxBar { from { transform: scaleX(0); opacity: 0 } to { transform: none; opacity: 1 } }
+.mx-how { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 6px; }
+.mx-how li { display: flex; gap: 10px; font-size: 14px; line-height: 1.4; color: rgba(241, 238, 232, .84); }
+.mx-how i { flex: none; width: 12px; height: 12px; margin-top: 3px; border-radius: 3px; background: var(--sx-grad); }
+
 /* Process path */
 .mx-path { list-style: none; margin: 22px 0 0; padding: 0 0 0 18px; position: relative; }
 .mx-path::before { content: ""; position: absolute; left: 4px; top: 8px; bottom: 8px; width: 1px; background: linear-gradient(180deg, #EC4899, #A855F7, #3B82F6); opacity: .5; }
-.mx-path li { position: relative; padding: 0 0 34px 14px; animation: mxIn .5s ease both; }
+.mx-path > li { position: relative; scroll-margin-top: 76px; padding: 0 0 34px 14px; animation: mxIn .5s ease both; }
 .mx-path .node { position: absolute; left: -18px; top: 4px; width: 9px; height: 9px; border-radius: 50%; background: var(--sx-grad); box-shadow: 0 0 12px #A855F7; }
 .mx-path .head { display: flex; justify-content: space-between; font-size: 10.5px; letter-spacing: .14em; color: rgba(241, 238, 232, .55); }
 .mx-path h3 { margin: 8px 0 0; font-size: 34px; line-height: 1; font-weight: 500; letter-spacing: -.05em; }
@@ -123,18 +155,24 @@
 .mx-case .tags { list-style: none; margin: 14px 0 18px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .mx-case .tags li { padding: 5px 10px; border: 1px solid rgba(255, 255, 255, .26); border-radius: 999px; font-size: 10px; letter-spacing: .06em; color: rgba(241, 238, 232, .86); }
 .mx-open { display: inline-flex; align-items: center; min-height: 48px; padding: 0 20px; border-radius: 14px; background: var(--sx-grad-btn); color: #fff; font: 600 14px var(--font-tight); }
+.mx-case .phone .cs { position: absolute; left: 0; top: 0; width: 170px; height: 350px; transform: scale(1.235); transform-origin: 0 0; }
+.mx-case .spec { margin: 14px 0 0; padding: 12px 14px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, .12); background: rgba(10, 12, 20, .55); font: 400 12px/1.55 var(--font-mono); color: rgba(241, 238, 232, .86); }
+.mx-case .spec div { display: grid; grid-template-columns: 64px 1fr; gap: 10px; }
+.mx-case .spec div + div { margin-top: 4px; }
+.mx-case .spec b { font-weight: 400; color: #C48BFA; }
+button.mx-open { border: 0; }
 .mx-case .status { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: rgba(241, 238, 232, .6); }
 
 /* Experience dossiers */
 .mx-dossiers { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; }
 .mx-dossier { display: block; width: 100%; padding: 16px; border-radius: 14px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(10, 12, 20, .55); color: var(--sx-ink); text-align: left; animation: mxIn .45s ease both; }
 .mx-dossier.empty { border-style: dashed; }
+.mx-dossier.on { border-color: rgba(196, 139, 250, .7); box-shadow: 0 0 26px -10px #A855F7; }
 .mx-dossier .head { font-size: 10.5px; letter-spacing: .12em; color: rgba(241, 238, 232, .55); }
 .mx-dossier h3 { margin: 6px 0 0; font-size: 24px; font-weight: 500; letter-spacing: -.035em; }
 @keyframes mxFlash { from { background: rgba(168, 85, 247, .25) } to { background: transparent } }
 .mx-dossier .flash { margin-top: 4px; border-radius: 4px; animation: mxFlash .8s ease; }
 
 @media (prefers-reduced-motion: reduce) {
-  .mx-layers .mdr { animation: none; stroke-dashoffset: 0; }
-  .mx-dash, .mx-case .shot, .sx.mx .tcaret, .mx-path li, .mx-acc-body, .mx-dossier, .mx-nav a, .mx-menu { animation: none !important; }
+  .mx-gantt .track i, .mx-deck, .mx-deck::after, .mx-roomcopy, .mx-dash, .mx-case .shot, .sx.mx .tcaret, .mx-path > li, .mx-acc-body, .mx-dossier, .mx-nav a, .mx-menu { animation: none !important; }
 }

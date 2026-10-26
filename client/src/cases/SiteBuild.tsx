@@ -1,4 +1,5 @@
 import type { CasesCopy } from "./content";
+import "./sitebuild.css";
 
 // The service slot's screens: a site assembles block by block (outline first, then fill), with
 // code comments naming what each block is for. Plays every time the slot comes up.

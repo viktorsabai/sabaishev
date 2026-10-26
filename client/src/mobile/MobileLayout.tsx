@@ -5,11 +5,12 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import type { Language } from "@/lib/content";
 import { sceneContent } from "@/scene/sceneContent";
 import { mobileContent } from "./content";
+import { ArtDefs, MobileWarp } from "./MobileArt";
 import "@/scene/scene.css";
 import "./mobile.css";
 
-// Phone layout shell: a compact header (brand, language, menu), a full-screen menu sheet, and a
-// request button pinned to the bottom of every page (from reference/Mobile.dc.html).
+// Phone layout shell: the desktop's flight background behind every page, a compact header
+// (brand, language, menu), a full-screen menu sheet, and a request button pinned to the bottom.
 
 type Section = "services" | "cases" | "process" | "experience";
 const LANGS: Language[] = ["ru", "en", "th"];
@@ -39,6 +40,8 @@ export default function MobileLayout({ active, children }: { active?: Section; c
 
   return (
     <div className="sx mx">
+      <ArtDefs />
+      <MobileWarp />
       <div className="mx-glow" aria-hidden="true" />
       <header className="mx-head">
         <Link href="/" className="flex items-baseline gap-1" aria-label="SABAISHEV.ONLINE">

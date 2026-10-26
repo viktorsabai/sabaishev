@@ -5,9 +5,9 @@ import { processContent, STAGE_DOCS, STAGE_WEEKS } from "@/process/content";
 import { mobileContent } from "./content";
 import MobileLayout from "./MobileLayout";
 
-// Phone process: the same idea as the desktop Gantt, as a vertical path. First the business
-// question; then the seven layers one under another, each with this business's pain, what I do,
-// the document you get, and a look at that document.
+// Phone process: the desktop Gantt, then its layers as a vertical path. First the business
+// question; then the Gantt (tap a row to jump to its layer) and the seven layers one under
+// another, each with this business's pain, what I do, how, the document you get, and a look at it.
 
 function fromQuery() {
   const n = Number(new URLSearchParams(window.location.search).get("biz"));
@@ -51,12 +51,24 @@ export default function MobileProcess() {
                 <button key={b.name} type="button" aria-pressed={biz === i + 1} onClick={() => setBiz(i + 1)}>{b.name}</button>
               ))}
             </div>
+            <div className="mx-gantt" aria-label={copy.eyebrow}>
+              <div className="wk mono">{Array.from({ length: 10 }, (_, i) => <span key={i}>W{i + 1}</span>)}</div>
+              {copy.stages.map((st, i) => {
+                const w = STAGE_WEEKS[i];
+                return (
+                  <a key={st.name} href={`#layer-${i + 1}`} className="row" onClick={(e) => { e.preventDefault(); document.getElementById(`layer-${i + 1}`)?.scrollIntoView({ behavior: "smooth", block: "start" }); }}>
+                    <span className="nm">{st.name}</span>
+                    <span className="track"><i style={{ left: `${w.s * 10}%`, width: `${w.d * 10}%`, animationDelay: `${0.2 + i * 0.08}s` }} /></span>
+                  </a>
+                );
+              })}
+            </div>
             <ol className="mx-path">
               {copy.stages.map((st, i) => {
                 const w = STAGE_WEEKS[i];
                 const doc = STAGE_DOCS[i].find((d) => d.img);
                 return (
-                  <li key={st.name} style={{ animationDelay: `${i * 0.06}s` }}>
+                  <li key={st.name} id={`layer-${i + 1}`} style={{ animationDelay: `${i * 0.06}s` }}>
                     <div className="node" aria-hidden="true" />
                     <div className="mono head">
                       <span className="gt">{copy.stage} 0{i + 1} / 07</span>
@@ -67,6 +79,8 @@ export default function MobileProcess() {
                     <p className="pain">«{B.p[i][0]}»</p>
                     <div className="lbl mono gt">{copy.whatIDo}</div>
                     <p>{B.p[i][1]}</p>
+                    <div className="lbl mono">{copy.howTitle}</div>
+                    <ul className="mx-how">{st.how.map((h) => <li key={h}><i aria-hidden="true" />{h}</li>)}</ul>
                     <div className="lbl mono">{copy.output}</div>
                     <div className="mx-code">
                       <div><span className="k1">const</span> {copy.code.out} <span className="k3">=</span> {"{"}</div>
