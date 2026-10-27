@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "wouter";
 import { useBrief } from "@/brief/BriefContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import SiteHeader from "@/scene/SiteHeader";
 import { H, W, useStageScale } from "@/scene/stage";
 import WarpBackground from "@/scene/WarpBackground";
-import { CASE_MEDIA, casesContent } from "./content";
+import { CASE_MEDIA, casesContent, PROTOTYPES } from "./content";
+import ProtoViewer from "./ProtoViewer";
 import SiteBuild from "./SiteBuild";
 import "@/scene/scene.css";
 import "./cases.css";
@@ -18,7 +20,12 @@ const COUNT = CASE_MEDIA.length;
 // Entrance order of a slide's parts (seconds after the switch).
 const STAGE = { browser: 0, phone: 0.15, head: 0.22, name: 0.3, desc: 0.38, spec: 0.46, tags: 0.54, cta: 0.62 };
 
+// The service slot, where the site prototype is opened from.
+const SERVICE = CASE_MEDIA.findIndex((c) => c.service) + 1;
+const protoOf = (path: string) => PROTOTYPES.find((p) => path === `/cases/${p.id}`);
+
 function initialCase() {
+  if (protoOf(window.location.pathname)) return SERVICE;
   const n = Number(new URLSearchParams(window.location.search).get("case"));
   return Number.isInteger(n) && n >= 1 && n <= COUNT ? n : 1;
 }
@@ -33,7 +40,10 @@ export default function CasesScene() {
   const [paused, setPaused] = useState(false);
   const [hover, setHover] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const halted = paused || hover || hidden;
+  // /cases/<id> opens that prototype over the page; closing it returns to /cases.
+  const [location, navigate] = useLocation();
+  const proto = protoOf(location);
+  const halted = paused || hover || hidden || !!proto;
   // Off for the first frames, so the first project comes in the same way a switch does.
   const [arrived, setArrived] = useState(false);
   useEffect(() => {
@@ -193,6 +203,11 @@ export default function CasesScene() {
                   )}
                   <span className="mono uppercase" style={{ fontSize: 10, letterSpacing: ".14em", color: "rgba(241,238,232,.6)" }}>{text.status}</span>
                 </div>
+                {m.service && (
+                  <button type="button" className="st pbtn mono" style={stage(STAGE.cta + 0.1)} tabIndex={on ? 0 : -1} onClick={() => navigate(`/cases/${PROTOTYPES[0].id}`)}>
+                    <i aria-hidden="true" />{copy.proto.open}
+                  </button>
+                )}
               </div>
             </section>
           );
@@ -201,6 +216,7 @@ export default function CasesScene() {
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[5]" style={{ background: "repeating-linear-gradient(0deg,rgba(255,255,255,.02) 0 1px,transparent 1px 3px)" }} />
 
         {/* Minimal controls */}
+        {proto && <ProtoViewer proto={proto} copy={copy.proto} onClose={() => navigate("/cases", { replace: true })} />}
         <button type="button" className="eg egl" onClick={prev} aria-label={copy.prevAria}><span><i />{copy.prev}</span></button>
         <button type="button" className="eg egr" onClick={next} aria-label={copy.nextAria}><span>{copy.next}<i /></span></button>
         <div className="absolute z-[8] flex items-center gap-3.5" style={{ left: "50%", bottom: 34, transform: "translateX(-50%)", animation: "sxUp .7s ease 1s both" }}>

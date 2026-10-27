@@ -36,6 +36,12 @@
 .sx .spec div + div { margin-top: 4px; }
 .sx .spec b { font-weight: 400; color: #C48BFA; }
 
+/* Link to the clickable prototype, under the service slot's button */
+.sx .pbtn { margin-top: 18px; display: inline-flex; align-items: center; gap: 10px; padding: 0; border: 0; background: none; cursor: pointer; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: rgba(241, 238, 232, .78); align-self: flex-start; transition: color .25s; }
+.sx .pbtn:hover { color: #fff; }
+.sx .pbtn i { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(196, 139, 250, .7); position: relative; box-shadow: 0 0 14px -4px #A855F7; }
+.sx .pbtn i::after { content: ""; position: absolute; left: 8px; top: 6px; border: 5px solid transparent; border-left: 7px solid #C48BFA; border-right: 0; }
+
 /* Controls */
 @keyframes prog { from { width: 0 } to { width: 100% } }
 @keyframes rec { 0%, 100% { opacity: 1 } 50% { opacity: .25 } }

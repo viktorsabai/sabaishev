@@ -67,6 +67,7 @@ function Router() {
       <Route path={"/v1"} component={ShipScene} />
       <Route path={"/process"} component={Process} />
       <Route path={"/cases"} component={Cases} />
+      <Route path={"/cases/:proto"} component={Cases} />
       <Route path={"/experience"} component={Experience} />
       <Route path={"/workspace/material/:slug"} component={LegacyWorkspace} />
       <Route path={"/workspace/route/:slug"} component={LegacyWorkspace} />

@@ -16,11 +16,18 @@ export const CASE_MEDIA: CaseMedia[] = [
 ];
 
 // spec: task / role / result lines, shown as a code block under the description.
+// Clickable prototypes kept on this site (public/proto/), opened from the cases in a viewer at
+// /cases/<id>. They are drawn on a fixed canvas, scaled to fit the viewer.
+export type Prototype = { id: string; src: string; host: string; w: number; h: number };
+export const PROTOTYPES: Prototype[] = [{ id: "eon", src: "/proto/eon/index.html", host: "eon · wellness", w: 1440, h: 900 }];
+
 export type CaseText = { name: string; type: string; desc: string; tags: string[]; status: string; spec: [string, string, string] };
 export type CasesCopy = {
   eyebrow: string; onAir: string; open: string; prev: string; next: string; prevAria: string; nextAria: string;
   pause: string; play: string; placeholder: string; screenshot: string;
   specKeys: [string, string, string]; discuss: string;
+  // The prototype linked from the site-development slot, and its viewer.
+  proto: { open: string; tag: string; note: string; full: string; close: string; loading: string; rotate: string };
   // The site that assembles in the service slot.
   mock: { title: string; accent: string; cta: string; notes: [string, string, string, string]; form: string };
   cases: CaseText[];
@@ -31,6 +38,7 @@ export const casesContent: Record<Language, CasesCopy> = {
     eyebrow: "Портфолио", onAir: "В эфире", open: "Открыть проект", prev: "Пред", next: "След",
     prevAria: "Предыдущий проект", nextAria: "Следующий проект", pause: "Пауза", play: "Продолжить",
     placeholder: "Сюда встанет скрин", screenshot: "Скриншот",
+    proto: { open: "Пример: EON — прототип", tag: "Прототип · концепт", note: "Кликабельный прототип сайта, не живой проект", full: "На весь экран", close: "Закрыть", loading: "Загружаю прототип", rotate: "Удобнее смотреть, повернув телефон" },
     specKeys: ["задача", "роль", "итог"], discuss: "Обсудить сайт",
     mock: { title: "Ваш бизнес.", accent: "Онлайн.", cta: "Оставить заявку", notes: ["навигация", "оффер → заявка", "доверие", "форма"], form: "Заявка" },
     cases: [
@@ -44,6 +52,7 @@ export const casesContent: Record<Language, CasesCopy> = {
     eyebrow: "Portfolio", onAir: "On air", open: "Open project", prev: "Prev", next: "Next",
     prevAria: "Previous project", nextAria: "Next project", pause: "Pause", play: "Play",
     placeholder: "Screenshot goes here", screenshot: "Screenshot of",
+    proto: { open: "Example: EON — prototype", tag: "Prototype · concept", note: "A clickable site prototype, not a live project", full: "Full screen", close: "Close", loading: "Loading the prototype", rotate: "Easier to view with the phone turned sideways" },
     specKeys: ["task", "role", "result"], discuss: "Discuss a site",
     mock: { title: "Your business.", accent: "Online.", cta: "Send a request", notes: ["navigation", "offer → request", "trust", "form"], form: "Request" },
     cases: [
@@ -57,6 +66,7 @@ export const casesContent: Record<Language, CasesCopy> = {
     eyebrow: "ผลงาน", onAir: "ออนแอร์", open: "เปิดโปรเจกต์", prev: "ก่อนหน้า", next: "ถัดไป",
     prevAria: "โปรเจกต์ก่อนหน้า", nextAria: "โปรเจกต์ถัดไป", pause: "หยุด", play: "เล่นต่อ",
     placeholder: "ภาพหน้าจอจะอยู่ตรงนี้", screenshot: "ภาพหน้าจอ",
+    proto: { open: "ตัวอย่าง: EON — โปรโตไทป์", tag: "โปรโตไทป์ · คอนเซปต์", note: "โปรโตไทป์เว็บไซต์ที่คลิกได้ ไม่ใช่โปรเจกต์จริง", full: "เต็มจอ", close: "ปิด", loading: "กำลังโหลดโปรโตไทป์", rotate: "ดูง่ายขึ้นเมื่อหมุนโทรศัพท์แนวนอน" },
     specKeys: ["โจทย์", "บทบาท", "ผลลัพธ์"], discuss: "คุยเรื่องเว็บไซต์",
     mock: { title: "ธุรกิจของคุณ", accent: "ออนไลน์", cta: "ส่งคำขอ", notes: ["เมนู", "ข้อเสนอ → คำขอ", "ความน่าเชื่อถือ", "ฟอร์ม"], form: "คำขอ" },
     cases: [

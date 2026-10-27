@@ -47,9 +47,10 @@ export default function PageTransition({ preload }: { preload: (path: string) =>
     return () => document.removeEventListener("click", onClick);
   }, [navigate, preload]);
 
-  // A new page: the veil sweeps off it.
+  // A new page: the veil sweeps off it. Paths inside a section (/cases/eon) are the same page.
   useEffect(() => {
-    if (prev.current === location) return;
+    const section = (p: string) => "/" + p.split("/")[1];
+    if (section(prev.current) === section(location)) { prev.current = location; return; }
     prev.current = location;
     window.scrollTo(0, 0);
     if (reduced()) return setPhase("idle");

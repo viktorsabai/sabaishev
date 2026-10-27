@@ -1,6 +1,8 @@
+import { useLocation } from "wouter";
 import { useBrief } from "@/brief/BriefContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { CASE_MEDIA, casesContent } from "@/cases/content";
+import { CASE_MEDIA, casesContent, PROTOTYPES } from "@/cases/content";
+import ProtoViewer from "@/cases/ProtoViewer";
 import SiteBuild from "@/cases/SiteBuild";
 import { mobileContent } from "./content";
 import MobileLayout from "./MobileLayout";
@@ -14,6 +16,8 @@ export default function MobileCases() {
   const copy = casesContent[language];
   const m = mobileContent[language];
   const { openBrief } = useBrief();
+  const [location, navigate] = useLocation();
+  const proto = PROTOTYPES.find((p) => location === `/cases/${p.id}`);
   return (
     <MobileLayout active="cases">
       <section className="mx-section mx-top">
@@ -47,11 +51,15 @@ export default function MobileCases() {
                   )}
                   <span className="mono status">{text.status}</span>
                 </div>
+                {c.service && (
+                  <button type="button" className="mx-proto mono" onClick={() => navigate(`/cases/${PROTOTYPES[0].id}`)}><i aria-hidden="true" />{copy.proto.open}</button>
+                )}
               </article>
             );
           })}
         </div>
       </section>
+      {proto && <ProtoViewer proto={proto} copy={copy.proto} onClose={() => navigate("/cases", { replace: true })} />}
     </MobileLayout>
   );
 }
