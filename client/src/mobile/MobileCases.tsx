@@ -31,7 +31,7 @@ export default function MobileCases() {
                   <i className="notch" aria-hidden="true" />
                   {c.service && <div className="cs on"><SiteBuild mock={copy.mock} phone /></div>}
                   {c.mobile && (
-                    <div className={`shot${c.still ? " still" : ""}`}>
+                    <div className={`shot${c.still ? " still" : ""}${c.frames ? ` f${c.frames}` : ""}`}>
                       <img src={c.mobile} alt={`${copy.screenshot} ${text.name}`} loading={i === 0 ? "eager" : "lazy"} decoding="async" />
                     </div>
                   )}
@@ -46,13 +46,15 @@ export default function MobileCases() {
                 <div className="flex items-center gap-4">
                   {c.service ? (
                     <button type="button" className="mx-open" onClick={() => openBrief(text.type, { need: ["site"] })}>{copy.discuss} →</button>
+                  ) : c.proto ? (
+                    <button type="button" className="mx-open" onClick={() => navigate(`/cases/${c.proto}`)}>{copy.proto.openCase} ▸</button>
                   ) : (
                     <a className="mx-open" href={c.url} target="_blank" rel="noopener noreferrer">{m.open} ↗</a>
                   )}
                   <span className="mono status">{text.status}</span>
                 </div>
                 {c.service && (
-                  <button type="button" className="mx-proto mono" onClick={() => navigate(`/cases/${PROTOTYPES[0].id}`)}><i aria-hidden="true" />{copy.proto.open}</button>
+                  <button type="button" className="mx-proto mono" onClick={() => navigate(`/cases/${PROTOTYPES.find((p) => p.slug === "site")!.id}`)}><i aria-hidden="true" />{copy.proto.open}</button>
                 )}
               </article>
             );

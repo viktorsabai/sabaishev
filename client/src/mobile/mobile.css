@@ -147,6 +147,8 @@
 @keyframes mxShot { 0%, 10% { transform: translateY(0) } 45%, 55% { transform: translateY(calc((430px - 100%) * .5)) } 90%, 100% { transform: translateY(calc(430px - 100%)) } }
 .mx-case .shot { position: absolute; left: 0; right: 0; top: 0; animation: mxShot 16s ease-in-out infinite alternate; }
 .mx-case .shot.still { animation: none; height: 100%; }
+@keyframes mxF4 { 0%, 18% { transform: translateY(0) } 25%, 43% { transform: translateY(-25%) } 50%, 68% { transform: translateY(-50%) } 75%, 93% { transform: translateY(-75%) } 100% { transform: translateY(0) } }
+.mx-case .shot.f4 { animation: mxF4 16s cubic-bezier(.6, 0, .2, 1) infinite; }
 .mx-case .shot img { display: block; width: 100%; }
 .mx-case .shot.still img { height: 100%; object-fit: cover; object-position: top; }
 .mx-case .meta { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: rgba(241, 238, 232, .7); }

@@ -1,25 +1,35 @@
 import type { Language } from "@/lib/content";
 
-// Cases page (CHANGES-2 "Cases"): three live projects shown as browser + phone mockups, and a
-// fourth slot for the service itself, site development, where a site assembles on the screens.
+// Cases page (CHANGES-2 "Cases"): three live projects and the EON prototype shown as browser +
+// phone mockups, and a last slot for the service itself, site development, where a site
+// assembles on the screens.
 // Russian is from the handoff (build_cases2.py); EN/TH are translations to review with the author.
 
 // Language-independent: links, screenshots (captured from the live sites), accent colour.
 // still: a single-screen capture, shown without the scroll-through.
 // service: no project behind it; the screens show a site being built and the button opens the brief.
-export type CaseMedia = { slug: string; host: string; url?: string; desktop?: string; mobile?: string; hue: string; still?: boolean; service?: boolean };
+// proto: the project is a prototype kept on this site; its button opens it in the viewer.
+// frames: the screenshots are that many screens stacked; they step from screen to screen.
+export type CaseMedia = { slug: string; host: string; url?: string; desktop?: string; mobile?: string; hue: string; still?: boolean; service?: boolean; proto?: string; frames?: 4 };
 export const CASE_MEDIA: CaseMedia[] = [
   { slug: "taika", host: "taikaa.online", url: "https://taikaa.online/", desktop: "/cases/taika-desktop.webp", mobile: "/cases/taika-mobile.webp", hue: "#3B82F6" },
   { slug: "moo", host: "moo-beryl.vercel.app", url: "https://moo-beryl.vercel.app/", desktop: "/cases/moo-desktop.webp", mobile: "/cases/moo-mobile.webp", hue: "#EC4899" },
   { slug: "paradise", host: "paradise-real-estate-orcin.vercel.app", url: "https://paradise-real-estate-orcin.vercel.app/", desktop: "/cases/paradise-desktop.webp", mobile: "/cases/paradise-mobile.webp", hue: "#A855F7" },
+  { slug: "eon", host: "eon · day club", desktop: "/cases/eon-desktop.webp", mobile: "/cases/eon-mobile.webp", hue: "#EC4899", proto: "eon", frames: 4 },
   { slug: "site", host: "your-business.online", hue: "#3B82F6", service: true },
 ];
 
 // spec: task / role / result lines, shown as a code block under the description.
 // Clickable prototypes kept on this site (public/proto/), opened from the cases in a viewer at
-// /cases/<id>. They are drawn on a fixed canvas, scaled to fit the viewer.
-export type Prototype = { id: string; src: string; host: string; w: number; h: number };
-export const PROTOTYPES: Prototype[] = [{ id: "eon", src: "/proto/eon/index.html", host: "eon · wellness", w: 1440, h: 900 }];
+// /cases/<id>; slug is the case they belong to. A prototype with a fixed canvas (w × h) is scaled
+// to fit the viewer; one without is a responsive page and fills it.
+// EON is the EON Day Club site; "spa" is the earlier wellness concept, kept without a name as an
+// example of site development.
+export type Prototype = { id: string; src: string; host: string; slug: string; w?: number; h?: number };
+export const PROTOTYPES: Prototype[] = [
+  { id: "eon", src: "/proto/eon/index.html", host: "eon · day club", slug: "eon" },
+  { id: "spa", src: "/proto/spa/index.html", host: "wellness · spa", slug: "site", w: 1440, h: 900 },
+];
 
 export type CaseText = { name: string; type: string; desc: string; tags: string[]; status: string; spec: [string, string, string] };
 export type CasesCopy = {
@@ -27,7 +37,7 @@ export type CasesCopy = {
   pause: string; play: string; placeholder: string; screenshot: string;
   specKeys: [string, string, string]; discuss: string;
   // The prototype linked from the site-development slot, and its viewer.
-  proto: { open: string; tag: string; note: string; full: string; close: string; loading: string; rotate: string };
+  proto: { openCase: string; open: string; tag: string; note: string; full: string; close: string; loading: string; rotate: string };
   // The site that assembles in the service slot.
   mock: { title: string; accent: string; cta: string; notes: [string, string, string, string]; form: string };
   cases: CaseText[];
@@ -38,13 +48,14 @@ export const casesContent: Record<Language, CasesCopy> = {
     eyebrow: "Портфолио", onAir: "В эфире", open: "Открыть проект", prev: "Пред", next: "След",
     prevAria: "Предыдущий проект", nextAria: "Следующий проект", pause: "Пауза", play: "Продолжить",
     placeholder: "Сюда встанет скрин", screenshot: "Скриншот",
-    proto: { open: "Пример: EON — прототип", tag: "Прототип · концепт", note: "Кликабельный прототип сайта, не живой проект", full: "На весь экран", close: "Закрыть", loading: "Загружаю прототип", rotate: "Удобнее смотреть, повернув телефон" },
+    proto: { openCase: "Открыть прототип", open: "Пример: Wellness spa — прототип", tag: "Прототип · концепт", note: "Кликабельный прототип сайта, не живой проект", full: "На весь экран", close: "Закрыть", loading: "Загружаю прототип", rotate: "Удобнее смотреть, повернув телефон" },
     specKeys: ["задача", "роль", "итог"], discuss: "Обсудить сайт",
     mock: { title: "Ваш бизнес.", accent: "Онлайн.", cta: "Оставить заявку", notes: ["навигация", "оффер → заявка", "доверие", "форма"], form: "Заявка" },
     cases: [
       { name: "TAIKA", type: "iOS-приложение · EdTech · AI", desc: "Разговорный тайский для русскоязычных: звук, смысл и тон. Курсы, лайфхаки и Speaker, который можно попробовать прямо на сайте.", tags: ["iOS", "Swift", "AI", "Speech"], status: "Тестирование", spec: ["тайский живым и ежедневным, а не академическим", "продукт, UX/UI, AI-сценарии, прототип iOS", "MVP: онбординг, уроки, голосовая практика"] },
       { name: "MOO", type: "Telegram Mini App · FoodTech", desc: "Ресторан в Telegram: гости заказывают, платят и следят за статусом без отдельного приложения и комиссии агрегатора. Запуск за 48 часов.", tags: ["Mini App", "Меню и корзина", "QR-оплата", "Подписка"], status: "Тест с заказчиком", spec: ["заказ еды без приложения и комиссии агрегатора", "продуктовая логика, UX/UI, mobile-flow", "меню, корзина, оплата и статус в Telegram"] },
       { name: "Paradise", type: "Сайт · Недвижимость · Пхукет", desc: "Сайт агентства недвижимости на Пхукете: продажа и аренда вилл и апартаментов, заявка для владельцев, RU/EN. Интерфейс в стилистике чертёжных листов.", tags: ["Продажа", "Аренда", "RU / EN", "Заявки"], status: "Онлайн", spec: ["витрина, которая приводит покупателей и владельцев", "структура, дизайн и разработка сайта", "каталог, аренда, заявки — онлайн на двух языках"] },
+      { name: "EON", type: "Сайт · Wellness · Пхукет", desc: "Сайт дневного клуба в Банг Тао: баня, вода, кухня и отдых. Сайт-прогулка: листаешь — и проходишь клуб от входа до вечера, а в конце бронируешь свой день.", tags: ["Сайт-прогулка", "Бронирование", "Членство", "RU / EN"], status: "Прототип", spec: ["продавать день в клубе, а не список услуг", "концепция, структура, дизайн, анимация", "кликабельный сайт с бронированием дня"] },
       { name: "Сайты", type: "Услуга · Разработка сайтов", desc: "Соберу сайт под ваш бизнес: структура, тексты, дизайн и разработка в одних руках. Каждый экран ведёт к заявке, а не просто красиво выглядит.", tags: ["Лендинг", "Сайт-каталог", "RU / EN / TH", "Заявки"], status: "Слот открыт", spec: ["сайт, где каждый экран ведёт к заявке", "структура, тексты, дизайн, разработка, запуск", "сайт онлайн, аналитика, заявки приходят вам"] },
     ],
   },
@@ -52,13 +63,14 @@ export const casesContent: Record<Language, CasesCopy> = {
     eyebrow: "Portfolio", onAir: "On air", open: "Open project", prev: "Prev", next: "Next",
     prevAria: "Previous project", nextAria: "Next project", pause: "Pause", play: "Play",
     placeholder: "Screenshot goes here", screenshot: "Screenshot of",
-    proto: { open: "Example: EON — prototype", tag: "Prototype · concept", note: "A clickable site prototype, not a live project", full: "Full screen", close: "Close", loading: "Loading the prototype", rotate: "Easier to view with the phone turned sideways" },
+    proto: { openCase: "Open the prototype", open: "Example: Wellness spa — prototype", tag: "Prototype · concept", note: "A clickable site prototype, not a live project", full: "Full screen", close: "Close", loading: "Loading the prototype", rotate: "Easier to view with the phone turned sideways" },
     specKeys: ["task", "role", "result"], discuss: "Discuss a site",
     mock: { title: "Your business.", accent: "Online.", cta: "Send a request", notes: ["navigation", "offer → request", "trust", "form"], form: "Request" },
     cases: [
       { name: "TAIKA", type: "iOS app · EdTech · AI", desc: "Conversational Thai for Russian speakers: sound, meaning and tone. Courses, tips and a Speaker you can try right on the site.", tags: ["iOS", "Swift", "AI", "Speech"], status: "Testing", spec: ["Thai as a living daily habit, not a textbook", "product, UX/UI, AI flows, iOS prototype", "MVP: onboarding, lessons, speech practice"] },
       { name: "MOO", type: "Telegram Mini App · FoodTech", desc: "A restaurant inside Telegram: guests order, pay and track status with no separate app and no aggregator fee. Launch in 48 hours.", tags: ["Mini App", "Menu & cart", "QR payment", "Subscription"], status: "Client testing", spec: ["food ordering with no app and no aggregator fee", "product logic, UX/UI, mobile flow", "menu, cart, payment and status in Telegram"] },
       { name: "Paradise", type: "Website · Real estate · Phuket", desc: "Site for a Phuket real-estate agency: villas and apartments for sale and rent, owner applications, RU/EN. Interface styled as blueprint sheets.", tags: ["Sale", "Rent", "RU / EN", "Enquiries"], status: "Live", spec: ["a showcase that brings in buyers and owners", "structure, design and development", "catalogue, rentals, enquiries — live in two languages"] },
+      { name: "EON", type: "Website · Wellness · Phuket", desc: "Site for a day club in Bang Tao: bathhouse, water, kitchen and rest. A walk-through site: scroll and you go through the club from the entrance to the evening, then book your day.", tags: ["Walk-through site", "Booking", "Membership", "RU / EN"], status: "Prototype", spec: ["sell a day at the club, not a list of services", "concept, structure, design, motion", "a clickable site with day booking"] },
       { name: "Websites", type: "Service · Website development", desc: "I build a site for your business: structure, copy, design and code in one pair of hands. Every screen leads to a request, not just looks good.", tags: ["Landing page", "Catalogue site", "RU / EN / TH", "Enquiries"], status: "Slot open", spec: ["a site where every screen leads to a request", "structure, copy, design, development, launch", "site live, analytics on, requests come to you"] },
     ],
   },
@@ -66,13 +78,14 @@ export const casesContent: Record<Language, CasesCopy> = {
     eyebrow: "ผลงาน", onAir: "ออนแอร์", open: "เปิดโปรเจกต์", prev: "ก่อนหน้า", next: "ถัดไป",
     prevAria: "โปรเจกต์ก่อนหน้า", nextAria: "โปรเจกต์ถัดไป", pause: "หยุด", play: "เล่นต่อ",
     placeholder: "ภาพหน้าจอจะอยู่ตรงนี้", screenshot: "ภาพหน้าจอ",
-    proto: { open: "ตัวอย่าง: EON — โปรโตไทป์", tag: "โปรโตไทป์ · คอนเซปต์", note: "โปรโตไทป์เว็บไซต์ที่คลิกได้ ไม่ใช่โปรเจกต์จริง", full: "เต็มจอ", close: "ปิด", loading: "กำลังโหลดโปรโตไทป์", rotate: "ดูง่ายขึ้นเมื่อหมุนโทรศัพท์แนวนอน" },
+    proto: { openCase: "เปิดโปรโตไทป์", open: "ตัวอย่าง: Wellness spa — โปรโตไทป์", tag: "โปรโตไทป์ · คอนเซปต์", note: "โปรโตไทป์เว็บไซต์ที่คลิกได้ ไม่ใช่โปรเจกต์จริง", full: "เต็มจอ", close: "ปิด", loading: "กำลังโหลดโปรโตไทป์", rotate: "ดูง่ายขึ้นเมื่อหมุนโทรศัพท์แนวนอน" },
     specKeys: ["โจทย์", "บทบาท", "ผลลัพธ์"], discuss: "คุยเรื่องเว็บไซต์",
     mock: { title: "ธุรกิจของคุณ", accent: "ออนไลน์", cta: "ส่งคำขอ", notes: ["เมนู", "ข้อเสนอ → คำขอ", "ความน่าเชื่อถือ", "ฟอร์ม"], form: "คำขอ" },
     cases: [
       { name: "TAIKA", type: "แอป iOS · EdTech · AI", desc: "ภาษาไทยเชิงสนทนาสำหรับคนพูดภาษารัสเซีย: เสียง ความหมาย และวรรณยุกต์ คอร์ส เคล็ดลับ และ Speaker ที่ลองได้บนเว็บไซต์", tags: ["iOS", "Swift", "AI", "Speech"], status: "กำลังทดสอบ", spec: ["ภาษาไทยที่มีชีวิตและใช้ทุกวัน ไม่ใช่ตำรา", "โปรดักต์ UX/UI ฉาก AI ต้นแบบ iOS", "MVP: ออนบอร์ดดิ้ง บทเรียน ฝึกพูด"] },
       { name: "MOO", type: "Telegram Mini App · FoodTech", desc: "ร้านอาหารใน Telegram: ลูกค้าสั่ง จ่าย และติดตามสถานะได้โดยไม่ต้องมีแอปแยกและไม่เสียค่าคอมแพลตฟอร์ม เปิดตัวใน 48 ชั่วโมง", tags: ["Mini App", "เมนูและตะกร้า", "จ่ายผ่าน QR", "สมาชิก"], status: "ทดสอบกับลูกค้า", spec: ["สั่งอาหารโดยไม่ต้องมีแอปและไม่เสียค่าคอม", "ลอจิกโปรดักต์ UX/UI โฟลว์มือถือ", "เมนู ตะกร้า ชำระเงิน และสถานะใน Telegram"] },
       { name: "Paradise", type: "เว็บไซต์ · อสังหาฯ · ภูเก็ต", desc: "เว็บไซต์เอเจนซีอสังหาฯ ในภูเก็ต: ขายและเช่าวิลล่าและคอนโด ฟอร์มสำหรับเจ้าของ RU/EN อินเทอร์เฟซสไตล์แบบพิมพ์เขียว", tags: ["ขาย", "เช่า", "RU / EN", "คำขอ"], status: "ออนไลน์", spec: ["หน้าร้านที่พาผู้ซื้อและเจ้าของมาหา", "โครงสร้าง ดีไซน์ และพัฒนาเว็บไซต์", "แคตตาล็อก เช่า คำขอ — ออนไลน์สองภาษา"] },
+      { name: "EON", type: "เว็บไซต์ · Wellness · ภูเก็ต", desc: "เว็บไซต์ของเดย์คลับในบางเทา: ห้องอบไอน้ำ น้ำ ครัว และการพักผ่อน เว็บไซต์แบบเดินชม: เลื่อนแล้วเดินผ่านคลับตั้งแต่ทางเข้าจนถึงยามเย็น แล้วจองวันของคุณ", tags: ["เว็บไซต์แบบเดินชม", "การจอง", "สมาชิก", "RU / EN"], status: "โปรโตไทป์", spec: ["ขายวันหนึ่งในคลับ ไม่ใช่รายการบริการ", "คอนเซปต์ โครงสร้าง ดีไซน์ โมชัน", "เว็บไซต์ที่คลิกได้พร้อมการจองวัน"] },
       { name: "เว็บไซต์", type: "บริการ · พัฒนาเว็บไซต์", desc: "ทำเว็บไซต์ให้ธุรกิจของคุณ: โครงสร้าง ข้อความ ดีไซน์ และโค้ดในมือเดียว ทุกหน้าจอพาไปสู่การติดต่อ ไม่ใช่แค่สวย", tags: ["แลนดิ้ง", "เว็บแคตตาล็อก", "RU / EN / TH", "คำขอ"], status: "รับงาน", spec: ["เว็บไซต์ที่ทุกหน้าจอพาไปสู่การติดต่อ", "โครงสร้าง ข้อความ ดีไซน์ พัฒนา เปิดตัว", "เว็บออนไลน์ มีอนาลิติกส์ คำขอส่งถึงคุณ"] },
     ],
   },

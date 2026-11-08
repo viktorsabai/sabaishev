@@ -20,12 +20,14 @@ const COUNT = CASE_MEDIA.length;
 // Entrance order of a slide's parts (seconds after the switch).
 const STAGE = { browser: 0, phone: 0.15, head: 0.22, name: 0.3, desc: 0.38, spec: 0.46, tags: 0.54, cta: 0.62 };
 
-// The service slot, where the site prototype is opened from.
-const SERVICE = CASE_MEDIA.findIndex((c) => c.service) + 1;
 const protoOf = (path: string) => PROTOTYPES.find((p) => path === `/cases/${p.id}`);
+// The site example opened from the service slot.
+const EXAMPLE = PROTOTYPES.find((p) => p.slug === "site")!;
 
 function initialCase() {
-  if (protoOf(window.location.pathname)) return SERVICE;
+  // /cases/<id> opens on the case the prototype belongs to.
+  const proto = protoOf(window.location.pathname);
+  if (proto) return CASE_MEDIA.findIndex((c) => c.slug === proto.slug) + 1;
   const n = Number(new URLSearchParams(window.location.search).get("case"));
   return Number.isInteger(n) && n >= 1 && n <= COUNT ? n : 1;
 }
@@ -144,7 +146,7 @@ export default function CasesScene() {
                   {m.service ? (
                     <SiteBuild mock={copy.mock} />
                   ) : m.desktop ? (
-                    <div className={`shot${m.still ? " still" : ""}`} style={{ ["--vh" as string]: "510px" }}>
+                    <div className={`shot${m.still ? " still" : ""}${m.frames ? ` f${m.frames}` : ""}`} style={{ ["--vh" as string]: "510px" }}>
                       <img src={m.desktop} alt={`${copy.screenshot} ${text.name}`} loading={i === 0 ? "eager" : "lazy"} decoding="async" />
                     </div>
                   ) : (
@@ -166,7 +168,7 @@ export default function CasesScene() {
                 <div key={on ? `p${switches}` : "p"} className={`gs b absolute inset-0 overflow-hidden${on && switches ? " gx" : ""}`}>
                   {m.service && <SiteBuild mock={copy.mock} phone />}
                   {m.mobile && (
-                    <div className={`shot phone${m.still ? " still" : ""}`} style={{ ["--vh" as string]: "350px" }}>
+                    <div className={`shot phone${m.still ? " still" : ""}${m.frames ? ` f${m.frames}` : ""}`} style={{ ["--vh" as string]: "350px" }}>
                       <img src={m.mobile} alt="" loading={i === 0 ? "eager" : "lazy"} decoding="async" />
                     </div>
                   )}
@@ -195,6 +197,11 @@ export default function CasesScene() {
                       {copy.discuss}
                       <svg width="16" height="10" viewBox="0 0 22 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M1 6h19M15 1l5 5-5 5" /></svg>
                     </button>
+                  ) : m.proto ? (
+                    <button type="button" className="opn border-0" onClick={() => navigate(`/cases/${m.proto}`)} tabIndex={on ? 0 : -1}>
+                      {copy.proto.openCase}
+                      <svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" /></svg>
+                    </button>
                   ) : (
                     <a className="opn" href={m.url} target="_blank" rel="noopener noreferrer" tabIndex={on ? 0 : -1}>
                       {copy.open}
@@ -204,7 +211,7 @@ export default function CasesScene() {
                   <span className="mono uppercase" style={{ fontSize: 10, letterSpacing: ".14em", color: "rgba(241,238,232,.6)" }}>{text.status}</span>
                 </div>
                 {m.service && (
-                  <button type="button" className="st pbtn mono" style={stage(STAGE.cta + 0.1)} tabIndex={on ? 0 : -1} onClick={() => navigate(`/cases/${PROTOTYPES[0].id}`)}>
+                  <button type="button" className="st pbtn mono" style={stage(STAGE.cta + 0.1)} tabIndex={on ? 0 : -1} onClick={() => navigate(`/cases/${EXAMPLE.id}`)}>
                     <i aria-hidden="true" />{copy.proto.open}
                   </button>
                 )}

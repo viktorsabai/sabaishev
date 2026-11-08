@@ -18,6 +18,9 @@
 .sx .shot { position: absolute; left: 0; right: 0; top: 0; animation: shotStops 18s ease-in-out infinite alternate; }
 .sx .shot.phone { animation-duration: 13s; }
 .sx .shot.still { animation: none; height: 100%; }
+/* Stacked screens (frames): hold each screen, then slide to the next */
+@keyframes shotF4 { 0%, 18% { transform: translateY(0) } 25%, 43% { transform: translateY(-25%) } 50%, 68% { transform: translateY(-50%) } 75%, 93% { transform: translateY(-75%) } 100% { transform: translateY(0) } }
+.sx .shot.f4, .sx .shot.phone.f4 { animation: shotF4 16s cubic-bezier(.6, 0, .2, 1) infinite; }
 .sx .shot img { display: block; width: 100%; }
 .sx .shot.still img { height: 100%; object-fit: cover; object-position: top; }
 .sx.paused .shot { animation-play-state: paused; }
