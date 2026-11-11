@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "wouter";
 import { useBrief } from "@/brief/BriefContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import SiteHeader from "@/scene/SiteHeader";
 import { H, W, useStageScale } from "@/scene/stage";
 import WarpBackground from "@/scene/WarpBackground";
-import { CASE_MEDIA, casesContent, PROTOTYPES } from "./content";
-import ProtoViewer from "./ProtoViewer";
+import { CASE_LINKS, CASE_MEDIA, casesContent } from "./content";
 import SiteBuild from "./SiteBuild";
 import "@/scene/scene.css";
 import "./cases.css";
 
-// Cases page per CHANGES-2: three live projects and the site-development slot as a browser +
-// phone over the flight background, autoplaying every 7 s. The first one assembles on arrival. Switching a project is a short "signal change":
+// Cases page per CHANGES-2: three live projects, EON (shown on request: its screens are dimmed
+// under a lock) and the site-development slot as a browser + phone over the flight background,
+// autoplaying every 7 s. The first one assembles on arrival. Switching a project is a short "signal change":
 // the stars jump, the screens glitch, and the new project comes in part by part —
 // browser, phone, then the caption.
 
@@ -20,14 +19,10 @@ const COUNT = CASE_MEDIA.length;
 // Entrance order of a slide's parts (seconds after the switch).
 const STAGE = { browser: 0, phone: 0.15, head: 0.22, name: 0.3, desc: 0.38, spec: 0.46, tags: 0.54, cta: 0.62 };
 
-const protoOf = (path: string) => PROTOTYPES.find((p) => path === `/cases/${p.id}`);
-// The site example opened from the service slot.
-const EXAMPLE = PROTOTYPES.find((p) => p.slug === "site")!;
-
 function initialCase() {
-  // /cases/<id> opens on the case the prototype belongs to.
-  const proto = protoOf(window.location.pathname);
-  if (proto) return CASE_MEDIA.findIndex((c) => c.slug === proto.slug) + 1;
+  // An old prototype link (/cases/eon) opens on the case it belonged to.
+  const slug = CASE_LINKS[window.location.pathname.split("/")[2] ?? ""];
+  if (slug) return CASE_MEDIA.findIndex((c) => c.slug === slug) + 1;
   const n = Number(new URLSearchParams(window.location.search).get("case"));
   return Number.isInteger(n) && n >= 1 && n <= COUNT ? n : 1;
 }
@@ -42,10 +37,7 @@ export default function CasesScene() {
   const [paused, setPaused] = useState(false);
   const [hover, setHover] = useState(false);
   const [hidden, setHidden] = useState(false);
-  // /cases/<id> opens that prototype over the page; closing it returns to /cases.
-  const [location, navigate] = useLocation();
-  const proto = protoOf(location);
-  const halted = paused || hover || hidden || !!proto;
+  const halted = paused || hover || hidden;
   // Off for the first frames, so the first project comes in the same way a switch does.
   const [arrived, setArrived] = useState(false);
   useEffect(() => {
@@ -146,7 +138,7 @@ export default function CasesScene() {
                   {m.service ? (
                     <SiteBuild mock={copy.mock} />
                   ) : m.desktop ? (
-                    <div className={`shot${m.still ? " still" : ""}${m.frames ? ` f${m.frames}` : ""}`} style={{ ["--vh" as string]: "510px" }}>
+                    <div className={`shot${m.still ? " still" : ""}${m.frames ? ` f${m.frames}` : ""}${m.locked ? " dim" : ""}`} style={{ ["--vh" as string]: "510px" }}>
                       <img src={m.desktop} alt={`${copy.screenshot} ${text.name}`} loading={i === 0 ? "eager" : "lazy"} decoding="async" />
                     </div>
                   ) : (
@@ -155,6 +147,14 @@ export default function CasesScene() {
                     </div>
                   )}
                 </div>
+                {m.locked && (
+                  <div className="lockb">
+                    <span className="ic"><svg width="18" height="20" viewBox="0 0 18 20" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><rect x="2" y="9" width="14" height="10" rx="2.5" /><path d="M5 9V6a4 4 0 018 0v3" /></svg></span>
+                    <b>{copy.locked.title}</b>
+                    <span className="mono">{copy.locked.note}</span>
+                    <button type="button" className="lockbtn" tabIndex={on ? 0 : -1} onClick={() => openBrief(`${copy.locked.context} · ${text.name}`)}>{copy.locked.request} →</button>
+                  </div>
+                )}
               </div>
 
               {/* Phone */}
@@ -166,9 +166,10 @@ export default function CasesScene() {
               >
                 <div className="absolute z-[3] rounded" style={{ left: "50%", top: 8, width: 54, height: 6, marginLeft: -27, background: "rgba(255,255,255,.18)" }} />
                 <div key={on ? `p${switches}` : "p"} className={`gs b absolute inset-0 overflow-hidden${on && switches ? " gx" : ""}`}>
+                  {m.locked && <div className="lockp" aria-hidden="true"><svg width="18" height="20" viewBox="0 0 18 20" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><rect x="2" y="9" width="14" height="10" rx="2.5" /><path d="M5 9V6a4 4 0 018 0v3" /></svg></div>}
                   {m.service && <SiteBuild mock={copy.mock} phone />}
                   {m.mobile && (
-                    <div className={`shot phone${m.still ? " still" : ""}${m.frames ? ` f${m.frames}` : ""}`} style={{ ["--vh" as string]: "350px" }}>
+                    <div className={`shot phone${m.still ? " still" : ""}${m.frames ? ` f${m.frames}` : ""}${m.locked ? " dim" : ""}`} style={{ ["--vh" as string]: "350px" }}>
                       <img src={m.mobile} alt="" loading={i === 0 ? "eager" : "lazy"} decoding="async" />
                     </div>
                   )}
@@ -197,10 +198,10 @@ export default function CasesScene() {
                       {copy.discuss}
                       <svg width="16" height="10" viewBox="0 0 22 12" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M1 6h19M15 1l5 5-5 5" /></svg>
                     </button>
-                  ) : m.proto ? (
-                    <button type="button" className="opn border-0" onClick={() => navigate(`/cases/${m.proto}`)} tabIndex={on ? 0 : -1}>
-                      {copy.proto.openCase}
-                      <svg width="12" height="12" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3 1.5v11l9-5.5z" /></svg>
+                  ) : m.locked ? (
+                    <button type="button" className="opn border-0" onClick={() => openBrief(`${copy.locked.context} · ${text.name}`)} tabIndex={on ? 0 : -1}>
+                      {copy.locked.request}
+                      <svg width="13" height="15" viewBox="0 0 18 20" fill="none" stroke="currentColor" strokeWidth="1.4" aria-hidden="true"><rect x="2" y="9" width="14" height="10" rx="2.5" /><path d="M5 9V6a4 4 0 018 0v3" /></svg>
                     </button>
                   ) : (
                     <a className="opn" href={m.url} target="_blank" rel="noopener noreferrer" tabIndex={on ? 0 : -1}>
@@ -211,8 +212,8 @@ export default function CasesScene() {
                   <span className="mono uppercase" style={{ fontSize: 10, letterSpacing: ".14em", color: "rgba(241,238,232,.6)" }}>{text.status}</span>
                 </div>
                 {m.service && (
-                  <button type="button" className="st pbtn mono" style={stage(STAGE.cta + 0.1)} tabIndex={on ? 0 : -1} onClick={() => navigate(`/cases/${EXAMPLE.id}`)}>
-                    <i aria-hidden="true" />{copy.proto.open}
+                  <button type="button" className="st pbtn lk mono" style={stage(STAGE.cta + 0.1)} tabIndex={on ? 0 : -1} onClick={() => openBrief(`${copy.locked.context} · Wellness spa`)}>
+                    <i><svg width="10" height="11" viewBox="0 0 18 20" fill="none" stroke="#C48BFA" strokeWidth="2" aria-hidden="true"><rect x="2" y="9" width="14" height="10" rx="2.5" /><path d="M5 9V6a4 4 0 018 0v3" /></svg></i>{copy.locked.example}
                   </button>
                 )}
               </div>
@@ -223,7 +224,6 @@ export default function CasesScene() {
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[5]" style={{ background: "repeating-linear-gradient(0deg,rgba(255,255,255,.02) 0 1px,transparent 1px 3px)" }} />
 
         {/* Minimal controls */}
-        {proto && <ProtoViewer proto={proto} copy={copy.proto} onClose={() => navigate("/cases", { replace: true })} />}
         <button type="button" className="eg egl" onClick={prev} aria-label={copy.prevAria}><span><i />{copy.prev}</span></button>
         <button type="button" className="eg egr" onClick={next} aria-label={copy.nextAria}><span>{copy.next}<i /></span></button>
         <div className="absolute z-[8] flex items-center gap-3.5" style={{ left: "50%", bottom: 34, transform: "translateX(-50%)", animation: "sxUp .7s ease 1s both" }}>

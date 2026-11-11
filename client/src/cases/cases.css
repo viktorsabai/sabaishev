@@ -39,10 +39,22 @@
 .sx .spec div + div { margin-top: 4px; }
 .sx .spec b { font-weight: 400; color: #C48BFA; }
 
-/* Link to the clickable prototype, under the service slot's button */
+/* A case shown on request: screens dimmed and blurred, a lock and the request button over them */
+.sx .shot.dim { filter: blur(7px) brightness(.38) saturate(.7); }
+.sx .lockb { position: absolute; left: 0; right: 0; top: 30px; bottom: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; text-align: center; background: radial-gradient(50% 50% at 50% 50%, rgba(10, 12, 20, .55), transparent 80%); }
+.sx .lockb .ic { width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center; border: 1px solid rgba(196, 139, 250, .6); background: rgba(10, 12, 20, .6); color: #F1EEE8; box-shadow: 0 0 30px -6px #A855F7; margin-bottom: 4px; }
+.sx .lockb b { font-size: 24px; font-weight: 500; letter-spacing: -.035em; }
+.sx .lockb .mono { font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: rgba(241, 238, 232, .62); }
+.sx .lockbtn { margin-top: 10px; height: 42px; padding: 0 20px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, .28); background: rgba(10, 12, 20, .5); color: #fff; font: 600 13px var(--font-tight); cursor: pointer; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); transition: border-color .25s, background .25s; }
+.sx .lockbtn:hover { border-color: rgba(196, 139, 250, .8); background: rgba(168, 85, 247, .18); }
+.sx .lockp { position: absolute; inset: 0; z-index: 2; display: grid; place-items: center; color: rgba(241, 238, 232, .85); }
+
+/* Example under the service slot's button (shown on request) */
 .sx .pbtn { margin-top: 18px; display: inline-flex; align-items: center; gap: 10px; padding: 0; border: 0; background: none; cursor: pointer; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: rgba(241, 238, 232, .78); align-self: flex-start; transition: color .25s; }
 .sx .pbtn:hover { color: #fff; }
 .sx .pbtn i { width: 22px; height: 22px; border-radius: 50%; border: 1px solid rgba(196, 139, 250, .7); position: relative; box-shadow: 0 0 14px -4px #A855F7; }
+.sx .pbtn.lk i { display: grid; place-items: center; }
+.sx .pbtn.lk i::after { display: none; }
 .sx .pbtn i::after { content: ""; position: absolute; left: 8px; top: 6px; border: 5px solid transparent; border-left: 7px solid #C48BFA; border-right: 0; }
 
 /* Controls */

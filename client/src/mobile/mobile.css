@@ -163,6 +163,13 @@
 .mx-case .spec div + div { margin-top: 4px; }
 .mx-case .spec b { font-weight: 400; color: #C48BFA; }
 button.mx-open { border: 0; }
+.mx-case .shot.dim { filter: blur(6px) brightness(.38) saturate(.7); }
+.mx-lock { position: absolute; inset: 0; z-index: 3; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 0 18px; text-align: center; }
+.mx-lock .ic { width: 50px; height: 50px; border-radius: 50%; display: grid; place-items: center; border: 1px solid rgba(196, 139, 250, .6); background: rgba(10, 12, 20, .6); box-shadow: 0 0 30px -6px #A855F7; margin-bottom: 4px; }
+.mx-lock b { font-size: 21px; font-weight: 500; letter-spacing: -.03em; }
+.mx-lock .mono { font-size: 10px; line-height: 1.5; letter-spacing: .12em; text-transform: uppercase; color: rgba(241, 238, 232, .62); }
+.mx-proto.lk i { display: grid; place-items: center; }
+.mx-proto.lk i::after { display: none; }
 .mx-proto { margin-top: 18px; min-height: 44px; display: inline-flex; align-items: center; gap: 10px; padding: 0; border: 0; background: none; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: rgba(241, 238, 232, .85); }
 .mx-proto i { width: 26px; height: 26px; border-radius: 50%; border: 1px solid rgba(196, 139, 250, .7); position: relative; }
 .mx-proto i::after { content: ""; position: absolute; left: 10px; top: 7.5px; border: 5px solid transparent; border-left: 7px solid #C48BFA; border-right: 0; }
