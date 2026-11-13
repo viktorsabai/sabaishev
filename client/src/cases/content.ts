@@ -20,17 +20,23 @@ export const CASE_MEDIA: CaseMedia[] = [
 ];
 
 // spec: task / role / result lines, shown as a code block under the description.
-// Old prototype links (/cases/<id>) land on the case they belonged to; the prototypes
-// themselves are no longer on the site.
+// Old prototype links (/cases/<id>) land on the case they belonged to.
 export const CASE_LINKS: Record<string, string> = { eon: "eon", spa: "site" };
+// The clickable prototype kept on this site (public/proto/): the earlier wellness concept,
+// without a name, opened from the site-development slot in a viewer at /cases/spa. Its canvas
+// is fixed (w × h), so it is scaled to fit the viewer. EON stays off the site (on request).
+export type Prototype = { id: string; src: string; host: string; slug: string; w?: number; h?: number };
+export const EXAMPLE: Prototype = { id: "spa", src: "/proto/spa/index.html", host: "wellness · spa", slug: "site", w: 1440, h: 900 };
 
 export type CaseText = { name: string; type: string; desc: string; tags: string[]; status: string; spec: [string, string, string] };
 export type CasesCopy = {
   eyebrow: string; onAir: string; open: string; prev: string; next: string; prevAria: string; nextAria: string;
   pause: string; play: string; placeholder: string; screenshot: string;
   specKeys: [string, string, string]; discuss: string;
-  // Prototypes shown on request: the lock over their screens and the example under the site slot.
-  locked: { request: string; title: string; note: string; example: string; context: string };
+  // Prototypes shown on request: the lock over their screens.
+  locked: { request: string; title: string; note: string; context: string };
+  // The example prototype linked from the site-development slot, and its viewer.
+  proto: { open: string; tag: string; note: string; full: string; close: string; loading: string; rotate: string };
   // The site that assembles in the service slot.
   mock: { title: string; accent: string; cta: string; notes: [string, string, string, string]; form: string };
   cases: CaseText[];
@@ -41,7 +47,8 @@ export const casesContent: Record<Language, CasesCopy> = {
     eyebrow: "Портфолио", onAir: "В эфире", open: "Открыть проект", prev: "Пред", next: "След",
     prevAria: "Предыдущий проект", nextAria: "Следующий проект", pause: "Пауза", play: "Продолжить",
     placeholder: "Сюда встанет скрин", screenshot: "Скриншот",
-    locked: { request: "Запросить доступ", title: "Прототип по запросу", note: "Покажу на созвоне или открою доступ лично", example: "Пример: Wellness spa — по запросу", context: "Доступ к прототипу" },
+    locked: { request: "Запросить доступ", title: "Прототип по запросу", note: "Покажу на созвоне или открою доступ лично", context: "Доступ к прототипу" },
+    proto: { open: "Пример: Wellness spa — прототип", tag: "Прототип · концепт", note: "Кликабельный прототип сайта, не живой проект", full: "На весь экран", close: "Закрыть", loading: "Загружаю прототип", rotate: "Удобнее смотреть, повернув телефон" },
     specKeys: ["задача", "роль", "итог"], discuss: "Обсудить сайт",
     mock: { title: "Ваш бизнес.", accent: "Онлайн.", cta: "Оставить заявку", notes: ["навигация", "оффер → заявка", "доверие", "форма"], form: "Заявка" },
     cases: [
@@ -56,7 +63,8 @@ export const casesContent: Record<Language, CasesCopy> = {
     eyebrow: "Portfolio", onAir: "On air", open: "Open project", prev: "Prev", next: "Next",
     prevAria: "Previous project", nextAria: "Next project", pause: "Pause", play: "Play",
     placeholder: "Screenshot goes here", screenshot: "Screenshot of",
-    locked: { request: "Request access", title: "Prototype on request", note: "I'll show it on a call or give you access personally", example: "Example: Wellness spa — on request", context: "Prototype access" },
+    locked: { request: "Request access", title: "Prototype on request", note: "I'll show it on a call or give you access personally", context: "Prototype access" },
+    proto: { open: "Example: Wellness spa — prototype", tag: "Prototype · concept", note: "A clickable site prototype, not a live project", full: "Full screen", close: "Close", loading: "Loading the prototype", rotate: "Easier to view with the phone turned sideways" },
     specKeys: ["task", "role", "result"], discuss: "Discuss a site",
     mock: { title: "Your business.", accent: "Online.", cta: "Send a request", notes: ["navigation", "offer → request", "trust", "form"], form: "Request" },
     cases: [
@@ -71,7 +79,8 @@ export const casesContent: Record<Language, CasesCopy> = {
     eyebrow: "ผลงาน", onAir: "ออนแอร์", open: "เปิดโปรเจกต์", prev: "ก่อนหน้า", next: "ถัดไป",
     prevAria: "โปรเจกต์ก่อนหน้า", nextAria: "โปรเจกต์ถัดไป", pause: "หยุด", play: "เล่นต่อ",
     placeholder: "ภาพหน้าจอจะอยู่ตรงนี้", screenshot: "ภาพหน้าจอ",
-    locked: { request: "ขอสิทธิ์เข้าชม", title: "โปรโตไทป์ตามคำขอ", note: "จะแสดงให้ดูผ่านวิดีโอคอลหรือเปิดสิทธิ์ให้เป็นการส่วนตัว", example: "ตัวอย่าง: Wellness spa — ตามคำขอ", context: "ขอเข้าชมโปรโตไทป์" },
+    locked: { request: "ขอสิทธิ์เข้าชม", title: "โปรโตไทป์ตามคำขอ", note: "จะแสดงให้ดูผ่านวิดีโอคอลหรือเปิดสิทธิ์ให้เป็นการส่วนตัว", context: "ขอเข้าชมโปรโตไทป์" },
+    proto: { open: "ตัวอย่าง: Wellness spa — โปรโตไทป์", tag: "โปรโตไทป์ · คอนเซปต์", note: "โปรโตไทป์เว็บไซต์ที่คลิกได้ ไม่ใช่โปรเจกต์จริง", full: "เต็มจอ", close: "ปิด", loading: "กำลังโหลดโปรโตไทป์", rotate: "ดูง่ายขึ้นเมื่อหมุนโทรศัพท์แนวนอน" },
     specKeys: ["โจทย์", "บทบาท", "ผลลัพธ์"], discuss: "คุยเรื่องเว็บไซต์",
     mock: { title: "ธุรกิจของคุณ", accent: "ออนไลน์", cta: "ส่งคำขอ", notes: ["เมนู", "ข้อเสนอ → คำขอ", "ความน่าเชื่อถือ", "ฟอร์ม"], form: "คำขอ" },
     cases: [

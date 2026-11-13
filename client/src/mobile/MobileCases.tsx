@@ -1,6 +1,8 @@
+import { useLocation } from "wouter";
 import { useBrief } from "@/brief/BriefContext";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { CASE_MEDIA, casesContent } from "@/cases/content";
+import { CASE_MEDIA, casesContent, EXAMPLE } from "@/cases/content";
+import ProtoViewer from "@/cases/ProtoViewer";
 import SiteBuild from "@/cases/SiteBuild";
 import { mobileContent } from "./content";
 import MobileLayout from "./MobileLayout";
@@ -14,6 +16,7 @@ export default function MobileCases() {
   const copy = casesContent[language];
   const m = mobileContent[language];
   const { openBrief } = useBrief();
+  const [location, navigate] = useLocation();
   return (
     <MobileLayout active="cases">
       <section className="mx-section mx-top">
@@ -57,13 +60,14 @@ export default function MobileCases() {
                   <span className="mono status">{text.status}</span>
                 </div>
                 {c.service && (
-                  <button type="button" className="mx-proto lk mono" onClick={() => openBrief(`${copy.locked.context} · Wellness spa`)}><i><svg width="10" height="11" viewBox="0 0 18 20" fill="none" stroke="#C48BFA" strokeWidth="2" aria-hidden="true"><rect x="2" y="9" width="14" height="10" rx="2.5" /><path d="M5 9V6a4 4 0 018 0v3" /></svg></i>{copy.locked.example}</button>
+                  <button type="button" className="mx-proto mono" onClick={() => navigate(`/cases/${EXAMPLE.id}`)}><i aria-hidden="true" />{copy.proto.open}</button>
                 )}
               </article>
             );
           })}
         </div>
       </section>
+      {location === `/cases/${EXAMPLE.id}` && <ProtoViewer proto={EXAMPLE} copy={copy.proto} onClose={() => navigate("/cases", { replace: true })} />}
     </MobileLayout>
   );
 }
