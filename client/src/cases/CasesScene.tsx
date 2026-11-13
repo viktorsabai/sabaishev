@@ -5,7 +5,7 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import SiteHeader from "@/scene/SiteHeader";
 import { H, W, useStageScale } from "@/scene/stage";
 import WarpBackground from "@/scene/WarpBackground";
-import { CASE_LINKS, CASE_MEDIA, casesContent, EXAMPLE } from "./content";
+import { CASE_LINKS, CASE_MEDIA, casesContent, EXAMPLES } from "./content";
 import ProtoViewer from "./ProtoViewer";
 import SiteBuild from "./SiteBuild";
 import "@/scene/scene.css";
@@ -39,10 +39,10 @@ export default function CasesScene() {
   const [paused, setPaused] = useState(false);
   const [hover, setHover] = useState(false);
   const [hidden, setHidden] = useState(false);
-  // /cases/spa opens the example prototype over the page; closing it returns to /cases.
+  // /cases/<id> opens that example prototype over the page; closing it returns to /cases.
   const [location, navigate] = useLocation();
-  const proto = location === `/cases/${EXAMPLE.id}`;
-  const halted = paused || hover || hidden || proto;
+  const proto = EXAMPLES.find((p) => location === `/cases/${p.id}`);
+  const halted = paused || hover || hidden || !!proto;
   // Off for the first frames, so the first project comes in the same way a switch does.
   const [arrived, setArrived] = useState(false);
   useEffect(() => {
@@ -216,11 +216,11 @@ export default function CasesScene() {
                   )}
                   <span className="mono uppercase" style={{ fontSize: 10, letterSpacing: ".14em", color: "rgba(241,238,232,.6)" }}>{text.status}</span>
                 </div>
-                {m.service && (
-                  <button type="button" className="st pbtn mono" style={stage(STAGE.cta + 0.1)} tabIndex={on ? 0 : -1} onClick={() => navigate(`/cases/${EXAMPLE.id}`)}>
-                    <i aria-hidden="true" />{copy.proto.open}
+                {m.service && EXAMPLES.map((p, j) => (
+                  <button key={p.id} type="button" className="st pbtn mono" style={stage(STAGE.cta + 0.1 + j * 0.08)} tabIndex={on ? 0 : -1} onClick={() => navigate(`/cases/${p.id}`)}>
+                    <i aria-hidden="true" />{copy.proto.example}: {p.name} — {copy.proto.kind}
                   </button>
-                )}
+                ))}
               </div>
             </section>
           );
@@ -229,7 +229,7 @@ export default function CasesScene() {
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[5]" style={{ background: "repeating-linear-gradient(0deg,rgba(255,255,255,.02) 0 1px,transparent 1px 3px)" }} />
 
         {/* Minimal controls */}
-        {proto && <ProtoViewer proto={EXAMPLE} copy={copy.proto} onClose={() => navigate("/cases", { replace: true })} />}
+        {proto && <ProtoViewer proto={proto} copy={copy.proto} onClose={() => navigate("/cases", { replace: true })} />}
         <button type="button" className="eg egl" onClick={prev} aria-label={copy.prevAria}><span><i />{copy.prev}</span></button>
         <button type="button" className="eg egr" onClick={next} aria-label={copy.nextAria}><span>{copy.next}<i /></span></button>
         <div className="absolute z-[8] flex items-center gap-3.5" style={{ left: "50%", bottom: 34, transform: "translateX(-50%)", animation: "sxUp .7s ease 1s both" }}>

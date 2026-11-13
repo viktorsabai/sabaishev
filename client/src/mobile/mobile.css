@@ -169,6 +169,7 @@ button.mx-open { border: 0; }
 .mx-lock b { font-size: 21px; font-weight: 500; letter-spacing: -.03em; }
 .mx-lock .mono { font-size: 10px; line-height: 1.5; letter-spacing: .12em; text-transform: uppercase; color: rgba(241, 238, 232, .62); }
 .mx-proto { margin-top: 18px; min-height: 44px; display: inline-flex; align-items: center; gap: 10px; padding: 0; border: 0; background: none; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: rgba(241, 238, 232, .85); }
+.mx-proto + .mx-proto { margin-top: 0; }
 .mx-proto i { width: 26px; height: 26px; border-radius: 50%; border: 1px solid rgba(196, 139, 250, .7); position: relative; }
 .mx-proto i::after { content: ""; position: absolute; left: 10px; top: 7.5px; border: 5px solid transparent; border-left: 7px solid #C48BFA; border-right: 0; }
 .mx-case .status { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: rgba(241, 238, 232, .6); }
